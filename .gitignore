@@ -1,0 +1,36 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+food-delivery-server/node_modules/
+FoodDeliveryApp/node_modules/
+
+# Expo
+FoodDeliveryApp/.expo/
+FoodDeliveryApp/dist/
+FoodDeliveryApp/web-build/
+
+# Native
+FoodDeliveryApp/*.orig.*
+FoodDeliveryApp/*.jks
+FoodDeliveryApp/*.p8
+FoodDeliveryApp/*.p12
+FoodDeliveryApp/*.key
+FoodDeliveryApp/*.mobileprovision
+
+# Metro
+FoodDeliveryApp/.metro-health-check*
+
+# debug
+FoodDeliveryApp/npm-debug.*
+FoodDeliveryApp/yarn-debug.*
+FoodDeliveryApp/yarn-error.*
+
+# macOS
+FoodDeliveryApp/.DS_Store
+FoodDeliveryApp/*.pem
+
+# local env files
+FoodDeliveryApp/.env*.local
+
+# typescript
+FoodDeliveryApp/*.tsbuildinfo
