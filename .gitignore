@@ -4,6 +4,9 @@
 food-delivery-server/node_modules/
 FoodDeliveryApp/node_modules/
 
+# .env
+food-delivery-server/.env
+
 # Expo
 FoodDeliveryApp/.expo/
 FoodDeliveryApp/dist/
