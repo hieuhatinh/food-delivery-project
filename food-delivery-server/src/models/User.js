@@ -1,6 +1,10 @@
 import mongoose, { Schema } from 'mongoose'
 import bcrypt from 'bcrypt'
 
+function validatePhoneNumber(val) {
+    return /(84|0[3|5|7|8|9])+([0-9]{8})\b/g.test(val)
+}
+
 const userSchema = new Schema({
     email: {
         type: String,
@@ -14,6 +18,27 @@ const userSchema = new Schema({
     fullName: {
         type: String,
         require: false,
+    },
+    phoneNumber: {
+        type: String,
+        require: false,
+    },
+    address: {
+        type: String,
+        require: false,
+        default: null,
+    },
+    sex: {
+        enum: ['male', 'female', 'other'],
+        type: String,
+        default: null,
+        require: false,
+    },
+    dateOfBirth: {
+        type: Date,
+        validate: [validatePhoneNumber, 'Số điện thoại không đúng định dạng'],
+        require: false,
+        default: null,
     },
     role: {
         type: String,
