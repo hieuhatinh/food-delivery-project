@@ -13,11 +13,11 @@ function App() {
             <NavigationContainer>
                 <Stack.Navigator initialRouteName='PersonalInfo'>
                     {/* <Stack.Group> */}
-                    {/* <Stack.Screen
+                    <Stack.Screen
                         name='PersonalInfo'
                         component={PersonalInfo}
                         options={{ headerShown: false }}
-                    /> */}
+                    />
                     <Stack.Screen
                         name='EditInformation'
                         component={EditInformation}

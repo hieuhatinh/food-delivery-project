@@ -1,17 +1,19 @@
-import { StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import { global } from '../../global'
 
-const Button = ({ height, outline, title, handlePress }) => {
+const Button = ({ height, outline, title, handlePress, disabled }) => {
     return (
         <TouchableOpacity
             style={[
                 styles.container,
                 height && { height: height },
                 outline && styles.containerOutline,
+                !!disabled && styles.disabled,
             ]}
             onPress={handlePress}
             activeOpacity={0.9}
+            disabled={disabled}
         >
             <Text
                 style={[
@@ -43,6 +45,9 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         textTransform: 'capitalize',
+    },
+    disabled: {
+        backgroundColor: global.disabled,
     },
 })
 

@@ -1,4 +1,5 @@
 import {
+    Image,
     KeyboardAvoidingView,
     ScrollView,
     StyleSheet,
@@ -8,7 +9,7 @@ import {
     TouchableWithoutFeedback,
     View,
 } from 'react-native'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Icon from 'react-native-vector-icons/FontAwesome6'
 
@@ -16,13 +17,120 @@ import Button from '../../component/button/Button'
 import HeaderSecondary from '../../component/header/HeaderSecondary'
 import Avatar from '../../component/Avatar'
 import { global } from '../../global'
+import { validDate, validPhoneNumber } from '../../validation'
+import useDebounce from '../../hooks/useDebounce'
 
 const EditInformation = () => {
     const insets = useSafeAreaInsets() // safe area view
 
-    // dropdown list item sex
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(false) // dropdown list item sex
 
+    const [fullName, setFullName] = useState(null)
+    const [sex, setSex] = useState({ label: null, value: null })
+    const [dateOfBirth, setDateOfBirth] = useState(null)
+    const [phoneNumber, setPhoneNumber] = useState(null)
+    const [address, setAddress] = useState(null)
+    const [slogan, setSlogan] = useState(null)
+    const [isValidDateBirth, setIsValidDateBirth] = useState()
+    const [isValidPhoneNumber, setIsValidPhoneNumber] = useState()
+    const [disableSubmit, setDisableSubmit] = useState()
+
+    // xử lý fullName, sex
+    const handleChangeFullname = (value) => {
+        setFullName(value)
+    }
+
+    const handleChangeSex = (label, value) => {
+        setSex({ label, value })
+    }
+
+    const handleChangeDateBirth = (date) => {
+        setDateOfBirth(date)
+    }
+
+    // kiểm tra và xử lý ngày sinh phù hợp
+    const handleCheckValidDateBirth = () => {
+        if (!!dateOfBirth) {
+            let isValid = validDate(dateOfBirth)
+            setIsValidDateBirth(isValid)
+        } else {
+            setIsValidDateBirth(true)
+        }
+    }
+
+    useDebounce(dateOfBirth, 150, handleCheckValidDateBirth) // đợi người dùng nhập xong sau 150ms mới bắt đầu kiểm tra
+
+    // kiểm tra và xử lý số điện thoại có hợp lệ không
+    const handleChangePhoneNumber = (phoneNumber) => {
+        setPhoneNumber(phoneNumber)
+    }
+
+    const handleCheckValidPhoneNumber = () => {
+        if (!!phoneNumber) {
+            let isValid = validPhoneNumber(phoneNumber)
+            setIsValidPhoneNumber(isValid)
+        } else {
+            setIsValidPhoneNumber(true)
+        }
+    }
+
+    useDebounce(phoneNumber, 150, handleCheckValidPhoneNumber) // đợi người dùng nhập xong sau 150ms mới bắt đầu kiểm tra
+
+    // address và slogan
+    const handleChangeAddress = (address) => {
+        setAddress(address)
+    }
+
+    const handleChangeSlogan = (slogan) => {
+        setSlogan(slogan)
+    }
+
+    // xử lý khi submit
+    const handlePressSubmit = () => {
+        console.log({
+            fullName,
+            sex,
+            dateOfBirth,
+            phoneNumber,
+            address,
+            slogan,
+        })
+    }
+
+    useEffect(() => {
+        if (!!fullName || !!sex.value || !!address || !!slogan) {
+            setDisableSubmit(false)
+        } else {
+            setDisableSubmit(true)
+        }
+
+        if (!!dateOfBirth) {
+            if (isValidDateBirth === true) {
+                setDisableSubmit(false)
+            } else {
+                setDisableSubmit(true)
+            }
+        }
+
+        if (!!phoneNumber) {
+            if (isValidPhoneNumber === true) {
+                setDisableSubmit(false)
+            } else {
+                setDisableSubmit(true)
+            }
+        }
+    }, [
+        fullName,
+        sex,
+        address,
+        slogan,
+        dateOfBirth,
+        phoneNumber,
+        isValidDateBirth,
+        isValidPhoneNumber,
+    ])
+
+    // dropdown list item sex
     const items = [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
@@ -58,19 +166,26 @@ const EditInformation = () => {
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         style={styles.content}
+                        contentContainerStyle={{
+                            alignItems: 'center',
+                        }}
                     >
                         <View style={styles.viewAvatar}>
                             <Avatar />
                         </View>
 
-                        <View>
+                        <View style={{ width: '100%' }}>
                             <Text style={styles.titlePart}>Information</Text>
                             <View style={styles.viewInformation}>
+                                {/* fullName */}
                                 <View style={styles.viewEditInfo}>
                                     <Text style={styles.text}>Full name:</Text>
                                     <TextInput
-                                        value='Nguyễn Trung Hiếu'
+                                        value={fullName}
+                                        placeholder='Enter your fullname'
                                         style={styles.textInput}
+                                        onChangeText={handleChangeFullname}
+                                        multiline
                                     />
                                     <Icon name='pencil' size={15} />
                                 </View>
@@ -92,7 +207,9 @@ const EditInformation = () => {
                                         onPress={toggleDropdown}
                                     >
                                         <Text style={styles.textDropdown}>
-                                            Male
+                                            {sex.label !== null
+                                                ? sex.label
+                                                : 'None'}
                                         </Text>
                                         <Icon name='chevron-down' size={10} />
                                         {isOpen && (
@@ -102,6 +219,12 @@ const EditInformation = () => {
                                                         key={item.value}
                                                         style={
                                                             styles.dropdownItem
+                                                        }
+                                                        onPress={() =>
+                                                            handleChangeSex(
+                                                                item.label,
+                                                                item.value,
+                                                            )
                                                         }
                                                     >
                                                         <Text>
@@ -115,53 +238,120 @@ const EditInformation = () => {
                                     <Icon name='user-tag' size={15} />
                                 </View>
 
-                                <View style={styles.viewEditInfo}>
-                                    <Text style={styles.text}>
-                                        Date of birth:
-                                    </Text>
-                                    <TextInput
-                                        value='22/12/2001'
-                                        style={styles.textInput}
-                                    />
-                                    <Icon name='calendar-alt' size={15} />
+                                {/* date of birth */}
+                                <View>
+                                    <View style={styles.viewEditInfo}>
+                                        <Text
+                                            style={[
+                                                styles.text,
+                                                isValidDateBirth === false && {
+                                                    color: global.error,
+                                                },
+                                            ]}
+                                        >
+                                            Date of birth:
+                                        </Text>
+                                        <TextInput
+                                            style={[
+                                                styles.textInput,
+                                                isValidDateBirth === false &&
+                                                    styles.inputBoxError,
+                                            ]}
+                                            value={dateOfBirth}
+                                            placeholder='dd-mm-yyyy'
+                                            onChangeText={handleChangeDateBirth}
+                                        />
+                                        <Icon name='calendar-alt' size={15} />
+                                    </View>
+                                    {isValidDateBirth === false &&
+                                        !!dateOfBirth && (
+                                            <Text style={styles.errorMessage}>
+                                                Incorrect format dd-mm-yyyy
+                                            </Text>
+                                        )}
                                 </View>
 
-                                <View style={styles.viewEditInfo}>
-                                    <Text style={styles.text}>
-                                        Phone number:
-                                    </Text>
-                                    <TextInput
-                                        value='0342648465'
-                                        style={styles.textInput}
-                                    />
-                                    <Icon name='phone' size={15} />
+                                {/* phone number */}
+                                <View>
+                                    <View style={styles.viewEditInfo}>
+                                        <Text
+                                            style={[
+                                                styles.text,
+                                                isValidPhoneNumber ===
+                                                    false && {
+                                                    color: global.error,
+                                                },
+                                            ]}
+                                        >
+                                            Phone number:
+                                        </Text>
+                                        <TextInput
+                                            value={phoneNumber}
+                                            style={[
+                                                styles.textInput,
+                                                isValidPhoneNumber === false &&
+                                                    styles.inputBoxError,
+                                            ]}
+                                            placeholder='09xxxxxxxx'
+                                            onChangeText={
+                                                handleChangePhoneNumber
+                                            }
+                                        />
+                                        <Icon name='phone' size={15} />
+                                        <Image
+                                            source={require('../../assets/images/vietnam-flag.png')}
+                                            style={{
+                                                height: 25,
+                                                width: 25,
+                                                marginLeft: 10,
+                                            }}
+                                        />
+                                    </View>
+                                    {isValidPhoneNumber === false && (
+                                        <Text style={styles.errorMessage}>
+                                            Incorrect phone number format(The
+                                            phone number has a length of 10 and
+                                            is a Vietnamese phone number)
+                                        </Text>
+                                    )}
                                 </View>
 
+                                {/* address */}
                                 <View style={styles.viewEditInfo}>
                                     <Text style={styles.text}>Address:</Text>
                                     <TextInput
-                                        value='123 NewYork USA'
                                         style={styles.textInput}
+                                        value={address}
+                                        placeholder='Ex: 123 NewYork USA'
+                                        onChangeText={handleChangeAddress}
+                                        multiline
                                     />
                                     <Icon name='map-location' size={15} />
                                 </View>
                             </View>
                         </View>
 
-                        <View>
+                        <View style={{ width: '100%' }}>
                             <Text style={styles.titlePart}>Slogan</Text>
                             <View style={styles.viewInformation}>
                                 <View style={styles.viewEditInfo}>
                                     <TextInput
-                                        value='I love fast food'
-                                        style={styles.textInput}
+                                        value={slogan}
+                                        placeholder='Write down your thoughts here'
+                                        onChangeText={handleChangeSlogan}
+                                        style={[styles.textSlogan]}
+                                        multiline
                                     />
                                     <Icon name='pencil' size={15} />
                                 </View>
                             </View>
                         </View>
+                        <Button
+                            title='Submit'
+                            handlePress={handlePressSubmit}
+                            disabled={disableSubmit}
+                        />
                     </ScrollView>
-                    <Button title='Submit' />
                 </KeyboardAvoidingView>
             </TouchableWithoutFeedback>
         </View>
@@ -202,6 +392,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
+    errorMessage: {
+        color: global.error,
+        fontSize: 13,
+        marginBottom: 10,
+        fontStyle: 'italic',
+    },
+    inputBoxError: {
+        borderBottomColor: global.error,
+    },
     text: {
         fontSize: 16,
         color: global.textPrimaryColor,
@@ -212,6 +411,13 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 15,
         minWidth: 100,
+        maxWidth: 150,
+    },
+    textSlogan: {
+        borderBottomWidth: 1,
+        marginLeft: 10,
+        marginRight: 15,
+        width: '80%',
     },
 
     // dropdown
