@@ -1,4 +1,5 @@
 import { UserModel } from '../models/index.js'
+import jwt from 'jsonwebtoken'
 
 const register = async ({ email, password }) => {
     const existedUser = await UserModel.findOne({
@@ -35,8 +36,15 @@ const login = async ({ email, password }) => {
         throw new Error('Tài khoản hoặc mật khẩu sai.')
     }
 
+    const token = await jwt.sign(
+        { id: user._id, email },
+        process.env.PRIVATE_KEY,
+        { algorithm: 'RS256' },
+    )
+
     return {
         message: 'Đăng nhập thành công',
+        token,
         userInfo: { ...user._doc, password: 'Not show' },
     }
 }
