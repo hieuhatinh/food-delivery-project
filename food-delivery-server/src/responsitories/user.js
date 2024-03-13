@@ -102,8 +102,19 @@ const updateInfo = async ({
     return resultUpdate
 }
 
+const getUserInfo = async ({ id }) => {
+    const user = await UserModel.findOne({ _id: id })
+
+    if (!user) {
+        throw new Error('Người dùng không tồn tại trong hệ thống')
+    }
+
+    return { ...user._doc, password: 'Not show' }
+}
+
 export default {
     register,
     login,
     updateInfo,
+    getUserInfo,
 }

@@ -57,8 +57,26 @@ const updateInfo = async (req, res) => {
     }
 }
 
+const getUserInfo = async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const user = await userResponsitories.getUserInfo({ id })
+
+        return res.status(200).json({
+            ...user,
+            message: 'Lấy thông tin thành công',
+        })
+    } catch (error) {
+        return res.status(404).json({
+            message: error.message,
+        })
+    }
+}
+
 export default {
     register,
     login,
     updateInfo,
+    getUserInfo,
 }
