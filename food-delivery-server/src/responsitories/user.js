@@ -76,28 +76,19 @@ const updateInfo = async ({
         }
     }
 
-    const existUser = await UserModel.findOne({ _id: { $ne: id } })
+    const existUser = await UserModel.findOne({ _id: id })
 
     if (!existUser) {
         throw new Error('Người dùng không tồn tại')
     }
 
-    const resultUpdate = await UserModel.updateOne(
-        {
-            _id: id,
-        },
-        {
-            fullName,
-            phoneNumber,
-            address,
-            sex,
-            dateOfBirth,
-        },
-    )
-
-    if (!resultUpdate) {
-        throw new Error('Người dùng không tồn tại trong hệ thống')
-    }
+    const resultUpdate = await UserModel.updateOne({
+        fullName,
+        phoneNumber,
+        address,
+        sex,
+        dateOfBirth,
+    })
 
     return resultUpdate
 }
