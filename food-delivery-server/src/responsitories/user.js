@@ -39,7 +39,6 @@ const login = async ({ email, password }) => {
     const token = await jwt.sign(
         { id: user._id, email },
         process.env.PRIVATE_KEY,
-        { algorithm: 'RS256' },
     )
 
     return {
