@@ -1,22 +1,23 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import home from './screens/home'
-import Account from './screens/Account'
-import My_Button from './components/My_Button'
+import MenuProfile from './src/screens/MenuProfile'
+import Welcome from './src/screens/Welcome'
+import Notification from './src/screens/Notification'
+
 const Stack = createStackNavigator()
 
 export default function App() {
     return (
         <NavigationContainer>
-            <Stack.Navigator intitialRouteName='home' screenOptions = {{ headerShown:false}}>
-                <Stack.Screen name= "home" component = {home} />
-                <Stack.Screen name= "Account" component = {Account} />
+            <Stack.Navigator
+                intitialRouteName='Welcome'
+                screenOptions={{ headerShown: false }}
+            >
+                <Stack.Screen name='HomeScreen' component={Welcome} />
+                <Stack.Screen name='MenuProfile' component={MenuProfile} />
+                <Stack.Screen name='Notification' component={Notification} />
             </Stack.Navigator>
         </NavigationContainer>
-       
     )
 }
-
-
-
