@@ -1,4 +1,5 @@
 import {
+    Alert,
     Image,
     KeyboardAvoidingView,
     ScrollView,
@@ -12,6 +13,7 @@ import {
 import { useEffect, useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Icon from 'react-native-vector-icons/FontAwesome6'
+import { useNavigation } from '@react-navigation/native'
 
 import Button from '../../component/button/Button'
 import HeaderSecondary from '../../component/header/HeaderSecondary'
@@ -19,21 +21,50 @@ import Avatar from '../../component/Avatar'
 import { global } from '../../global'
 import { validDate, validPhoneNumber } from '../../validation'
 import useDebounce from '../../hooks/useDebounce'
+import axiosClient from '../../api/axiosClient'
+import Loading from '../../component/Loading'
 
-const EditInformation = () => {
+const items = [
+    { label: 'Male', value: 'male' },
+    { label: 'Female', value: 'female' },
+    { label: 'Other', value: 'Other' },
+]
+
+const EditInformation = ({ route }) => {
+    const { userInfo } = route.params
+    const labelSex =
+        userInfo.sex && items.find((item) => item.value === userInfo.sex).label
+    let dateTimeArr = userInfo.dateOfBirth.substring(0, 10).split('-')
+    let dateString = `${dateTimeArr[2]}-${dateTimeArr[1]}-${dateTimeArr[0]}`
+
     const insets = useSafeAreaInsets() // safe area view
 
+    const navigation = useNavigation()
     const [isOpen, setIsOpen] = useState(false) // dropdown list item sex
 
-    const [fullName, setFullName] = useState(null)
-    const [sex, setSex] = useState({ label: null, value: null })
-    const [dateOfBirth, setDateOfBirth] = useState(null)
-    const [phoneNumber, setPhoneNumber] = useState(null)
-    const [address, setAddress] = useState(null)
-    const [slogan, setSlogan] = useState(null)
+    const [fullName, setFullName] = useState(userInfo.fullName || null)
+    const [sex, setSex] = useState({
+        label: labelSex,
+        value: userInfo.sex || null,
+    })
+    const [dateOfBirth, setDateOfBirth] = useState(dateString || null)
+    const [phoneNumber, setPhoneNumber] = useState(userInfo.phoneNumber || null)
+    const [address, setAddress] = useState(userInfo.address || null)
+    const [slogan, setSlogan] = useState(userInfo.slogan || null)
     const [isValidDateBirth, setIsValidDateBirth] = useState()
     const [isValidPhoneNumber, setIsValidPhoneNumber] = useState()
     const [disableSubmit, setDisableSubmit] = useState()
+
+    const [loading, setLoading] = useState(false)
+
+    // dropdown list item sex
+    const toggleDropdown = () => {
+        setIsOpen(!isOpen)
+    }
+
+    const handlePressOutside = () => {
+        setIsOpen(false)
+    }
 
     // xử lý fullName, sex
     const handleChangeFullname = (value) => {
@@ -86,38 +117,56 @@ const EditInformation = () => {
     }
 
     // xử lý khi submit
-    const handlePressSubmit = () => {
-        console.log({
-            fullName,
-            sex,
-            dateOfBirth,
-            phoneNumber,
-            address,
-            slogan,
-        })
+    const handlePressSubmit = async () => {
+        setLoading(true)
+        let dateArr = dateOfBirth.split('-')
+        let dateStr = `${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`
+        try {
+            const userInfoUpdate = await axiosClient.patch(
+                '/user/65e5f6c0fe2f097520f7248c/update-information',
+                {
+                    fullName,
+                    phoneNumber,
+                    address,
+                    sex: sex.value,
+                    dateOfBirth: dateStr,
+                    slogan,
+                },
+            )
+            if (userInfoUpdate.status === 200) {
+                Alert.alert('Thông báo', userInfoUpdate.data.message, [
+                    {
+                        text: 'OK',
+                        onPress: () => navigation.navigate('PersonalInfo'),
+                    },
+                ])
+                setLoading(false)
+            }
+        } catch (error) {
+            console.log(error)
+            if (error.response.status === 404) {
+                Alert.alert('Thông báo', error.response.data.message)
+            }
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
-        if (!!fullName || !!sex.value || !!address || !!slogan) {
-            setDisableSubmit(false)
-        } else {
-            setDisableSubmit(true)
+        setDisableSubmit(
+            !(
+                (!!fullName && fullName !== userInfo.fullName) ||
+                (!!sex.value && sex.value !== userInfo.sex) ||
+                (!!address && address !== userInfo.address) ||
+                (!!slogan && slogan !== userInfo.slogan)
+            ),
+        )
+
+        if (!!dateOfBirth && dateOfBirth !== dateString) {
+            setDisableSubmit(!(isValidDateBirth === true))
         }
 
-        if (!!dateOfBirth) {
-            if (isValidDateBirth === true) {
-                setDisableSubmit(false)
-            } else {
-                setDisableSubmit(true)
-            }
-        }
-
-        if (!!phoneNumber) {
-            if (isValidPhoneNumber === true) {
-                setDisableSubmit(false)
-            } else {
-                setDisableSubmit(true)
-            }
+        if (!!phoneNumber && phoneNumber !== userInfo.phoneNumber) {
+            setDisableSubmit(!(isValidPhoneNumber === true))
         }
     }, [
         fullName,
@@ -129,21 +178,6 @@ const EditInformation = () => {
         isValidDateBirth,
         isValidPhoneNumber,
     ])
-
-    // dropdown list item sex
-    const items = [
-        { label: 'Male', value: 'male' },
-        { label: 'Female', value: 'female' },
-        { label: 'Other', value: 'Other' },
-    ]
-
-    const toggleDropdown = () => {
-        setIsOpen(!isOpen)
-    }
-
-    const handlePressOutside = () => {
-        setIsOpen(false)
-    }
 
     return (
         <View
@@ -157,6 +191,7 @@ const EditInformation = () => {
                 },
             ]}
         >
+            {loading && <Loading />}
             <TouchableWithoutFeedback onPress={handlePressOutside}>
                 <KeyboardAvoidingView
                     style={styles.keyBoardAvoidingView}

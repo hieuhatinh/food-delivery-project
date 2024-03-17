@@ -1,20 +1,49 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Alert, StyleSheet, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useNavigation } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
+import { useEffect, useState } from 'react'
 
 import Button from '../../component/button/Button'
 import HeaderSecondary from '../../component/header/HeaderSecondary'
 import Avatar from '../../component/Avatar'
 import { global } from '../../global'
+import axiosClient from '../../api/axiosClient'
+import { calculateAge } from '../../caculator'
+import Loading from '../../component/Loading'
 
 const PersonalInfo = () => {
     const insets = useSafeAreaInsets()
 
     const navigation = useNavigation()
+    const isFocused = useIsFocused()
+
+    const [userInfo, setUserInfo] = useState()
+    const [isLoading, setIsLoading] = useState(true)
 
     const handlePressEdit = () => {
-        navigation.navigate('EditInformation')
+        navigation.navigate('EditInformation', { userInfo })
     }
+
+    useEffect(() => {
+        if (isFocused === true) {
+            const fetchData = async () => {
+                try {
+                    const user = await axiosClient.get(
+                        '/user/65e5f6c0fe2f097520f7248c/get-information',
+                    )
+                    setUserInfo(user.data)
+
+                    setIsLoading(false)
+                } catch (error) {
+                    if (error.response.status === 404) {
+                        Alert.alert('Thông báo', error.response.data.message)
+                    }
+                    setIsLoading(false)
+                }
+            }
+            fetchData()
+        }
+    }, [isFocused])
 
     return (
         <View
@@ -29,25 +58,95 @@ const PersonalInfo = () => {
             ]}
         >
             <HeaderSecondary title='Personal Information' />
-            <View style={styles.content}>
-                <View style={styles.introduce}>
-                    <Avatar />
-                    <View style={styles.info}>
-                        <Text style={styles.textName}>Hiếu</Text>
-                        <Text style={styles.textSlogan}>I love fast food</Text>
+
+            {isLoading ? (
+                <Loading />
+            ) : (
+                <View style={styles.content}>
+                    <View style={styles.introduce}>
+                        <Avatar />
+                        <View style={styles.info}>
+                            <Text style={styles.textName}>
+                                {userInfo.fullName.split(' ')[
+                                    userInfo.fullName.split(' ').length - 1
+                                ] || userInfo.email}
+                            </Text>
+                            <Text style={styles.textSlogan}>
+                                {userInfo.slogan || null}
+                            </Text>
+                        </View>
+                    </View>
+                    <View style={styles.information}>
+                        <Text style={styles.text}>
+                            Full name:{' '}
+                            <Text
+                                style={[
+                                    styles.text,
+                                    !userInfo.fullName && styles.notData,
+                                ]}
+                            >
+                                {!!userInfo.fullName
+                                    ? userInfo.fullName
+                                    : 'None'}
+                            </Text>
+                        </Text>
+                        <Text style={styles.text}>
+                            Sex:{' '}
+                            <Text
+                                style={[
+                                    styles.text,
+                                    !userInfo.sex && styles.notData,
+                                ]}
+                            >
+                                {!!userInfo.sex ? userInfo.sex : 'None'}
+                            </Text>
+                        </Text>
+                        {/* Age */}
+                        <Text style={styles.text}>
+                            Age:{' '}
+                            <Text
+                                style={[
+                                    styles.text,
+                                    !userInfo.dateOfBirth && styles.notData,
+                                ]}
+                            >
+                                {!!userInfo.dateOfBirth
+                                    ? calculateAge(userInfo.dateOfBirth)
+                                    : 'None'}
+                            </Text>
+                        </Text>
+                        <Text style={styles.text}>
+                            Phone number:{' '}
+                            <Text
+                                style={[
+                                    styles.text,
+                                    !userInfo.phoneNumber && styles.notData,
+                                ]}
+                            >
+                                {!!userInfo.phoneNumber
+                                    ? userInfo.phoneNumber
+                                    : 'None'}
+                            </Text>
+                        </Text>
+                        <Text style={styles.text}>
+                            Address:{' '}
+                            <Text
+                                style={[
+                                    styles.text,
+                                    !userInfo.address && styles.notData,
+                                ]}
+                            >
+                                {!!userInfo.address ? userInfo.address : 'None'}
+                            </Text>
+                        </Text>
                     </View>
                 </View>
-                <View style={styles.information}>
-                    <Text style={styles.text}>
-                        Full name: Nguyễn Trung Hiếu
-                    </Text>
-                    <Text style={styles.text}>Sex: Male</Text>
-                    <Text style={styles.text}>Age: 25</Text>
-                    <Text style={styles.text}>Phone number: 097652423</Text>
-                    <Text style={styles.text}>Address: 123 NewYork USA</Text>
-                </View>
-            </View>
-            <Button title='Edit Information' handlePress={handlePressEdit} />
+            )}
+            <Button
+                title='Edit Information'
+                handlePress={handlePressEdit}
+                disabled={isLoading ? true : false}
+            />
         </View>
     )
 }
@@ -98,6 +197,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: global.textPrimaryColor,
         marginVertical: 10,
+    },
+    notData: {
+        color: global.error,
+        fontSize: 14,
     },
 })
 
