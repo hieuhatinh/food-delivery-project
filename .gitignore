@@ -37,3 +37,4 @@ FoodDeliveryApp/.env*.local
 
 # typescript
 FoodDeliveryApp/*.tsbuildinfo
+node_modules

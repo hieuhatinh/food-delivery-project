@@ -7,4 +7,7 @@ userRouter.post('/login', userController.login)
 
 userRouter.post('/register', userController.register)
 
+userRouter.patch('/:id/update-information', userController.updateInfo)
+userRouter.get('/:id/get-information', userController.getUserInfo)
+
 export default userRouter

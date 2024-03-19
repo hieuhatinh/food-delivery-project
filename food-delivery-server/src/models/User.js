@@ -14,6 +14,27 @@ const userSchema = new Schema({
     fullName: {
         type: String,
         require: false,
+        default: null,
+    },
+    phoneNumber: {
+        type: String,
+        require: false,
+    },
+    address: {
+        type: String,
+        require: false,
+        default: null,
+    },
+    sex: {
+        enum: ['male', 'female', 'other'],
+        type: String,
+        default: null,
+        require: false,
+    },
+    dateOfBirth: {
+        type: Date,
+        require: false,
+        default: null,
     },
     role: {
         type: String,
