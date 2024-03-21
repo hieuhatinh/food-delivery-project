@@ -1,38 +1,54 @@
+import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
-import PersonalInfo from './src/screen/PersonalInfo'
-import EditInformation from './src/screen/PersonalInfo/EditInformation'
+import { Provider } from 'react-redux'
+import store from './src/store'
+
+import MenuProfile from './src/screens/MenuProfile'
+import Welcome from './src/screens/Welcome'
+import Notification from './src/screens/Notification'
+import PersonalInfo from './src/screens/PersonalInfo'
+import EditInformation from './src/screens/PersonalInfo/EditInformation'
+import SignIn from './src/screens/auth/SignIn'
+import SignUp from './src/screens/auth/SignUp'
+import Home from './src/screens/Home'
 
 const Stack = createNativeStackNavigator()
 
 function App() {
     return (
         <SafeAreaProvider>
-            <NavigationContainer>
-                <Stack.Navigator initialRouteName='PersonalInfo'>
-                    {/* <Stack.Group> */}
-                    <Stack.Screen
-                        name='PersonalInfo'
-                        component={PersonalInfo}
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name='EditInformation'
-                        component={EditInformation}
-                        options={{ headerShown: false }}
-                    />
-                    {/* </Stack.Group> */}
-                    {/* <Stack.Group screenOptions={{ presentation: 'modal' }}>
+            <Provider store={store}>
+                <NavigationContainer>
+                    <Stack.Navigator
+                        initialRouteName='Welcome'
+                        screenOptions={{ headerShown: false }}
+                    >
+                        <Stack.Screen name='Welcome' component={Welcome} />
+                        <Stack.Screen
+                            name='MenuProfile'
+                            component={MenuProfile}
+                        />
+                        <Stack.Screen
+                            name='PersonalInfo'
+                            component={PersonalInfo}
+                        />
                         <Stack.Screen
                             name='EditInformation'
                             component={EditInformation}
-                            options={{ headerShown: false }}
                         />
-                    </Stack.Group> */}
-                </Stack.Navigator>
-            </NavigationContainer>
+                        <Stack.Screen
+                            name='Notification'
+                            component={Notification}
+                        />
+                        <Stack.Screen name='SignIn' component={SignIn} />
+                        <Stack.Screen name='SignUp' component={SignUp} />
+                        <Stack.Screen name='Home' component={Home} />
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </Provider>
         </SafeAreaProvider>
     )
 }

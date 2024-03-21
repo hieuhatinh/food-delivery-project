@@ -1,21 +1,23 @@
 import { Alert, StyleSheet, Text, View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
-import Button from '../../component/button/Button'
-import HeaderSecondary from '../../component/header/HeaderSecondary'
-import Avatar from '../../component/Avatar'
+import Button from '../../components/button/Button'
 import { global } from '../../global'
 import axiosClient from '../../api/axiosClient'
 import { calculateAge } from '../../caculator'
-import Loading from '../../component/Loading'
+import Loading from '../../components/Loading'
+import AvatarComp from '../../components/AvatarComp'
+import BoundaryScreen from '../../components/BoundaryScreen'
+import HeaderSecondary from '../../components/header/HeaderSecondary'
 
 const PersonalInfo = () => {
-    const insets = useSafeAreaInsets()
-
     const navigation = useNavigation()
     const isFocused = useIsFocused()
+
+    // lấy id người dùng từ store redux
+    const userId = useSelector((state) => state.user.id)
 
     const [userInfo, setUserInfo] = useState()
     const [isLoading, setIsLoading] = useState(true)
@@ -29,7 +31,7 @@ const PersonalInfo = () => {
             const fetchData = async () => {
                 try {
                     const user = await axiosClient.get(
-                        '/user/65e5f6c0fe2f097520f7248c/get-information',
+                        `/user/${userId}/get-information`,
                     )
                     setUserInfo(user.data)
 
@@ -46,37 +48,23 @@ const PersonalInfo = () => {
     }, [isFocused])
 
     return (
-        <View
-            style={[
-                styles.container,
-                {
-                    paddingTop: insets.top + 10,
-                    paddingBottom: insets.bottom + 20,
-                    paddingLeft: insets.left,
-                    paddingRight: insets.right,
-                },
-            ]}
-        >
+        <BoundaryScreen>
             <HeaderSecondary title='Personal Information' />
 
             {isLoading ? (
                 <Loading />
             ) : (
                 <View style={styles.content}>
-                    <View style={styles.introduce}>
-                        <Avatar />
-                        <View style={styles.info}>
-                            <Text style={styles.textName}>
-                                {userInfo.fullName.split(' ')[
-                                    userInfo.fullName.split(' ').length - 1
-                                ] || userInfo.email}
-                            </Text>
-                            <Text style={styles.textSlogan}>
-                                {userInfo.slogan || null}
-                            </Text>
-                        </View>
-                    </View>
+                    <AvatarComp
+                        name={
+                            userInfo.fullName?.split(' ')[
+                                userInfo.fullName?.split(' ').length - 1
+                            ] || userInfo.email
+                        }
+                        slogan={userInfo.slogan || null}
+                    />
                     <View style={styles.information}>
+                        {/* fullname */}
                         <Text style={styles.text}>
                             Full name:{' '}
                             <Text
@@ -90,6 +78,8 @@ const PersonalInfo = () => {
                                     : 'None'}
                             </Text>
                         </Text>
+
+                        {/* sex */}
                         <Text style={styles.text}>
                             Sex:{' '}
                             <Text
@@ -101,6 +91,7 @@ const PersonalInfo = () => {
                                 {!!userInfo.sex ? userInfo.sex : 'None'}
                             </Text>
                         </Text>
+
                         {/* Age */}
                         <Text style={styles.text}>
                             Age:{' '}
@@ -115,6 +106,8 @@ const PersonalInfo = () => {
                                     : 'None'}
                             </Text>
                         </Text>
+
+                        {/* Phone number */}
                         <Text style={styles.text}>
                             Phone number:{' '}
                             <Text
@@ -128,6 +121,8 @@ const PersonalInfo = () => {
                                     : 'None'}
                             </Text>
                         </Text>
+
+                        {/* address */}
                         <Text style={styles.text}>
                             Address:{' '}
                             <Text
@@ -147,45 +142,15 @@ const PersonalInfo = () => {
                 handlePress={handlePressEdit}
                 disabled={isLoading ? true : false}
             />
-        </View>
+        </BoundaryScreen>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#fff',
-    },
     content: {
         flex: 1,
         marginVertical: 25,
         width: '90%',
-    },
-    introduce: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    avatar: {
-        width: 120,
-        height: 120,
-        borderRadius: 100,
-        overflow: 'hidden',
-        resizeMode: 'cover',
-    },
-    info: {
-        flexDirection: 'column',
-        marginLeft: 30,
-    },
-    textName: {
-        fontSize: 24,
-        color: global.textPrimaryColor,
-        fontWeight: '600',
-        marginBottom: 10,
-    },
-    textSlogan: {
-        fontSize: 14,
-        color: global.textFifthColor,
     },
     information: {
         backgroundColor: global.backgroundPrimaryColor,

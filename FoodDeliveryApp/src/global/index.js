@@ -9,6 +9,8 @@ export const global = {
     textThirdColor: '#646982',
     textFourthColor: '#939393',
     textFifthColor: '#A0A5BA',
+    textSixColor: '#F44336',
+    textLinkColor: '#3567E7',
     error: '#ef4444',
     disabled: '#ccc',
 }

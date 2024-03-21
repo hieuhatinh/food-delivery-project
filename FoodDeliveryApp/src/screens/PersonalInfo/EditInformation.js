@@ -11,18 +11,18 @@ import {
     View,
 } from 'react-native'
 import { useEffect, useState } from 'react'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Icon from 'react-native-vector-icons/FontAwesome6'
 import { useNavigation } from '@react-navigation/native'
 
-import Button from '../../component/button/Button'
-import HeaderSecondary from '../../component/header/HeaderSecondary'
-import Avatar from '../../component/Avatar'
+import Button from '../../components/button/Button'
+import HeaderSecondary from '../../components/header/HeaderSecondary'
+import Avatar from '../../components/Avatar'
 import { global } from '../../global'
 import { validDate, validPhoneNumber } from '../../validation'
 import useDebounce from '../../hooks/useDebounce'
 import axiosClient from '../../api/axiosClient'
-import Loading from '../../component/Loading'
+import Loading from '../../components/Loading'
+import BoundaryScreen from '../../components/BoundaryScreen'
 
 const items = [
     { label: 'Male', value: 'male' },
@@ -32,14 +32,16 @@ const items = [
 
 const EditInformation = ({ route }) => {
     const { userInfo } = route.params
+
+    // thông tin cũ của người dùng
     const labelSex =
         userInfo.sex && items.find((item) => item.value === userInfo.sex).label
-    let dateTimeArr = userInfo.dateOfBirth.substring(0, 10).split('-')
-    let dateString = `${dateTimeArr[2]}-${dateTimeArr[1]}-${dateTimeArr[0]}`
-
-    const insets = useSafeAreaInsets() // safe area view
+    let dateTimeArr = userInfo.dateOfBirth?.substring(0, 10).split('-')
+    let dateString =
+        !!dateTimeArr && `${dateTimeArr[2]}-${dateTimeArr[1]}-${dateTimeArr[0]}`
 
     const navigation = useNavigation()
+
     const [isOpen, setIsOpen] = useState(false) // dropdown list item sex
 
     const [fullName, setFullName] = useState(userInfo.fullName || null)
@@ -119,11 +121,11 @@ const EditInformation = ({ route }) => {
     // xử lý khi submit
     const handlePressSubmit = async () => {
         setLoading(true)
-        let dateArr = dateOfBirth.split('-')
-        let dateStr = `${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`
+        let dateArr = dateOfBirth?.split('-')
+        let dateStr = !!dateArr && `${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`
         try {
             const userInfoUpdate = await axiosClient.patch(
-                '/user/65e5f6c0fe2f097520f7248c/update-information',
+                `/user/${userInfo._id}/update-information`,
                 {
                     fullName,
                     phoneNumber,
@@ -133,6 +135,7 @@ const EditInformation = ({ route }) => {
                     slogan,
                 },
             )
+
             if (userInfoUpdate.status === 200) {
                 Alert.alert('Thông báo', userInfoUpdate.data.message, [
                     {
@@ -140,10 +143,10 @@ const EditInformation = ({ route }) => {
                         onPress: () => navigation.navigate('PersonalInfo'),
                     },
                 ])
+
                 setLoading(false)
             }
         } catch (error) {
-            console.log(error)
             if (error.response.status === 404) {
                 Alert.alert('Thông báo', error.response.data.message)
             }
@@ -180,17 +183,7 @@ const EditInformation = ({ route }) => {
     ])
 
     return (
-        <View
-            style={[
-                styles.container,
-                {
-                    paddingTop: insets.top + 10,
-                    paddingBottom: insets.bottom + 20,
-                    paddingLeft: insets.left,
-                    paddingRight: insets.right,
-                },
-            ]}
-        >
+        <BoundaryScreen>
             {loading && <Loading />}
             <TouchableWithoutFeedback onPress={handlePressOutside}>
                 <KeyboardAvoidingView
@@ -389,16 +382,11 @@ const EditInformation = ({ route }) => {
                     </ScrollView>
                 </KeyboardAvoidingView>
             </TouchableWithoutFeedback>
-        </View>
+        </BoundaryScreen>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#fff',
-    },
     keyBoardAvoidingView: {
         flex: 1,
         width: '100%',

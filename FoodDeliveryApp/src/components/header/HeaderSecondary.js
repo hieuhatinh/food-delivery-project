@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo'
 import { useNavigation } from '@react-navigation/native'
 
-import BoundaryIcon from '../button/BoundaryIcon'
+import BoundaryIcon from '../../components/button/BoundaryIcon'
 
 const HeaderSecondary = ({ title }) => {
     const navigation = useNavigation()

@@ -29,3 +29,9 @@ export const validDate = (dateString) => {
 export const validPhoneNumber = (phoneNumber) => {
     return /(84|0[3|5|7|8|9])+([0-9]{8})\b/g.test(phoneNumber)
 }
+
+export const validEmail = (email) => {
+    return /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(
+        email,
+    )
+}

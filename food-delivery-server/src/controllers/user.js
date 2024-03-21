@@ -34,7 +34,7 @@ const login = async (req, res) => {
 
 const updateInfo = async (req, res) => {
     const { id } = req.params
-    const { fullName, phoneNumber, address, sex, dateOfBirth, slogan } =
+    const { fullName, address, sex, slogan, phoneNumber, dateOfBirth } =
         req.body
 
     try {
@@ -53,6 +53,7 @@ const updateInfo = async (req, res) => {
             message: 'Cập nhật thông tin thành công',
         })
     } catch (error) {
+        console.log(error)
         return res.status(404).json({
             message: error.message,
         })
