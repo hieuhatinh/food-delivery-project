@@ -129,7 +129,7 @@ export default function SignUp({ navigation }) {
                         <View style={styles.heading}>
                             <Text style={styles.titel2}>please </Text>
                             <Link
-                                to={{ screen: 'SignUp' }}
+                                to={{ screen: 'SignIn' }}
                                 style={[
                                     styles.titel2,
                                     { color: global.textSixColor },
