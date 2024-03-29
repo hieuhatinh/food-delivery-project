@@ -14,6 +14,8 @@ import EditInformation from './src/screens/PersonalInfo/EditInformation'
 import SignIn from './src/screens/auth/SignIn'
 import SignUp from './src/screens/auth/SignUp'
 import Home from './src/screens/Home'
+import HomeV3 from './src/screens/auth/HomeV3'
+import ScreenSearch from './src/components/icon/ScreenSearch'
 
 const Stack = createNativeStackNavigator()
 
@@ -23,7 +25,7 @@ function App() {
             <Provider store={store}>
                 <NavigationContainer>
                     <Stack.Navigator
-                        initialRouteName='Welcome'
+                        initialRouteName='HomeV3'
                         screenOptions={{ headerShown: false }}
                     >
                         <Stack.Screen name='Welcome' component={Welcome} />
@@ -46,6 +48,8 @@ function App() {
                         <Stack.Screen name='SignIn' component={SignIn} />
                         <Stack.Screen name='SignUp' component={SignUp} />
                         <Stack.Screen name='Home' component={Home} />
+                        <Stack.Screen name='HomeV3' component={HomeV3} />
+                        <Stack.Screen name='ScreenSearch' component={ScreenSearch} />
                     </Stack.Navigator>
                 </NavigationContainer>
             </Provider>
