@@ -1,18 +1,23 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-export default function BoxFood({ text, image, paddingLeft }) {
+export default function CardCategory({ text, image }) {
     return (
-        <View style={[styles.order, { paddingLeft: paddingLeft }]}>
+        <TouchableOpacity style={styles.container} activeOpacity={0.9}>
             <View style={[styles.boxFood, styles.shadow]}>
-                <Image source={image} style={styles.imageFood} />
+                <Image
+                    source={image}
+                    style={styles.imageFood}
+                    resizeMode='cover'
+                />
             </View>
             <Text style={styles.nameFood}>{text}</Text>
-        </View>
+        </TouchableOpacity>
     )
 }
+
 const styles = StyleSheet.create({
-    order: {
-        paddingRight: 20,
+    container: {
+        paddingHorizontal: 10,
     },
     boxFood: {
         width: 120,
@@ -26,21 +31,22 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
-            height: 12,
+            height: 4,
         },
-        shadowOpacity: 1,
-        shadowRadius: 16.0,
-        elevation: 24,
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 10,
     },
     nameFood: {
         textAlign: 'center',
         paddingTop: 10,
         fontSize: 18,
         fontWeight: '600',
+        textTransform: 'capitalize',
     },
     imageFood: {
-        width: '80%',
-        height: '80%',
+        width: '85%',
+        height: '85%',
         borderRadius: 100,
     },
 })

@@ -2,11 +2,11 @@ import React from 'react'
 import { View, StyleSheet, Text, ScrollView } from 'react-native'
 import { useSelector } from 'react-redux'
 
-import MenuItem from './components/MenuItem'
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 import AvatarComp from '../../components/AvatarComp'
 import BoundaryScreen from '../../components/BoundaryScreen'
 import storage from '../../storage'
+import MenuItem from '../components/MenuItem'
 
 const profileCluster = [
     {

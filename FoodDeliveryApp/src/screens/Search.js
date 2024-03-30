@@ -6,111 +6,122 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome5'
-import KeyWord from './KeyWord'
-import SuggestRestaurants from './SuggestRestaurants'
-import FastFood from './FastFood'
+import Icon from 'react-native-vector-icons/Entypo'
 
-export default function Header({ navigation }) {
-    const suggests = [
-        { id: 1, suggest: 'Burge' },
-        { id: 2, suggest: 'Burge' },
-        { id: 3, suggest: 'Burge' },
-        { id: 4, suggest: 'Burge' },
-        { id: 5, suggest: 'Burge' },
-        { id: 6, suggest: 'Burge' },
-    ]
+import KeyWord from '../components/icon/KeyWord'
+import SuggestRestaurants from '../components/icon/SuggestRestaurants'
+import FastFood from '../components/icon/FastFood'
+import BoundaryScreen from '../components/BoundaryScreen'
 
-    const suggestRestaurants = [
-        {
-            id: 1,
-            restaurant: 'Pansi Restaurant',
-            image: require('../../assets/images/avatar.png'),
-            rate: 4.7,
-        },
-        {
-            id: 2,
-            restaurant: 'Pansi Restaurant',
-            image: require('../../assets/images/avatar.png'),
-            rate: 4.7,
-        },
-        {
-            id: 3,
-            restaurant: 'Pansi Restaurant',
-            image: require('../../assets/images/avatar.png'),
-            rate: 4.7,
-        },
-        {
-            id: 4,
-            restaurant: 'Pansi Restaurant',
-            image: require('../../assets/images/avatar.png'),
-            rate: 4.7,
-        },
-    ]
-    const popularFood = [
-        {
-            id: 1,
-            nameFood: 'Thịt luộc',
-            restaurant: 'Hà nội',
-            image: require('../../assets/images/logo.jpg'),
-        },
-        {
-            id: 2,
-            nameFood: 'Thịt luộc',
-            restaurant: 'Hà nội',
-            image: require('../../assets/images/logo.jpg'),
-        },
-        {
-            id: 3,
-            nameFood: 'Thịt luộc',
-            restaurant: 'Hà nội',
-            image: require('../../assets/images/logo.jpg'),
-        },
-        {
-            id: 4,
-            nameFood: 'Thịt luộc',
-            restaurant: 'Hà nội',
-            image: require('../../assets/images/logo.jpg'),
-        },
-    ]
+const suggests = [
+    { id: 1, suggest: 'Burge' },
+    { id: 2, suggest: 'Burge' },
+    { id: 3, suggest: 'Burge' },
+    { id: 4, suggest: 'Burge' },
+    { id: 5, suggest: 'Burge' },
+    { id: 6, suggest: 'Burge' },
+]
 
+const suggestRestaurants = [
+    {
+        id: 1,
+        restaurant: 'Pansi Restaurant',
+        image: require('../assets/images/avatar.png'),
+        rate: 4.7,
+    },
+    {
+        id: 2,
+        restaurant: 'Pansi Restaurant',
+        image: require('../assets/images/avatar.png'),
+        rate: 4.7,
+    },
+    {
+        id: 3,
+        restaurant: 'Pansi Restaurant',
+        image: require('../assets/images/avatar.png'),
+        rate: 4.7,
+    },
+    {
+        id: 4,
+        restaurant: 'Pansi Restaurant',
+        image: require('../assets/images/avatar.png'),
+        rate: 4.7,
+    },
+]
+const popularFood = [
+    {
+        id: 1,
+        nameFood: 'Thịt luộc',
+        restaurant: 'Hà nội',
+        image: require('../assets/images/logo.jpg'),
+    },
+    {
+        id: 2,
+        nameFood: 'Thịt luộc',
+        restaurant: 'Hà nội',
+        image: require('../assets/images/logo.jpg'),
+    },
+    {
+        id: 3,
+        nameFood: 'Thịt luộc',
+        restaurant: 'Hà nội',
+        image: require('../assets/images/logo.jpg'),
+    },
+    {
+        id: 4,
+        nameFood: 'Thịt luộc',
+        restaurant: 'Hà nội',
+        image: require('../assets/images/logo.jpg'),
+    },
+]
+
+export default function Search({ navigation }) {
     return (
-        <ScrollView>
-            <View style={styles.container}>
-                <View style={{ marginLeft: 20 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity
-                            style={styles.headerLeft}
-                            onPress={() => navigation.goBack()}
-                        >
-                            <Icon name='angle-left' size={25} />
-                        </TouchableOpacity>
-                        <View
-                            style={{
-                                paddingLeft: 20,
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <Text style={{ fontSize: 20 }}>Search</Text>
-                        </View>
-                        <View style={styles.headerRight}>
-                            <Icon
-                                name='shopping-bag'
-                                size={30}
-                                style={styles.iconBag}
-                            />
-                            <View style={styles.number}>
-                                <Text>2</Text>
-                            </View>
+        <BoundaryScreen>
+            {/* Header */}
+            <View style={{ marginLeft: 20 }}>
+                <View style={{ flexDirection: 'row' }}>
+                    <TouchableOpacity
+                        style={styles.headerLeft}
+                        onPress={() => navigation.goBack()}
+                    >
+                        <Icon name='chevron-left' size={25} />
+                    </TouchableOpacity>
+                    <View
+                        style={{
+                            paddingLeft: 20,
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Text style={{ fontSize: 20 }}>Search</Text>
+                    </View>
+                    <View style={styles.headerRight}>
+                        <Icon
+                            name='shopping-bag'
+                            size={30}
+                            style={styles.iconBag}
+                        />
+                        <View style={styles.number}>
+                            <Text>2</Text>
                         </View>
                     </View>
                 </View>
-                <View style={{ margin: 20, marginTop: 10 }}>
+            </View>
+            <ScrollView
+                style={styles.container}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ flex: 1 }}
+            >
+                <View style={{ marginTop: 10 }}>
                     <TextInput
                         placeholder='What will you like to eat?'
                         style={styles.search}
                     />
-                    <Icon name='search' size={30} style={styles.iconSearch} />
+                    <Icon
+                        name='magnifying-glass'
+                        size={25}
+                        style={styles.iconSearch}
+                    />
                 </View>
                 <View style={{ paddingTop: 20 }}>
                     <Text style={{ fontSize: 18, marginLeft: 20 }}>
@@ -156,14 +167,13 @@ export default function Header({ navigation }) {
                         ))}
                     </View>
                 </View>
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </BoundaryScreen>
     )
 }
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        marginTop: 40,
+        width: '95%',
     },
     row: {
         flexDirection: 'row',

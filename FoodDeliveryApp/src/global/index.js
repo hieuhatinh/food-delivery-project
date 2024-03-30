@@ -1,9 +1,10 @@
 export const global = {
     primaryColor: '#ff7622', // màu cam
     secondaryColor: '#121223',
-    thirdColor: '#E53935',
-    fourthColor: '#FFCA28',
+    thirdColor: '#E53935', // màu đỏ
+    fourthColor: '#FFCA28', // màu vàng
     backgroundPrimaryColor: '#ECF0F4',
+    backgroundTextInput: '#EBEBEB',
     textPrimaryColor: '#181C2E',
     textSecondaryColor: '#0d0d0d',
     textThirdColor: '#646982',
@@ -13,4 +14,5 @@ export const global = {
     textLinkColor: '#3567E7',
     error: '#ef4444',
     disabled: '#ccc',
+    textNote: '#A0A5BA',
 }

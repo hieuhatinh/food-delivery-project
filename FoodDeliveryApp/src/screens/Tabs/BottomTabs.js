@@ -1,7 +1,7 @@
 import { Text, View } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import Home from '../../components/icon/Home'
+import Home from '../Home'
 
 function Order() {
     return (
@@ -35,7 +35,7 @@ function Account() {
 
 const Tab = createBottomTabNavigator()
 
-function MyTabs() {
+export default function BottomTabs() {
     return (
         <Tab.Navigator
             initialRouteName='Home'
@@ -88,11 +88,5 @@ function MyTabs() {
                 }}
             />
         </Tab.Navigator>
-    )
-}
-
-export default function App() {
-    return (
-        <MyTabs />
     )
 }

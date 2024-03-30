@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         height: 50,
-        backgroundColor: '#EBEBEB',
+        backgroundColor: global.backgroundTextInput,
         borderRadius: 12,
         padding: 10,
     },
