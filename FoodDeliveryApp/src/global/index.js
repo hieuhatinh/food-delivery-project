@@ -15,4 +15,5 @@ export const global = {
     error: '#ef4444',
     disabled: '#ccc',
     textNote: '#A0A5BA',
+    headerHeight: 60,
 }

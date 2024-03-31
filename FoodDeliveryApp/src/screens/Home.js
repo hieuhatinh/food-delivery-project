@@ -6,6 +6,7 @@ import {
     View,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo'
+import { useNavigation } from '@react-navigation/native'
 
 import CardCategory from '../components/Card/CardCategory'
 import CardRestaurant from '../components/Card/CardRestaurant'
@@ -13,6 +14,7 @@ import HeaderHome from '../components/header/HeaderHome'
 import BoundaryScreen from '../components/BoundaryScreen'
 import SectionHeader from '../components/SectionHeader'
 import { global } from '../global'
+import OpenRestaurantsComp from './components/OpenRestaurantsComp'
 
 const categoryies = [
     {
@@ -29,28 +31,13 @@ const categoryies = [
     },
 ]
 
-const restaurants = [
-    {
-        id: 1,
-        nameRestaurant: 'rose garden restaurant',
-        image: require('../assets/images/restaurant.png'),
-        categories: 'Burger - Chiken - Riche - Wings',
-    },
-    {
-        id: 2,
-        nameRestaurant: 'rose garden restaurant',
-        image: require('../assets/images/restaurant.png'),
-        categories: 'Burger - Chiken - Riche - Wings',
-    },
-    {
-        id: 3,
-        nameRestaurant: 'rose garden restaurant',
-        image: require('../assets/images/restaurant.png'),
-        categories: 'Burger - Chiken - Riche - Wings',
-    },
-]
+export default function Home() {
+    const navigation = useNavigation()
 
-export default function Home({ navigation }) {
+    const handlePressAllCategories = () => {
+        navigation.navigate('AllCategories')
+    }
+
     return (
         <BoundaryScreen>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -75,11 +62,13 @@ export default function Home({ navigation }) {
 
                 {/* All categories */}
                 <View style={styles.section}>
-                    <SectionHeader titleSection='All Categories' />
+                    <SectionHeader
+                        titleSection='All Categories'
+                        handlePress={handlePressAllCategories}
+                    />
                     <ScrollView
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
-                        style={{ maxHeight: 200 }}
                     >
                         <View style={styles.row}>
                             {categoryies.map((item) => (
@@ -94,18 +83,7 @@ export default function Home({ navigation }) {
                 </View>
 
                 {/* Open Restaurants */}
-                <View style={styles.section}>
-                    <SectionHeader titleSection='Open Restaurants' />
-
-                    {restaurants.map((item) => (
-                        <CardRestaurant
-                            key={item.id}
-                            restaurant={item.nameRestaurant}
-                            categories={item.categories}
-                            image={item.image}
-                        />
-                    ))}
-                </View>
+                <OpenRestaurantsComp />
             </ScrollView>
         </BoundaryScreen>
     )
@@ -130,8 +108,5 @@ const styles = StyleSheet.create({
     textPlaceHolder: {
         color: global.textFourthColor,
         marginLeft: 10,
-    },
-    section: {
-        marginTop: 20,
     },
 })

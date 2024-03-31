@@ -190,7 +190,13 @@ const EditInformation = ({ route }) => {
                     style={styles.keyBoardAvoidingView}
                     behavior='padding'
                 >
-                    <HeaderSecondary title='Edit Information' />
+                    <HeaderSecondary
+                        iconRightSecond={{
+                            name: 'dots-three-horizontal',
+                        }}
+                    >
+                        <Text style={styles.title}>Edit Information</Text>
+                    </HeaderSecondary>
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         style={styles.content}
@@ -395,7 +401,11 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         marginVertical: 25,
-        width: '90%',
+        width: '95%',
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: '600',
     },
     viewAvatar: {
         alignItems: 'center',

@@ -3,7 +3,17 @@ import { global } from '../../global'
 
 const BoundaryIcon = ({ children, backgroundColor, size, handlePress }) => {
     return (
-        <TouchableOpacity style={styles.container} onPress={handlePress}>
+        <TouchableOpacity
+            style={[
+                styles.container,
+                {
+                    backgroundColor: backgroundColor
+                        ? backgroundColor
+                        : global.backgroundPrimaryColor,
+                },
+            ]}
+            onPress={handlePress}
+        >
             {children}
         </TouchableOpacity>
     )
@@ -11,7 +21,6 @@ const BoundaryIcon = ({ children, backgroundColor, size, handlePress }) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: global.backgroundPrimaryColor,
         width: 45,
         height: 45,
         borderRadius: '50%',

@@ -17,11 +17,14 @@ export default function CardCategory({ text, image }) {
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 10,
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        flex: 1,
+        alignItems: 'center',
     },
     boxFood: {
-        width: 120,
-        height: 120,
+        width: 135,
+        height: 135,
         backgroundColor: 'white',
         borderRadius: 24,
         justifyContent: 'center',

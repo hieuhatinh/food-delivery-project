@@ -12,7 +12,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { Link } from '@react-navigation/native'
 
-import SocialLogin from './components/SocialLogin'
+import SocialLogin from '../components/SocialLogin'
 import { validEmail } from '../../validation'
 import Loading from '../../components/Loading'
 import axiosClient from '../../api/axiosClient'

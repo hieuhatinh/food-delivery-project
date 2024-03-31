@@ -1,7 +1,8 @@
 import { Text, View } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import Icon from 'react-native-vector-icons/FontAwesome5'
+import Icon from 'react-native-vector-icons/Entypo'
 import Home from '../Home'
+import { global } from '../../global'
 
 function Order() {
     return (
@@ -40,7 +41,7 @@ export default function BottomTabs() {
         <Tab.Navigator
             initialRouteName='Home'
             screenOptions={{
-                tabBarActiveTintColor: '#e91e63',
+                tabBarActiveTintColor: global.primaryColor,
             }}
         >
             <Tab.Screen
@@ -61,7 +62,7 @@ export default function BottomTabs() {
                     headerShown: false,
                     tabBarLabel: 'Order',
                     tabBarIcon: ({ color, size }) => (
-                        <Icon name='border-all' size={size} color={color} />
+                        <Icon name='text-document' size={size} color={color} />
                     ),
                 }}
             />

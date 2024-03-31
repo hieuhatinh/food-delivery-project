@@ -14,7 +14,11 @@ import EditInformation from './src/screens/PersonalInfo/EditInformation'
 import SignIn from './src/screens/auth/SignIn'
 import SignUp from './src/screens/auth/SignUp'
 import BottomTabs from './src/screens/Tabs/BottomTabs'
+import Home from './src/screens/Home'
+import AllCategories from './src/screens/AllCategories'
 import Search from './src/screens/Search'
+import ResultByCategory from './src/screens/Search/ResultByCategory'
+import OpenRestaurants from './src/screens/OpenRestaurants'
 
 const Stack = createNativeStackNavigator()
 
@@ -24,7 +28,7 @@ function App() {
             <Provider store={store}>
                 <NavigationContainer>
                     <Stack.Navigator
-                        initialRouteName='Search'
+                        initialRouteName='BottomTabs'
                         screenOptions={{ headerShown: false }}
                     >
                         <Stack.Screen name='Welcome' component={Welcome} />
@@ -50,7 +54,20 @@ function App() {
                             name='BottomTabs'
                             component={BottomTabs}
                         />
+                        {/* <Stack.Screen name='Home' component={Home} /> */}
+                        <Stack.Screen
+                            name='AllCategories'
+                            component={AllCategories}
+                        />
+                        <Stack.Screen
+                            name='OpenRestaurants'
+                            component={OpenRestaurants}
+                        />
                         <Stack.Screen name='Search' component={Search} />
+                        <Stack.Screen
+                            name='ResultByCategory'
+                            component={ResultByCategory}
+                        />
                     </Stack.Navigator>
                 </NavigationContainer>
             </Provider>

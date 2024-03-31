@@ -2,11 +2,15 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo'
 import { global } from '../global'
 
-const SectionHeader = ({ titleSection }) => {
+const SectionHeader = ({ titleSection, handlePress }) => {
     return (
         <View style={[styles.boxTitle]}>
             <Text style={styles.titleSection}>{titleSection}</Text>
-            <TouchableOpacity style={styles.btnSeeAll} activeOpacity={0.9}>
+            <TouchableOpacity
+                style={styles.btnSeeAll}
+                activeOpacity={0.9}
+                onPress={handlePress}
+            >
                 <Text style={styles.seeAll}>See All</Text>
                 <Icon
                     name='chevron-right'

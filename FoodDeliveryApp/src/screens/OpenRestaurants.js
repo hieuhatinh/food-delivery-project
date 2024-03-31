@@ -1,0 +1,66 @@
+import React from 'react'
+import { FlatList, StyleSheet, Text } from 'react-native'
+
+import HeaderSecondary from '../components/header/HeaderSecondary'
+import BoundaryScreen from '../components/BoundaryScreen'
+import CardRestaurant from '../components/Card/CardRestaurant'
+
+const restaurants = [
+    {
+        id: 1,
+        nameRestaurant: 'rose garden restaurant',
+        image: require('../assets/images/restaurant.png'),
+        categories: 'Burger - Chiken - Riche - Wings',
+    },
+    {
+        id: 2,
+        nameRestaurant: 'rose garden restaurant',
+        image: require('../assets/images/restaurant.png'),
+        categories: 'Burger - Chiken - Riche - Wings',
+    },
+    {
+        id: 3,
+        nameRestaurant: 'rose garden restaurant',
+        image: require('../assets/images/restaurant.png'),
+        categories: 'Burger - Chiken - Riche - Wings',
+    },
+]
+
+const OpenRestaurants = () => {
+    return (
+        <BoundaryScreen>
+            <HeaderSecondary
+                iconRightSecond={{
+                    name: 'shopping-basket',
+                }}
+            >
+                <Text style={styles.title}>All Categories</Text>
+            </HeaderSecondary>
+
+            <FlatList
+                data={restaurants}
+                renderItem={({ item }) => (
+                    <CardRestaurant
+                        text={item.catgoryName}
+                        image={item.image}
+                    />
+                )}
+                keyExtractor={(item) => item.id}
+                numColumns={1}
+                showsVerticalScrollIndicator={false}
+                style={styles.flatlist}
+            />
+        </BoundaryScreen>
+    )
+}
+
+const styles = StyleSheet.create({
+    title: {
+        fontSize: 20,
+        fontWeight: '600',
+    },
+    flatlist: {
+        width: '92%',
+    },
+})
+export default OpenRestaurants

@@ -85,7 +85,13 @@ const MenuProfile = ({ navigation }) => {
 
     return (
         <BoundaryScreen>
-            <HeaderSecondary title='Menu Profile' />
+            <HeaderSecondary
+                iconRightSecond={{
+                    name: 'dots-three-horizontal',
+                }}
+            >
+                <Text style={styles.title}>Menu Profile</Text>
+            </HeaderSecondary>
             <ScrollView
                 style={styles.scrollMenu}
                 showsVerticalScrollIndicator={false}
@@ -155,8 +161,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     scrollMenu: {
-        width: '90%',
+        width: '95%',
         marginTop: 20,
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: '600',
     },
     box: {
         flexDirection: 'row',

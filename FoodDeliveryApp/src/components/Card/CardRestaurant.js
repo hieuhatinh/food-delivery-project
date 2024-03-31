@@ -1,43 +1,33 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome5'
+import Icon from 'react-native-vector-icons/FontAwesome6'
 import { global } from '../../global'
 
-export default function CardRestaurant({ restaurant, categories, image }) {
+const CardRestaurant = () => {
     return (
         <TouchableOpacity style={styles.container} activeOpacity={0.9}>
-            <View style={styles.restaurants}>
-                <Image source={image} style={styles.image} />
-                <View style={styles.iRestaurants}>
-                    <Text style={styles.textRestaurants}>{restaurant}</Text>
-                    <Text style={styles.categories}>{categories} </Text>
-                    <View style={styles.rate}>
-                        <View style={styles.row}>
-                            <Icon
-                                name='star'
-                                size={20}
-                                color={global.primaryColor}
-                            />
-                            <Text style={[styles.numberRate, styles.textInfo]}>
-                                4.7
-                            </Text>
-                        </View>
-                        <View style={styles.row}>
-                            <Icon
-                                name='car-side'
-                                size={20}
-                                color={global.primaryColor}
-                            />
-                            <Text style={styles.textInfo}>Free</Text>
-                        </View>
-                        <View style={styles.row}>
-                            <Icon
-                                name='clock'
-                                size={20}
-                                color={global.primaryColor}
-                            />
-                            <Text style={styles.textInfo}>20 min</Text>
-                        </View>
-                    </View>
+            <Image
+                source={require('../../assets/images/salats.png')}
+                resizeMode='cover'
+                style={styles.image}
+            />
+            <Text style={styles.restaurantName}>Rose Garden Restaurant</Text>
+            <Text style={styles.categories}> Burger-Chicken-Riche-Wings</Text>
+            <View style={styles.footer_Icon}>
+                <View style={styles.info}>
+                    <Icon name='star' color={global.primaryColor} size={20} />
+                    <Text>4.7</Text>
+                </View>
+                <View style={styles.info}>
+                    <Icon
+                        name='truck-fast'
+                        color={global.primaryColor}
+                        size={20}
+                    />
+                    <Text>Free</Text>
+                </View>
+                <View style={styles.info}>
+                    <Icon name='clock' color={global.primaryColor} size={20} />
+                    <Text>20 min</Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -46,48 +36,31 @@ export default function CardRestaurant({ restaurant, categories, image }) {
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center',
-        marginTop: 20,
+        marginVertical: 15,
+        gap: 8,
     },
     image: {
         width: '100%',
-        height: '60%',
-        borderRadius: 15,
+        height: 140,
+        borderRadius: 10,
     },
-    restaurants: {
-        width: '90%',
-        height: 250,
-        borderRadius: 15,
-        alignItems: 'center',
-    },
-    iRestaurants: {
-        paddingTop: 10,
-        width: '100%',
-    },
-    textRestaurants: {
-        fontSize: 18,
-        textTransform: 'capitalize',
-        color: global.textPrimaryColor,
-        marginBottom: 5,
+    restaurantName: {
+        fontSize: 20,
     },
     categories: {
-        color: global.textNote,
+        fontSize: 14,
+        color: '#a0a5ba',
     },
-    rate: {
+    footer_Icon: {
         flexDirection: 'row',
-        width: 250,
-        justifyContent: 'space-between',
-        marginTop: 15,
+        gap: 30,
+        marginTop: 10,
     },
-    row: {
+    info: {
         flexDirection: 'row',
         alignItems: 'center',
-    },
-    textInfo: {
-        marginLeft: 5,
-        color: global.textPrimaryColor,
-    },
-    numberRate: {
-        fontWeight: '700',
+        gap: 8,
     },
 })
+
+export default CardRestaurant

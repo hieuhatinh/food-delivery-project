@@ -49,7 +49,13 @@ const PersonalInfo = () => {
 
     return (
         <BoundaryScreen>
-            <HeaderSecondary title='Personal Information' />
+            <HeaderSecondary
+                iconRightSecond={{
+                    name: 'dots-three-horizontal',
+                }}
+            >
+                <Text style={styles.title}>Personal Information</Text>
+            </HeaderSecondary>
 
             {isLoading ? (
                 <Loading />
@@ -150,7 +156,11 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         marginVertical: 25,
-        width: '90%',
+        width: '95%',
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: '600',
     },
     information: {
         backgroundColor: global.backgroundPrimaryColor,

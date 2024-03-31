@@ -38,7 +38,7 @@ const Button = ({
 const styles = StyleSheet.create({
     container: {
         backgroundColor: global.primaryColor,
-        width: '90%',
+        width: '95%',
         height: 50,
         borderRadius: 10,
         justifyContent: 'center',

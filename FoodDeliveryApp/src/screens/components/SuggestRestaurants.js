@@ -1,27 +1,30 @@
-import { Image, StyleSheet, View, Text } from 'react-native'
+import { Image, StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import { global } from '../../global'
 
-export default function suggestedRestaurants({ restaurant, rate, image }) {
+export default function SuggestRestaurants({ restaurant, rate, image }) {
     return (
-        <View style={styles.suggestedRestaurants}>
+        <TouchableOpacity
+            style={styles.suggestedRestaurants}
+            activeOpacity={0.8}
+        >
             <Image source={image} style={styles.imgRestaurants} />
             <View style={styles.pdImage}>
-                <Text>{restaurant}</Text>
+                <Text style={styles.restaurantName}>{restaurant}</Text>
                 <View style={styles.rate}>
-                    <Icon name='star' size={20} />
+                    <Icon name='star' size={15} color={global.primaryColor} />
                     <Text> {rate}</Text>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 const styles = StyleSheet.create({
     suggestedRestaurants: {
         flexDirection: 'row',
-        paddingTop: 20,
-        paddingBottom: 20,
+        paddingVertical: 15,
         borderBottomWidth: 1,
-        borderColor: '#98A8B8',
+        borderColor: '#ebebeb',
     },
     imgRestaurants: {
         width: 60,
@@ -31,8 +34,12 @@ const styles = StyleSheet.create({
     rate: {
         flexDirection: 'row',
         paddingTop: 10,
+        alignItems: 'center',
     },
     pdImage: {
         paddingLeft: 20,
+    },
+    restaurantName: {
+        fontSize: 16,
     },
 })
