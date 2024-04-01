@@ -8,15 +8,14 @@ import {
 import Icon from 'react-native-vector-icons/Entypo'
 import { useNavigation } from '@react-navigation/native'
 
+import { global } from '../global'
 import CardCategory from '../components/Card/CardCategory'
-import CardRestaurant from '../components/Card/CardRestaurant'
 import HeaderHome from '../components/header/HeaderHome'
 import BoundaryScreen from '../components/BoundaryScreen'
-import SectionHeader from '../components/SectionHeader'
-import { global } from '../global'
 import OpenRestaurantsComp from './components/OpenRestaurantsComp'
+import HeaderSection from '../components/header/HeaderSection'
 
-const categoryies = [
+const categories = [
     {
         catgoryName: 'Pizza',
         image: require('../assets/images/logo.jpg'),
@@ -62,7 +61,7 @@ export default function Home() {
 
                 {/* All categories */}
                 <View style={styles.section}>
-                    <SectionHeader
+                    <HeaderSection
                         titleSection='All Categories'
                         handlePress={handlePressAllCategories}
                     />
@@ -71,11 +70,10 @@ export default function Home() {
                         showsHorizontalScrollIndicator={false}
                     >
                         <View style={styles.row}>
-                            {categoryies.map((item) => (
+                            {categories.map((item) => (
                                 <CardCategory
                                     key={item.catgoryName}
-                                    text={item.catgoryName}
-                                    image={item.image}
+                                    {...item}
                                 />
                             ))}
                         </View>

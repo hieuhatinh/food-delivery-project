@@ -4,6 +4,7 @@ import { FlatList, StyleSheet, Text } from 'react-native'
 import HeaderSecondary from '../components/header/HeaderSecondary'
 import BoundaryScreen from '../components/BoundaryScreen'
 import CardRestaurant from '../components/Card/CardRestaurant'
+import CartNorify from '../components/icon/CartNotify'
 
 const restaurants = [
     {
@@ -29,12 +30,8 @@ const restaurants = [
 const OpenRestaurants = () => {
     return (
         <BoundaryScreen>
-            <HeaderSecondary
-                iconRightSecond={{
-                    name: 'shopping-basket',
-                }}
-            >
-                <Text style={styles.title}>All Categories</Text>
+            <HeaderSecondary iconNotify={<CartNorify />}>
+                <Text style={styles.title}>Open Restaurants</Text>
             </HeaderSecondary>
 
             <FlatList

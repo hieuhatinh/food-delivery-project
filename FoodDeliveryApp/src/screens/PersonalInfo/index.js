@@ -58,7 +58,9 @@ const PersonalInfo = () => {
             </HeaderSecondary>
 
             {isLoading ? (
-                <Loading />
+                <View style={{height: '100%', width: '100%', top: 0}}>
+                    <Loading />
+                </View>
             ) : (
                 <View style={styles.content}>
                     <AvatarComp

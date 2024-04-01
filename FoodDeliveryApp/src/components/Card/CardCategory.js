@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-export default function CardCategory({ text, image }) {
+export default function CardCategory({ categoryName, image }) {
     return (
         <TouchableOpacity style={styles.container} activeOpacity={0.9}>
             <View style={[styles.boxFood, styles.shadow]}>
@@ -10,7 +10,7 @@ export default function CardCategory({ text, image }) {
                     resizeMode='cover'
                 />
             </View>
-            <Text style={styles.nameFood}>{text}</Text>
+            <Text style={styles.nameFood}>{categoryName}</Text>
         </TouchableOpacity>
     )
 }

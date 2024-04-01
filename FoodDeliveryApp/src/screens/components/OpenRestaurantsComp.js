@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import CardRestaurant from '../../components/Card/CardRestaurant'
-import SectionHeader from '../../components/SectionHeader'
+import HeaderSection from '../../components/header/HeaderSection'
 
 const restaurants = [
     {
@@ -35,9 +35,9 @@ const OpenRestaurantsComp = () => {
 
     return (
         <View style={styles.container}>
-            <SectionHeader
-                titleSection='Open Restaurants'
-                handlePress={handlePressOpenRes}
+            <HeaderSection
+                title='Open Restaurants'
+                handleSeeAll={handlePressOpenRes}
             />
 
             <View style={{ marginHorizontal: '5%' }}>

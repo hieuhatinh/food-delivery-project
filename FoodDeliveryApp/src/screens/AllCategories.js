@@ -4,8 +4,9 @@ import { FlatList, StyleSheet, Text } from 'react-native'
 import HeaderSecondary from '../components/header/HeaderSecondary'
 import BoundaryScreen from '../components/BoundaryScreen'
 import CardCategory from '../components/Card/CardCategory'
+import CartNorify from '../components/icon/CartNotify'
 
-const categoryies = [
+const categories = [
     {
         id: 1,
         catgoryName: 'Pizza',
@@ -41,16 +42,12 @@ const categoryies = [
 const AllCategories = () => {
     return (
         <BoundaryScreen>
-            <HeaderSecondary
-                iconRightSecond={{
-                    name: 'shopping-basket',
-                }}
-            >
+            <HeaderSecondary iconNotify={<CartNorify />}>
                 <Text style={styles.title}>All Categories</Text>
             </HeaderSecondary>
 
             <FlatList
-                data={categoryies}
+                data={categories}
                 renderItem={({ item }) => (
                     <CardCategory text={item.catgoryName} image={item.image} />
                 )}

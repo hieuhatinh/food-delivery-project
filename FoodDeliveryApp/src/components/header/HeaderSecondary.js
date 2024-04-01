@@ -5,7 +5,12 @@ import { useNavigation } from '@react-navigation/native'
 import BoundaryIcon from '../../components/button/BoundaryIcon'
 import { global } from '../../global'
 
-const HeaderSecondary = ({ children, iconRightFirst, iconRightSecond }) => {
+const HeaderSecondary = ({
+    children,
+    iconRightFirst,
+    iconRightSecond,
+    iconNotify,
+}) => {
     const navigation = useNavigation()
 
     const handlePressBack = () => {
@@ -32,11 +37,12 @@ const HeaderSecondary = ({ children, iconRightFirst, iconRightSecond }) => {
                         />
                     </BoundaryIcon>
                 )}
-                {iconRightSecond && (
-                    <BoundaryIcon>
+                <BoundaryIcon>
+                    {iconRightSecond?.name && (
                         <Icon name={iconRightSecond.name} size={20} />
-                    </BoundaryIcon>
-                )}
+                    )}
+                    {iconNotify}
+                </BoundaryIcon>
             </View>
         </View>
     )
@@ -50,6 +56,7 @@ const styles = StyleSheet.create({
         width: '95%',
         paddingBottom: 10,
         height: global.headerHeight,
+        zIndex: 100
     },
     row: {
         flexDirection: 'row',

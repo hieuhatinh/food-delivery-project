@@ -86,6 +86,7 @@ const MenuProfile = ({ navigation }) => {
     return (
         <BoundaryScreen>
             <HeaderSecondary
+                iconLeft={false}
                 iconRightSecond={{
                     name: 'dots-three-horizontal',
                 }}
@@ -162,7 +163,6 @@ const styles = StyleSheet.create({
     },
     scrollMenu: {
         width: '95%',
-        marginTop: 20,
     },
     title: {
         fontSize: 20,

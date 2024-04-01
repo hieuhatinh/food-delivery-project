@@ -3,7 +3,7 @@ import { View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo'
 import { global } from '../../global'
 
-const CardMeal = ({ mealName, restaurantName, price, image }) => {
+const CardMeal = ({ id, mealName, restaurantName, price, image }) => {
     return (
         <View style={styles.container}>
             <Image source={image} style={styles.image} resizeMode='cover' />

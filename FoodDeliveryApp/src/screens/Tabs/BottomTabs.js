@@ -1,8 +1,10 @@
 import { Text, View } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/Entypo'
-import Home from '../Home'
+
 import { global } from '../../global'
+import Home from '../Home'
+import MenuProfile from '../MenuProfile'
 
 function Order() {
     return (
@@ -20,16 +22,6 @@ function ShoppingCart() {
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
         >
             <Text>Shopping Cart!</Text>
-        </View>
-    )
-}
-
-function Account() {
-    return (
-        <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        >
-            <Text>Account!</Text>
         </View>
     )
 }
@@ -78,13 +70,13 @@ export default function BottomTabs() {
                 }}
             />
             <Tab.Screen
-                name='Account'
-                component={Account}
+                name='MenuProfile'
+                component={MenuProfile}
                 options={{
                     headerShown: false,
-                    tabBarLabel: 'Account',
+                    tabBarLabel: 'Menu',
                     tabBarIcon: ({ color, size }) => (
-                        <Icon name='user' size={size} color={color} />
+                        <Icon name='menu' size={size} color={color} />
                     ),
                 }}
             />

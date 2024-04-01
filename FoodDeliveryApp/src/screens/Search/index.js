@@ -6,6 +6,7 @@ import BoundaryScreen from '../../components/BoundaryScreen'
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 import React from 'react'
 import CardMeal from '../../components/Card/CardMeal'
+import CartNorify from '../../components/icon/CartNotify'
 
 const recentKeywords = [
     { id: 1, suggestName: 'Burge' },
@@ -78,11 +79,7 @@ export default function Search({ navigation }) {
     return (
         <BoundaryScreen>
             {/* Header */}
-            <HeaderSecondary
-                iconRightSecond={{
-                    name: 'shopping-basket',
-                }}
-            >
+            <HeaderSecondary iconNotify={<CartNorify />}>
                 <Text style={styles.title}>Search</Text>
             </HeaderSecondary>
 
