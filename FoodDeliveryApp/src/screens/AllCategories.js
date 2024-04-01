@@ -9,32 +9,32 @@ import CartNorify from '../components/icon/CartNotify'
 const categories = [
     {
         id: 1,
-        catgoryName: 'Pizza',
+        categoryName: 'Pizza',
         image: require('../assets/images/logo.jpg'),
     },
     {
         id: 2,
-        catgoryName: 'Burger',
+        categoryName: 'Burger',
         image: require('../assets/images/logo.jpg'),
     },
     {
         id: 3,
-        catgoryName: 'Chicken',
+        categoryName: 'Chicken',
         image: require('../assets/images/logo.jpg'),
     },
     {
         id: 4,
-        catgoryName: 'Chicken',
+        categoryName: 'Chicken',
         image: require('../assets/images/logo.jpg'),
     },
     {
         id: 5,
-        catgoryName: 'Chicken',
+        categoryName: 'Chicken',
         image: require('../assets/images/logo.jpg'),
     },
     {
         id: 6,
-        catgoryName: 'Chicken',
+        categoryName: 'Chicken',
         image: require('../assets/images/logo.jpg'),
     },
 ]
@@ -48,9 +48,7 @@ const AllCategories = () => {
 
             <FlatList
                 data={categories}
-                renderItem={({ item }) => (
-                    <CardCategory text={item.catgoryName} image={item.image} />
-                )}
+                renderItem={({ item }) => <CardCategory {...item} />}
                 keyExtractor={(item) => item.id}
                 numColumns={2}
                 showsVerticalScrollIndicator={false}

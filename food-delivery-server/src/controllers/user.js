@@ -53,7 +53,6 @@ const updateInfo = async (req, res) => {
             message: 'Cập nhật thông tin thành công',
         })
     } catch (error) {
-        console.log(error)
         return res.status(404).json({
             message: error.message,
         })

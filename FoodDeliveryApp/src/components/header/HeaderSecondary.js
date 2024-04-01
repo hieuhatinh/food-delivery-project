@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
         width: '95%',
         paddingBottom: 10,
         height: global.headerHeight,
-        zIndex: 100
+        zIndex: 100,
     },
     row: {
         flexDirection: 'row',

@@ -9,19 +9,19 @@ import CartNorify from '../components/icon/CartNotify'
 const restaurants = [
     {
         id: 1,
-        nameRestaurant: 'rose garden restaurant',
+        restaurantName: 'rose garden restaurant',
         image: require('../assets/images/restaurant.png'),
         categories: 'Burger - Chiken - Riche - Wings',
     },
     {
         id: 2,
-        nameRestaurant: 'rose garden restaurant',
+        restaurantName: 'rose garden restaurant',
         image: require('../assets/images/restaurant.png'),
         categories: 'Burger - Chiken - Riche - Wings',
     },
     {
         id: 3,
-        nameRestaurant: 'rose garden restaurant',
+        restaurantName: 'rose garden restaurant',
         image: require('../assets/images/restaurant.png'),
         categories: 'Burger - Chiken - Riche - Wings',
     },
@@ -36,12 +36,7 @@ const OpenRestaurants = () => {
 
             <FlatList
                 data={restaurants}
-                renderItem={({ item }) => (
-                    <CardRestaurant
-                        text={item.catgoryName}
-                        image={item.image}
-                    />
-                )}
+                renderItem={({ item }) => <CardRestaurant {...item} />}
                 keyExtractor={(item) => item.id}
                 numColumns={1}
                 showsVerticalScrollIndicator={false}

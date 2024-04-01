@@ -27,10 +27,18 @@ function App() {
             <Provider store={store}>
                 <NavigationContainer>
                     <Stack.Navigator
-                        initialRouteName='ResultByCategory'
+                        initialRouteName='BottomTabs'
                         screenOptions={{ headerShown: false }}
                     >
                         <Stack.Screen name='Welcome' component={Welcome} />
+                        <Stack.Screen name='SignIn' component={SignIn} />
+                        <Stack.Screen name='SignUp' component={SignUp} />
+                        <Stack.Screen
+                            name='BottomTabs'
+                            component={BottomTabs}
+                        />
+
+                        {/* Person infomation */}
                         <Stack.Screen
                             name='PersonalInfo'
                             component={PersonalInfo}
@@ -43,12 +51,7 @@ function App() {
                             name='Notification'
                             component={Notification}
                         />
-                        <Stack.Screen name='SignIn' component={SignIn} />
-                        <Stack.Screen name='SignUp' component={SignUp} />
-                        <Stack.Screen
-                            name='BottomTabs'
-                            component={BottomTabs}
-                        />
+
                         <Stack.Screen
                             name='AllCategories'
                             component={AllCategories}

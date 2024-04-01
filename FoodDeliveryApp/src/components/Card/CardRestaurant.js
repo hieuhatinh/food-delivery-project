@@ -2,7 +2,9 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome6'
 import { global } from '../../global'
 
-const CardRestaurant = () => {
+const CardRestaurant = ({ restaurantName, categories }) => {
+    console.log(categories)
+
     return (
         <TouchableOpacity style={styles.container} activeOpacity={0.9}>
             <Image
@@ -10,8 +12,12 @@ const CardRestaurant = () => {
                 resizeMode='cover'
                 style={styles.image}
             />
-            <Text style={styles.restaurantName}>Rose Garden Restaurant</Text>
-            <Text style={styles.categories}> Burger-Chicken-Riche-Wings</Text>
+            <Text style={styles.restaurantName} numberOfLines={1}>
+                {restaurantName}
+            </Text>
+            <Text style={styles.categories} numberOfLines={1}>
+                {categories}
+            </Text>
             <View style={styles.footer_Icon}>
                 <View style={styles.info}>
                     <Icon name='star' color={global.primaryColor} size={20} />
@@ -46,6 +52,7 @@ const styles = StyleSheet.create({
     },
     restaurantName: {
         fontSize: 20,
+        textTransform: 'capitalize',
     },
     categories: {
         fontSize: 14,

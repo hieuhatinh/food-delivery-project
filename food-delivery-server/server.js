@@ -6,6 +6,11 @@ import * as dotenv from 'dotenv'
 import routes from './src/routes/index.js'
 import connectDB from './src/database/index.js'
 
+// nhập dữ liệu vào restaurant, meal, category database
+// thêm vào giỏ hàng
+// tạo giỏ hàng ngay khi tạo tài khoản người dùng
+// lấy thông tin giỏ hàng
+
 dotenv.config()
 
 const app = express()

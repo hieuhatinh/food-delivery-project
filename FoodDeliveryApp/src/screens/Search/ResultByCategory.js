@@ -77,83 +77,80 @@ const ResultByCategory = () => {
         setIsOpenDropdown(!isOpenDropdown)
     }
 
-    const handlePressOutside = () => {
-        setIsOpenDropdown(false)
-    }
-
     return (
         <BoundaryScreen>
-            <TouchableWithoutFeedback onPress={handlePressOutside}>
-                <HeaderSecondary
-                    iconRightFirst={{
-                        backgroundColor: global.secondaryColor,
-                        name: 'magnifying-glass',
-                    }}
-                    iconNotify={<CartNorify />}
-                >
-                    <View>
-                        <TouchableOpacity
-                            style={styles.buttonListSearch}
-                            onPress={toggoleDropdown}
+            <HeaderSecondary
+                iconRightFirst={{
+                    backgroundColor: global.secondaryColor,
+                    name: 'magnifying-glass',
+                }}
+                iconNotify={<CartNorify />}
+            >
+                <View>
+                    <TouchableOpacity
+                        style={styles.buttonListSearch}
+                        onPress={toggoleDropdown}
+                        activeOpacity={0.8}
+                    >
+                        <Text
+                            style={styles.categoryName}
+                            numberOfLines={1}
+                            ellipsizeMode='tail'
                         >
-                            <Text
-                                style={styles.categoryName}
-                                numberOfLines={1}
-                                ellipsizeMode='tail'
+                            {category}
+                        </Text>
+                        <Icon name='triangle-down' size={20} color='#f58d1d' />
+                    </TouchableOpacity>
+                    {isOpenDropdown && (
+                        <View style={styles.viewDropdown}>
+                            <ScrollView
+                                style={[styles.dropdown]}
+                                showsVerticalScrollIndicator={false}
+                                contentContainerStyle={{
+                                    justifyContent: 'space-between',
+                                }}
                             >
-                                {category}
-                            </Text>
-                            <Icon
-                                name='triangle-down'
-                                size={20}
-                                color='#f58d1d'
-                            />
-                        </TouchableOpacity>
-                        <ScrollView
-                            style={styles.dropdown}
-                            showsVerticalScrollIndicator={false}
-                            contentContainerStyle={{
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <View style={{ height: 40 }} />
-                            {categories.map((item, index) => (
-                                <TouchableOpacity
-                                    key={index}
-                                    style={[
-                                        styles.item,
-                                        index !== categories.length &&
-                                            styles.borderBottom,
-                                    ]}
-                                    onPress={handleChooseCategory}
-                                >
-                                    <Text numberOfLines={2}>{item}</Text>
-                                </TouchableOpacity>
-                            ))}
-                        </ScrollView>
-                    </View>
-                </HeaderSecondary>
-
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    style={styles.scrollView}
-                >
-                    <View style={{ marginTop: 10 }}>
-                        <HeaderSection
-                            title='Popular Burgers'
-                            handleSeeAll={handleSeeAllMeals}
-                        />
-                        <View style={styles.boxMenu}>
-                            {meals.map((item) => (
-                                <CardMeal key={item.id} {...item} />
-                            ))}
+                                <View style={{ height: 40 }} />
+                                {categories.map((item, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        style={[
+                                            styles.item,
+                                            index !== categories.length - 1 &&
+                                                styles.borderBottom,
+                                        ]}
+                                        onPress={() =>
+                                            handleChooseCategory(item)
+                                        }
+                                    >
+                                        <Text numberOfLines={2}>{item}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </ScrollView>
                         </View>
-                    </View>
+                    )}
+                </View>
+            </HeaderSecondary>
 
-                    {/* Open restaurant */}
-                    <OpenRestaurantsComp />
-                </ScrollView>
-            </TouchableWithoutFeedback>
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                style={styles.scrollView}
+            >
+                <View style={{ marginTop: 10 }}>
+                    <HeaderSection
+                        title='Popular Burgers'
+                        handleSeeAll={handleSeeAllMeals}
+                    />
+                    <View style={styles.boxMenu}>
+                        {meals.map((item) => (
+                            <CardMeal key={item.id} {...item} />
+                        ))}
+                    </View>
+                </View>
+
+                {/* Open restaurant */}
+                <OpenRestaurantsComp />
+            </ScrollView>
         </BoundaryScreen>
     )
 }
@@ -161,7 +158,6 @@ const ResultByCategory = () => {
 const styles = StyleSheet.create({
     scrollView: {
         width: '95%',
-        marginTop: 5,
     },
     boxMenu: {
         flexDirection: 'row',
@@ -202,22 +198,26 @@ const styles = StyleSheet.create({
     },
 
     // dropdown categories
-    dropdown: {
+    viewDropdown: {
         position: 'absolute',
         top: 0,
         right: 0,
         width: '100%',
         height: 200,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+    },
+    dropdown: {
         borderRadius: 25,
         backgroundColor: '#fff',
         paddingHorizontal: 10,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 2,
-            height: 5,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
+        zIndex: 1,
+        overflow: 'hidden',
     },
     item: {
         paddingHorizontal: 10,
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     },
     borderBottom: {
         borderBottomColor: '#ccc',
-        borderWidth: 1,
+        borderBottomWidth: 1,
     },
 })
 
