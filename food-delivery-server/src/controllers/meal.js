@@ -41,19 +41,23 @@ const getDetailMeal = async (req, res) => {
 
 // restaurant
 const createMeal = async (req, res) => {
+    let artwork = req.file
     const { idRestaurant, idCategory } = req.params
-    const { foodName, price, artWork, describe, size } = req.body
-    console.log(req.body)
+    const { foodName, priceAndSize, describe } = req.body
+
+    let priceAndSizeArr = JSON.parse(priceAndSize).map((item) => ({
+        price: Number(item.price),
+        size: item.size,
+    }))
 
     try {
         const result = await mealResponsitories.createMeal({
             idRestaurant,
             idCategory,
             foodName,
-            price,
-            artWork,
+            priceAndSize: priceAndSizeArr,
+            artwork,
             describe,
-            size,
         })
 
         return res.status(200).json({

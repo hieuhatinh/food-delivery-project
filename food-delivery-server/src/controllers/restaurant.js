@@ -49,7 +49,7 @@ const createRestaurant = async (req, res) => {
             restaurantName,
             address,
             state,
-            rate,
+            rate: +rate,
             introduce,
             imageInfo,
         })
@@ -59,8 +59,7 @@ const createRestaurant = async (req, res) => {
             message: 'Lấy thông tin thành công',
         })
     } catch (error) {
-        console.log(error)
-        return res.status(error.statusCode).json({
+        return res.status(error.statusCode || 404).json({
             message: error.message,
         })
     }

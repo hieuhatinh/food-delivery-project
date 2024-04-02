@@ -6,7 +6,6 @@ import MealModel from './Meal.js'
 import OrderModel from './Order.js'
 import RestautantModel from './Restaurant.js'
 import ImageModel from './Image.js'
-import CategoryResModel from './CategoryRes.js'
 
 export {
     UserModel,
@@ -17,5 +16,4 @@ export {
     OrderModel,
     RestautantModel,
     ImageModel,
-    CategoryResModel,
 }

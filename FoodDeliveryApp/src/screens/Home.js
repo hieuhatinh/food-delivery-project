@@ -37,9 +37,11 @@ export default function Home() {
             let openRes = await axiosClient.get('/restaurant/get-restaurants', {
                 params: {
                     state: 'open',
-                    limit: 4,
+                    limit: 3,
                 },
             })
+            // console.log(categories.data)
+            // console.log(openRes.data)
 
             if (categories.status == 200 && openRes.status === 200) {
                 setCategories(categories.data.categories)

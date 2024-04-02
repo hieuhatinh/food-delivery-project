@@ -1,16 +1,54 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Base64 } from 'js-base64'
 
-export default function CardCategory({ categoryName, image }) {
+// // Hàm chuyển đổi mảng byte sang base64
+// const arrayToBase64 = (array) => {
+//     let binary = ''
+//     const bytes = new Uint8Array(array)
+//     const len = bytes.byteLength
+//     for (let i = 0; i < len; i++) {
+//         binary += String.fromCharCode(bytes[i])
+//     }
+//     return encodeBase64(binary)
+// }
+
+// // Hàm mã hóa base64
+// const encodeBase64 = (str) => {
+//     return Buffer.from(str, 'binary').toString('base64')
+// }
+
+export default function CardCategory(props, { image }) {
+    console.log(props.image.file)
+    // let base64Data = arrayToBase64(props.image.file.data.data)
+    // const buffer = Buffer.from(base64Data, 'base64')
+    // console.log(base64Data.join(''))
+    // const decodedString = Base64.decode(base64Data.join(''))
+    let contentType = props.image.file.contentType
+    // const imageURL = `data:${contentType};base64,${decodedString}`
+
+    // const base64Data = arrayBufferToBase64(data.data);
+    // const uri = `data:${contentType};base64,${base64Data}`
+    const data = props.image.file.data.data
+    const base64Data = data.reduce((acc, byte) => {
+        console.log(String.fromCharCode(byte))
+        return acc + String.fromCharCode(byte)
+    }, '')
+    const uri = `data:${contentType};base64,${base64Data}`
+    console.log(base64Data.length)
+
     return (
         <TouchableOpacity style={styles.container} activeOpacity={0.9}>
             <View style={[styles.boxFood, styles.shadow]}>
                 <Image
-                    source={image}
+                    // source={require('../../assets/images/logo.jpg')}
+                    source={{
+                        uri: uri,
+                    }}
                     style={styles.imageFood}
                     resizeMode='cover'
                 />
             </View>
-            <Text style={styles.nameFood}>{categoryName}</Text>
+            <Text style={styles.nameFood}>{props.categoryName}</Text>
         </TouchableOpacity>
     )
 }

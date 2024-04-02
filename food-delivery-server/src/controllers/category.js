@@ -17,27 +17,6 @@ const getCategory = async (req, res) => {
     }
 }
 
-const createNewCategory = async (req, res) => {
-    const imageInfo = req.file
-    const { categoryName } = req.body
-
-    try {
-        const result = await categoryResponsitories.createNewCategory({
-            categoryName,
-            imageInfo,
-        })
-
-        return res.status(200).json({
-            ...result,
-            message: 'Lấy thông tin thành công',
-        })
-    } catch (error) {
-        return res.status(error.statusCode).json({
-            message: error.message,
-        })
-    }
-}
-
 const searchByCategory = async (req, res) => {
     const limit = parseInt(req.query.limit)
     const { idCategory } = req.params
@@ -54,6 +33,27 @@ const searchByCategory = async (req, res) => {
         })
     } catch (error) {
         return res.status(404).json({
+            message: error.message,
+        })
+    }
+}
+
+const createNewCategory = async (req, res) => {
+    const imageInfo = req.file
+    const { categoryName } = req.body
+
+    try {
+        const result = await categoryResponsitories.createNewCategory({
+            categoryName,
+            imageInfo,
+        })
+
+        return res.status(200).json({
+            ...result,
+            message: 'Lấy thông tin thành công',
+        })
+    } catch (error) {
+        return res.status(error.statusCode || 404).json({
             message: error.message,
         })
     }

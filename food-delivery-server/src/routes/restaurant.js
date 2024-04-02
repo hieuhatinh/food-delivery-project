@@ -14,7 +14,7 @@ restaurantRouter.get(
 // restaurant (cần check role='restaurant')
 restaurantRouter.post(
     '/create',
-    uploadImage.single('image_res'),
+    uploadImage.single('imageRes'),
     restaurantController.createRestaurant,
 )
 
