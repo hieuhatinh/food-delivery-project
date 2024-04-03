@@ -10,7 +10,7 @@ const BoundaryScreen = ({ children }) => {
                 styles.container,
                 {
                     paddingTop: insets.top + 10,
-                    paddingBottom: insets.bottom + 20,
+                    paddingBottom: insets.bottom,
                     paddingLeft: insets.left,
                     paddingRight: insets.right,
                 },

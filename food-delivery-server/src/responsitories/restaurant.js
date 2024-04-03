@@ -2,25 +2,12 @@ import { Types } from 'mongoose'
 
 import { RestautantModel } from '../models/index.js'
 import ErrorHandler from '../Exception/ErrorHandler.js'
-import { createImage } from './image.js'
 
 const getRestaurants = async ({ limit, state }) => {
     const restaurants = await RestautantModel.find({
         state: state ? state : { $exists: true },
     })
         .populate('categories', '_id categoryName')
-        .populate({
-            path: 'image',
-            select: {
-                file: {
-                    data: {
-                        $toString: 'base64',
-                    },
-                    contentType: '$file.contentType',
-                },
-                fileName: '$fileName',
-            },
-        })
         .limit(limit)
 
     return restaurants
@@ -151,9 +138,9 @@ const createRestaurant = async ({
     restaurantName,
     address,
     state,
-    imageInfo,
     rate,
     introduce,
+    imageInfo,
 }) => {
     const exitRes = await RestautantModel.findOne({ restaurantName, address })
 
@@ -161,13 +148,15 @@ const createRestaurant = async ({
         throw new ErrorHandler('Quán ăn đã tồn tại', 409)
     }
 
-    const newImage = await createImage(imageInfo, restaurantName)
-
     const newRes = await RestautantModel.create({
         restaurantName,
         address,
         state,
-        image: new Types.ObjectId(newImage._id),
+        image: {
+            fileName: imageInfo.originalname,
+            path: imageInfo.path,
+            mimetype: imageInfo.mimetype,
+        },
         rate,
         introduce,
     })

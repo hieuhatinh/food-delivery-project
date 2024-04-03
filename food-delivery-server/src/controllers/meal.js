@@ -1,26 +1,5 @@
 import { mealResponsitories } from '../responsitories/index.js'
 
-const searchMeal = async (req, res) => {
-    const limit = parseInt(req.query.limit) || 6
-    const { searchValue } = req.query
-
-    try {
-        const result = await mealResponsitories.searchMeal({
-            limit,
-            searchValue,
-        })
-
-        return res.status(200).json({
-            ...result,
-            message: 'Lấy thông tin thành công',
-        })
-    } catch (error) {
-        return res.status(404).json({
-            message: error.message,
-        })
-    }
-}
-
 const getDetailMeal = async (req, res) => {
     const { idMeal } = req.params
     try {
@@ -33,7 +12,7 @@ const getDetailMeal = async (req, res) => {
             message: 'Lấy thông tin thành công',
         })
     } catch (error) {
-        return res.status(404).json({
+        return res.status(error.statusCode || 404).json({
             message: error.message,
         })
     }
@@ -65,10 +44,10 @@ const createMeal = async (req, res) => {
             message: 'Tạo thành công món ăn',
         })
     } catch (error) {
-        return res.status(404).json({
+        return res.status(error.statusCode || 404).json({
             message: error.message,
         })
     }
 }
 
-export default { searchMeal, getDetailMeal, createMeal }
+export default { getDetailMeal, createMeal }

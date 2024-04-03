@@ -16,8 +16,11 @@ import BottomTabs from './src/screens/Tabs/BottomTabs'
 import AllCategories from './src/screens/AllCategories'
 import Search from './src/screens/Search'
 import ResultByCategory from './src/screens/Search/ResultByCategory'
-import OpenRestaurants from './src/screens/OpenRestaurants'
 import ResultByName from './src/screens/Search/ResultByName'
+import DetailRestaurant from './src/screens/restaurant/DetailRestaurant'
+import OpenRestaurants from './src/screens/restaurant/OpenRestaurants'
+
+// gọi API tìm kiếm theo loại đồ ăn
 
 const Stack = createNativeStackNavigator()
 
@@ -37,7 +40,6 @@ function App() {
                             name='BottomTabs'
                             component={BottomTabs}
                         />
-
                         {/* Person infomation */}
                         <Stack.Screen
                             name='PersonalInfo'
@@ -51,16 +53,19 @@ function App() {
                             name='Notification'
                             component={Notification}
                         />
-
                         <Stack.Screen
                             name='AllCategories'
                             component={AllCategories}
                         />
+                        {/* restaurant */}
                         <Stack.Screen
                             name='OpenRestaurants'
                             component={OpenRestaurants}
                         />
-
+                        <Stack.Screen
+                            name='DetailRestaurant'
+                            component={DetailRestaurant}
+                        />
                         {/* Search and result */}
                         <Stack.Screen name='Search' component={Search} />
                         <Stack.Screen

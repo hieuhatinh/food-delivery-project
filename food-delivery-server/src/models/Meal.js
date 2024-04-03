@@ -19,9 +19,16 @@ const mealSchema = new Schema({
         },
     ],
     artwork: {
-        type: Schema.Types.ObjectId,
-        ref: 'Image',
-        require: false,
+        fileName: {
+            type: String,
+            require: true,
+        },
+        path: String,
+        mimetype: String,
+        uploadTime: {
+            type: Date,
+            default: Date.now,
+        },
     },
     describe: {
         type: String,

@@ -3,21 +3,37 @@ import { View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo'
 import { global } from '../../global'
 
-const CardMeal = ({ id, mealName, restaurantName, price, image }) => {
+const CardMeal = (props) => {
+    console.log(props)
     return (
         <View style={styles.container}>
-            <Image source={image} style={styles.image} resizeMode='cover' />
+            <Image
+                source={{ uri: props?.artwork?.path }}
+                style={styles.image}
+                resizeMode='cover'
+            />
             <View style={styles.box}>
                 <Text
                     style={styles.mealName}
-                    numberOfLines={1}
+                    numberOfLines={2}
                     ellipsizeMode='tail'
                 >
-                    {mealName}
+                    {props?.foodName}
                 </Text>
-                <Text style={styles.restaurantName}>{restaurantName}</Text>
+                <Text
+                    numberOfLines={2}
+                    ellipsizeMode='tail'
+                    style={styles.restaurantName}
+                >
+                    {props?.restaurant?.restaurantName}
+                </Text>
                 <View style={styles.footer}>
-                    <Text style={styles.price}>{price}</Text>
+                    <Text style={styles.price}>
+                        {props?.priceAndSize[0]?.price.toLocaleString('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND',
+                        })}
+                    </Text>
                     <TouchableOpacity activeOpacity={0.9}>
                         <Icon
                             name='circle-with-plus'
@@ -41,12 +57,12 @@ const styles = StyleSheet.create({
     box: {
         borderRadius: 24,
         backgroundColor: 'white',
-        height: 140,
-        width: 160,
-        justifyContent: 'flex-start',
+        height: 180,
+        width: 170,
+        justifyContent: 'space-between',
         paddingVertical: 50,
         padding: 10,
-        gap: 5,
+        gap: 10,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,

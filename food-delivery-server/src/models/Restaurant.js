@@ -6,8 +6,16 @@ const restautantSchema = new Schema({
         require: true,
     },
     image: {
-        type: Schema.Types.ObjectId,
-        ref: 'Image',
+        fileName: {
+            type: String,
+            require: true,
+        },
+        path: String,
+        mimetype: String,
+        uploadTime: {
+            type: Date,
+            default: Date.now,
+        },
     },
     address: {
         type: String,

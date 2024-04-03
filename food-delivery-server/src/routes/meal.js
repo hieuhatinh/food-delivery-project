@@ -5,7 +5,6 @@ import uploadImage from '../middleware/uploadImage.js'
 const mealRouter = express.Router()
 
 // user
-mealRouter.post('/search', mealController.searchMeal)
 mealRouter.get('/:idMeal/detail', mealController.getDetailMeal)
 
 // restaurant (cần check role)

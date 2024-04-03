@@ -49,7 +49,7 @@ const createRestaurant = async (req, res) => {
             restaurantName,
             address,
             state,
-            rate: +rate,
+            rate: Number(rate),
             introduce,
             imageInfo,
         })

@@ -6,10 +6,6 @@ const categoryRouter = express.Router()
 
 // user
 categoryRouter.get('/get-categories', categoryController.getCategory)
-categoryRouter.post(
-    '/:idCategory/search-by-category',
-    categoryController.searchByCategory,
-)
 
 // admin (cần check role)
 categoryRouter.post(

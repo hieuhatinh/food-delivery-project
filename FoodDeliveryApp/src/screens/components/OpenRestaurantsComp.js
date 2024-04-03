@@ -14,6 +14,8 @@ const OpenRestaurantsComp = () => {
         navigation.navigate('OpenRestaurants')
     }
 
+    console.log(restaurants[0])
+
     return (
         <View style={styles.container}>
             <HeaderSection
@@ -29,6 +31,7 @@ const OpenRestaurantsComp = () => {
                         categories={item.categories
                             .map((item) => item.categoryName)
                             .join('-')}
+                        imageURI={item.image.path}
                     />
                 ))}
             </View>

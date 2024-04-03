@@ -1,21 +1,7 @@
-import { Types } from 'mongoose'
 import ErrorHandler from '../Exception/ErrorHandler.js'
 import { CategoryModel, MealModel, RestautantModel } from '../models/index.js'
-import { createImage } from './image.js'
 
 // user
-const searchMeal = async ({ limit, searchValue }) => {
-    const meals = await MealModel.find({
-        foodName: { $regex: searchValue, $options: 'i' },
-    })
-        .populate('restaurant')
-        .populate('category')
-        .populate('artwork')
-        .limit(limit)
-        .exec()
-
-    return { meals: { ...meals } }
-}
 
 const getDetailMeal = async ({ idMeal }) => {
     const mealInfo = await MealModel.findById(idMeal)
@@ -39,6 +25,17 @@ const createMeal = async ({
     artwork,
     describe,
 }) => {
+    const exitRes = await RestautantModel.findOne({ _id: idRestaurant })
+    const exitCategory = await CategoryModel.findOne({ _id: idCategory })
+
+    if (!exitRes) {
+        throw new ErrorHandler('Nhà hàng không tồn tại', 404)
+    }
+
+    if (!exitCategory) {
+        throw new ErrorHandler('Loại món ăn không tồn tại', 404)
+    }
+
     const existMeal = await MealModel.findOne({
         $and: [
             {
@@ -53,6 +50,10 @@ const createMeal = async ({
         ],
     })
 
+    if (existMeal) {
+        throw new ErrorHandler('Món ăn đã tồn tại trong quán', 409)
+    }
+
     // Tạo liên kết giữa Category và Restaurant
     await CategoryModel.findOneAndUpdate(
         { _id: idCategory },
@@ -66,23 +67,21 @@ const createMeal = async ({
         { new: true, upsert: true }, // upsert: true sẽ tạo mới tài liệu nếu không tìm thấy
     )
 
-    if (existMeal) {
-        throw new ErrorHandler('Món ăn đã tồn tại trong quán', 409)
-    }
-
-    const newImage = await createImage(artwork, foodName + idRestaurant)
-
     // tạo món ăn mới
     const newMeal = await MealModel.create({
         restaurant: idRestaurant,
         category: idCategory,
         foodName,
         priceAndSize,
-        artwork: new Types.ObjectId(newImage._id),
+        artwork: {
+            fileName: artwork.originalname,
+            path: artwork.path,
+            mimetype: artwork.mimetype,
+        },
         describe,
     })
 
     return { mealInfo: { ...newMeal._doc } }
 }
 
-export default { searchMeal, getDetailMeal, createMeal }
+export default { getDetailMeal, createMeal }
