@@ -4,7 +4,7 @@ import { Text } from 'react-native'
 
 const AvatarComp = ({ name, slogan }) => {
     return (
-        <View style={styles.introduce}>
+        <View style={styles.container}>
             <Avatar />
             <View style={styles.info}>
                 <Text style={styles.textName}>{name}</Text>
@@ -15,7 +15,7 @@ const AvatarComp = ({ name, slogan }) => {
 }
 
 const styles = StyleSheet.create({
-    introduce: {
+    container: {
         flexDirection: 'row',
         alignItems: 'center',
     },
@@ -28,13 +28,15 @@ const styles = StyleSheet.create({
     },
     info: {
         flexDirection: 'column',
-        marginLeft: 30,
+        marginLeft: 15,
+        flex: 1,
     },
     textName: {
-        fontSize: 24,
+        fontSize: 20,
         color: global.textPrimaryColor,
         fontWeight: '600',
         marginBottom: 10,
+        marginRight: 10,
     },
     textSlogan: {
         fontSize: 14,

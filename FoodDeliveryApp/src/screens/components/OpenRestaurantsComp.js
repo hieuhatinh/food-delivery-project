@@ -14,8 +14,6 @@ const OpenRestaurantsComp = () => {
         navigation.navigate('OpenRestaurants')
     }
 
-    console.log(restaurants[0])
-
     return (
         <View style={styles.container}>
             <HeaderSection

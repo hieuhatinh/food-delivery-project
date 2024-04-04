@@ -74,7 +74,10 @@ export default function SignIn({ navigation }) {
 
                 // hiển thị thông báo đăng nhập thành công
                 Alert.alert('Thông báo', user.data.message, [
-                    { text: 'OK', onPress: () => navigation.replace('Home') },
+                    {
+                        text: 'OK',
+                        onPress: () => navigation.replace('BottomTabs'),
+                    },
                 ])
                 setLoading(false)
             }

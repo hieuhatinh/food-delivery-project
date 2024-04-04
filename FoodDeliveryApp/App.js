@@ -19,8 +19,7 @@ import ResultByCategory from './src/screens/Search/ResultByCategory'
 import ResultByName from './src/screens/Search/ResultByName'
 import DetailRestaurant from './src/screens/restaurant/DetailRestaurant'
 import OpenRestaurants from './src/screens/restaurant/OpenRestaurants'
-
-// gọi API tìm kiếm theo loại đồ ăn
+import DetailMeal from './src/screens/DetailMeal'
 
 const Stack = createNativeStackNavigator()
 
@@ -30,7 +29,7 @@ function App() {
             <Provider store={store}>
                 <NavigationContainer>
                     <Stack.Navigator
-                        initialRouteName='BottomTabs'
+                        initialRouteName='Welcome'
                         screenOptions={{ headerShown: false }}
                     >
                         <Stack.Screen name='Welcome' component={Welcome} />
@@ -57,6 +56,7 @@ function App() {
                             name='AllCategories'
                             component={AllCategories}
                         />
+
                         {/* restaurant */}
                         <Stack.Screen
                             name='OpenRestaurants'
@@ -75,6 +75,12 @@ function App() {
                         <Stack.Screen
                             name='ResultByName'
                             component={ResultByName}
+                        />
+
+                        {/* meal */}
+                        <Stack.Screen
+                            name='DetailMeal'
+                            component={DetailMeal}
                         />
                     </Stack.Navigator>
                 </NavigationContainer>

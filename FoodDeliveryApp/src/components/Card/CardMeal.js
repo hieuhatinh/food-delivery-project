@@ -1,12 +1,23 @@
 import React from 'react'
 import { View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo'
+import { useNavigation } from '@react-navigation/native'
+
 import { global } from '../../global'
 
 const CardMeal = (props) => {
-    console.log(props)
+    const navigation = useNavigation()
+
+    const handlePressPlus = () => {
+        console.log('press plus')
+    }
+
     return (
-        <View style={styles.container}>
+        <TouchableOpacity
+            style={styles.container}
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate('DetailMeal')}
+        >
             <Image
                 source={{ uri: props?.artwork?.path }}
                 style={styles.image}
@@ -34,7 +45,7 @@ const CardMeal = (props) => {
                             currency: 'VND',
                         })}
                     </Text>
-                    <TouchableOpacity activeOpacity={0.9}>
+                    <TouchableOpacity activeOpacity={0.8} onPress={handlePressPlus}>
                         <Icon
                             name='circle-with-plus'
                             size={32}
@@ -43,7 +54,7 @@ const CardMeal = (props) => {
                     </TouchableOpacity>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 

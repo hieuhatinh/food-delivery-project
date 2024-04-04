@@ -19,6 +19,7 @@ import HeaderSection from '../components/header/HeaderSection'
 import axiosClient from '../api/axiosClient'
 import Loading from '../components/Loading'
 import { setRestaurants } from '../store/slice/restaurantSlice'
+import { setCategoriesRedux } from '../store/slice/categoriesSlice'
 
 export default function Home() {
     const navigation = useNavigation()
@@ -33,7 +34,9 @@ export default function Home() {
 
     useEffect(() => {
         async function fetchGets() {
-            let categories = await axiosClient.get('/category/get-categories')
+            let categoriesResult = await axiosClient.get(
+                '/category/get-categories',
+            )
             let openRes = await axiosClient.get('/restaurant/get-restaurants', {
                 params: {
                     state: 'open',
@@ -41,9 +44,17 @@ export default function Home() {
                 },
             })
 
-            if (categories.status == 200 && openRes.status === 200) {
-                setCategories(categories.data.categories)
+            if (categoriesResult.status == 200 && openRes.status === 200) {
+                let categoriesRedux = categoriesResult.data.categories.map(
+                    (item) => ({
+                        _id: item._id,
+                        categoryName: item.categoryName
+                    }),
+                )
+
+                setCategories(categoriesResult.data.categories)
                 dispatch(setRestaurants(openRes.data.restaurants))
+                dispatch(setCategoriesRedux(categoriesRedux))
                 setLoading(false)
             }
         }

@@ -24,7 +24,6 @@ const searchByCategory = async (req, res) => {
 const searchMeal = async (req, res) => {
     const limit = parseInt(req.query.limit)
     const { searchValue } = req.query
-    console.log(searchValue)
 
     try {
         const meals = await searchResponsitories.searchMeal({

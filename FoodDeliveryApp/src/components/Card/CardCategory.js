@@ -1,8 +1,18 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 
 export default function CardCategory(props) {
+    const navigation = useNavigation()
+
+    const handlePress = () => {
+        navigation.navigate('ResultByCategory', {
+            categoryName: props.categoryName, 
+            _id: props._id
+        })
+    }
+
     return (
-        <TouchableOpacity style={styles.container} activeOpacity={0.9}>
+        <TouchableOpacity style={styles.container} activeOpacity={0.8} onPress={handlePress}>
             <View style={[styles.boxFood, styles.shadow]}>
                 <Image
                     source={{

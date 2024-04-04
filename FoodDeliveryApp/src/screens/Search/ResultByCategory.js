@@ -1,14 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     View,
     StyleSheet,
     TouchableOpacity,
     Text,
     ScrollView,
-    TouchableWithoutFeedback,
+    ActivityIndicator,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 import { global } from '../../global'
@@ -17,64 +17,57 @@ import CardMeal from '../../components/Card/CardMeal'
 import HeaderSection from '../../components/header/HeaderSection'
 import OpenRestaurantsComp from '../components/OpenRestaurantsComp'
 import CartNorify from '../../components/icon/CartNotify'
-
-const meals = [
-    {
-        id: 1,
-        mealName: 'Berger Bistro Berger BistroBerger BistroBerger Bistro',
-        restaurantName: 'Rose Garden',
-        price: '$40',
-        image: require('../../assets/images/burger.png'),
-    },
-    {
-        id: 2,
-        mealName: 'Smokin Burger',
-        restaurantName: 'Cafenio Restaurant',
-        price: '$60',
-        image: require('../../assets/images/burger.png'),
-    },
-    {
-        id: 3,
-        mealName: 'Buffalo Burgers',
-        restaurantName: 'Kaji Firm Kitchen',
-        price: '$75',
-        image: require('../../assets/images/burger.png'),
-    },
-    {
-        id: 4,
-        mealName: 'Bullseye Burgers',
-        restaurantName: 'Kabab restaurant',
-        price: '$94',
-        image: require('../../assets/images/burger.png'),
-    },
-]
-
-const categories = [
-    'Burger',
-    'Chicken',
-    'Pizza',
-    'Cơm',
-    'Cháo',
-    'Phở',
-    'Bánh mì',
-]
+import { useSelector } from 'react-redux'
+import axiosClient from '../../api/axiosClient'
 
 const ResultByCategory = () => {
     const navigation = useNavigation()
+    const route = useRoute()
+    const allCategory = useSelector((state) => state.categories)
 
     const [isOpenDropdown, setIsOpenDropdown] = useState(false)
-    const [category, setCategory] = useState('burger')
+    const [categoryInfo, setCategoryInfo] = useState({ ...route.params })
+    const [loading, setLoading] = useState(true)
+    const [resultMeals, setResultMeals] = useState()
 
+    useEffect(() => {
+        async function fetchSearchByCategory() {
+            let result = await axiosClient.get(
+                `/search/category/${categoryInfo._id}`,
+            )
+            if (result.status === 200) {
+                setResultMeals(result.data.meals.slice(0,4))
+                setLoading(false)
+            }
+        }
+
+        let idTimeout = setTimeout(() => {
+            fetchSearchByCategory()
+        }, 1500)
+
+        return () => clearTimeout(idTimeout)
+    }, [])
+
+    // chuyển đến màn hình resultByName khi bấm vào see all
     const handleSeeAllMeals = () => {
-        navigation.navigate('ResultByName')
+        navigation.navigate('ResultByName', {
+            title: categoryInfo.categoryName,
+            data: resultMeals 
+        })
     }
 
+    // xử lý khi chọn loại đồ ăn
     const handleChooseCategory = (value) => {
-        setCategory(value)
+        setCategoryInfo({ ...value })
+        setIsOpenDropdown(false)
     }
 
     const toggoleDropdown = () => {
         setIsOpenDropdown(!isOpenDropdown)
+    }
+
+    const handlePressSearchIcon = () => {
+        navigation.navigate('Search')
     }
 
     return (
@@ -83,6 +76,7 @@ const ResultByCategory = () => {
                 iconRightFirst={{
                     backgroundColor: global.secondaryColor,
                     name: 'magnifying-glass',
+                    handlePress: handlePressSearchIcon,
                 }}
                 iconNotify={<CartNorify />}
             >
@@ -97,33 +91,35 @@ const ResultByCategory = () => {
                             numberOfLines={1}
                             ellipsizeMode='tail'
                         >
-                            {category}
+                            {categoryInfo.categoryName}
                         </Text>
                         <Icon name='triangle-down' size={20} color='#f58d1d' />
                     </TouchableOpacity>
                     {isOpenDropdown && (
                         <View style={styles.viewDropdown}>
                             <ScrollView
-                                style={[styles.dropdown]}
+                                style={styles.dropdown}
                                 showsVerticalScrollIndicator={false}
                                 contentContainerStyle={{
                                     justifyContent: 'space-between',
                                 }}
                             >
                                 <View style={{ height: 40 }} />
-                                {categories.map((item, index) => (
+                                {allCategory.map((item, index) => (
                                     <TouchableOpacity
-                                        key={index}
+                                        key={item._id}
                                         style={[
                                             styles.item,
-                                            index !== categories.length - 1 &&
+                                            index !== allCategory.length - 1 &&
                                                 styles.borderBottom,
                                         ]}
                                         onPress={() =>
                                             handleChooseCategory(item)
                                         }
                                     >
-                                        <Text numberOfLines={2}>{item}</Text>
+                                        <Text numberOfLines={2}>
+                                            {item.categoryName}
+                                        </Text>
                                     </TouchableOpacity>
                                 ))}
                             </ScrollView>
@@ -136,17 +132,23 @@ const ResultByCategory = () => {
                 showsVerticalScrollIndicator={false}
                 style={styles.scrollView}
             >
-                <View style={{ marginTop: 10 }}>
-                    <HeaderSection
-                        title='Popular Burgers'
-                        handleSeeAll={handleSeeAllMeals}
-                    />
-                    <View style={styles.boxMenu}>
-                        {meals.map((item) => (
-                            <CardMeal key={item.id} {...item} />
-                        ))}
+                {loading ? (
+                    <View>
+                        <ActivityIndicator />
                     </View>
-                </View>
+                ) : (
+                    <View style={{ marginTop: 10 }}>
+                        <HeaderSection
+                            title={`${categoryInfo.categoryName} phổ biến`}
+                            handleSeeAll={handleSeeAllMeals}
+                        />
+                        <View style={styles.boxMenu}>
+                            {resultMeals.map((item) => (
+                                <CardMeal key={item._id} {...item} />
+                            ))}
+                        </View>
+                    </View>
+                )}
 
                 {/* Open restaurant */}
                 <OpenRestaurantsComp />

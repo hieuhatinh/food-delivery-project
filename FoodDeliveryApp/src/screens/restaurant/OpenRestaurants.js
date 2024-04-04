@@ -41,7 +41,7 @@ const OpenRestaurants = () => {
                     params: { state: 'open' },
                 },
             )
-            // console.log(restaurants.data.restaurants.length)
+            
             if (restaurants.status === 200) {
                 setOpenRestaurants(restaurants.data.restaurants)
                 setLoading(false)

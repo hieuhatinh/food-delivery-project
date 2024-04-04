@@ -13,7 +13,7 @@ const ResultByName = () => {
     return (
         <BoundaryScreen>
             <HeaderSecondary iconNotify={<CartNorify />}>
-                <Text style={styles.title}>{route.params.mealName}</Text>
+                <Text style={styles.title}>{route.params.title}</Text>
             </HeaderSecondary>
 
             <FlatList

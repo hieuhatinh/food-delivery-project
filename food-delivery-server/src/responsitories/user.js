@@ -55,6 +55,7 @@ const updateInfo = async ({
     address,
     sex,
     dateOfBirth,
+    slogan
 }) => {
     const existUser = await UserModel.findOne({ _id: id })
 

@@ -85,13 +85,6 @@ export default function Search({ navigation }) {
         setSearchValue(value)
     }
 
-    // const handleEnter = ({ nativeEvent: { key: keyValue } }) => {
-    //     console.log(keyValue)
-    //     if (keyValue === 'Enter') {
-    //         console.log('enter')
-    //     }
-    // }
-
     const handleEnter = async () => {
         setLoading(true)
 
@@ -102,7 +95,7 @@ export default function Search({ navigation }) {
             if (resultSearch.status === 200) {
                 setLoading(false)
                 navigation.navigate('ResultByName', {
-                    mealName: searchValue,
+                    title: searchValue,
                     data: resultSearch.data.meals,
                 })
             }

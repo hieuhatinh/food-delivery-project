@@ -7,6 +7,7 @@ import { global } from '../../global'
 
 const HeaderSecondary = ({
     children,
+    iconLeft = true,
     iconRightFirst,
     iconRightSecond,
     iconNotify,
@@ -20,15 +21,18 @@ const HeaderSecondary = ({
     return (
         <View style={styles.container}>
             <View style={styles.row}>
-                <BoundaryIcon handlePress={handlePressBack}>
-                    <Icon name='chevron-left' size={20} />
-                </BoundaryIcon>
+                {iconLeft && (
+                    <BoundaryIcon handlePress={handlePressBack}>
+                        <Icon name='chevron-left' size={20} />
+                    </BoundaryIcon>
+                )}
                 {children}
             </View>
             <View style={styles.row}>
                 {iconRightFirst && (
                     <BoundaryIcon
                         backgroundColor={iconRightFirst.backgroundColor}
+                        handlePress={iconRightFirst.handlePress}
                     >
                         <Icon
                             name={iconRightFirst.name}
