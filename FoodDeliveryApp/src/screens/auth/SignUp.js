@@ -90,15 +90,15 @@ export default function SignUp({ navigation }) {
     }
 
     const handleChangeEmail = (value) => {
-        setEmail(value)
+        setEmail(value.trim())
     }
 
     const handleChangePassword = (value) => {
-        setPassWord(value)
+        setPassWord(value.trim())
     }
 
     const handleChangeRePassword = (value) => {
-        setRePassword(value)
+        setRePassword(value.trim())
     }
 
     return (
@@ -146,6 +146,7 @@ export default function SignUp({ navigation }) {
                                 style={styles.textInput}
                                 placeholder='hieu@gmail.com'
                                 onChangeText={handleChangeEmail}
+                                value={email}
                             />
                             {!checkEmail && (
                                 <Text style={styles.warring}>
@@ -162,6 +163,7 @@ export default function SignUp({ navigation }) {
                                 placeholder='*********'
                                 secureTextEntry={isOpenSecurePassword}
                                 onChangeText={handleChangePassword}
+                                value={passWord}
                             />
                             <Icon
                                 name='eye'
@@ -184,6 +186,7 @@ export default function SignUp({ navigation }) {
                                 placeholder='*********'
                                 secureTextEntry={isOpenSecureRePassword}
                                 onChangeText={handleChangeRePassword}
+                                value={rePassword}
                             />
                             <Icon
                                 name='eye'

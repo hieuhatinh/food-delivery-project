@@ -35,11 +35,11 @@ export default function SignIn({ navigation }) {
     const [loading, setLoading] = useState(false)
 
     const handleChangeEmail = (value) => {
-        setEmail(value)
+        setEmail(value.trim())
     }
 
     const handleChangePassword = (value) => {
-        setPassWord(value)
+        setPassWord(value.trim())
     }
 
     // xử lý submit form
@@ -151,6 +151,7 @@ export default function SignIn({ navigation }) {
                                 style={styles.textInput}
                                 placeholder='hieu@gmail.com'
                                 onChangeText={handleChangeEmail}
+                                value={email}
                             />
                             {!checkEmail && (
                                 <Text style={styles.warring}>
@@ -166,6 +167,7 @@ export default function SignIn({ navigation }) {
                                 placeholder='*********'
                                 secureTextEntry={isSelected}
                                 onChangeText={handleChangePassword}
+                                value={passWord}
                             />
                             <Icon
                                 name='eye'

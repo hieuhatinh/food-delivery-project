@@ -4,7 +4,10 @@ const register = async (req, res) => {
     const { email, password } = req.body
 
     try {
-        const newUser = await userResponsitories.register({ email, password })
+        const newUser = await userResponsitories.register({
+            email: email.trim(),
+            password: password.trim(),
+        })
 
         return res.status(200).json({
             ...newUser,
@@ -20,7 +23,10 @@ const login = async (req, res) => {
     const { email, password } = req.body
 
     try {
-        const user = await userResponsitories.login({ email, password })
+        const user = await userResponsitories.login({
+            email: email.trim(),
+            password: password.trim(),
+        })
 
         return res.status(200).json({
             ...user,
@@ -40,12 +46,12 @@ const updateInfo = async (req, res) => {
     try {
         const user = await userResponsitories.updateInfo({
             id,
-            fullName,
-            phoneNumber,
-            address,
-            sex,
-            dateOfBirth,
-            slogan,
+            fullName: fullName.trim(),
+            phoneNumber: phoneNumber.trim(),
+            address: address.trim(),
+            sex: sex.trim(),
+            dateOfBirth: dateOfBirth.trim(),
+            slogan: slogan.trim(),
         })
 
         return res.status(200).json({

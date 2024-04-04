@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         marginBottom: 10,
         marginRight: 10,
+        textTransform: 'capitalize',
     },
     textSlogan: {
         fontSize: 14,

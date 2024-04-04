@@ -27,6 +27,7 @@ export default function Home() {
 
     const [loading, setLoading] = useState(true)
     const [categories, setCategories] = useState([])
+    const [greeting, setGreeting] = useState()
 
     const handlePressAllCategories = () => {
         navigation.navigate('AllCategories')
@@ -48,11 +49,11 @@ export default function Home() {
                 let categoriesRedux = categoriesResult.data.categories.map(
                     (item) => ({
                         _id: item._id,
-                        categoryName: item.categoryName
+                        categoryName: item.categoryName,
                     }),
                 )
 
-                setCategories(categoriesResult.data.categories.slice(0,5))
+                setCategories(categoriesResult.data.categories.slice(0, 5))
                 dispatch(setRestaurants(openRes.data.restaurants))
                 dispatch(setCategoriesRedux(categoriesRedux))
                 setLoading(false)
@@ -64,6 +65,24 @@ export default function Home() {
         }, 3000)
 
         return () => clearTimeout(idTimeout)
+    }, [])
+
+    // lấy buổi (sáng, trưa, chiều, tối) hiện tại
+    useEffect(() => {
+        const currentTime = new Date()
+        const currentHour = currentTime.getHours()
+
+        let greeting = ''
+
+        if (currentHour < 12) {
+            greeting = 'Good morning'
+        } else if (currentHour < 18) {
+            greeting = 'Good afternoon'
+        } else {
+            greeting = 'Good evening'
+        }
+
+        setGreeting(greeting)
     }, [])
 
     return (
@@ -85,9 +104,7 @@ export default function Home() {
                     {/* Search */}
                     <View style={[styles.row, { marginLeft: 20 }]}>
                         <Text>Hey Septa, </Text>
-                        <Text style={{ fontWeight: '700' }}>
-                            Good Afternoon!
-                        </Text>
+                        <Text style={{ fontWeight: '700' }}>{greeting}</Text>
                     </View>
                     <TouchableOpacity
                         style={styles.search}

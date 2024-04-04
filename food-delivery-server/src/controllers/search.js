@@ -28,7 +28,7 @@ const searchMeal = async (req, res) => {
     try {
         const meals = await searchResponsitories.searchMeal({
             limit,
-            searchValue,
+            searchValue: searchValue.trim(),
         })
 
         return res.status(200).json({

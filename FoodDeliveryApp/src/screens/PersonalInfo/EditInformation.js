@@ -127,12 +127,12 @@ const EditInformation = ({ route }) => {
             const userInfoUpdate = await axiosClient.patch(
                 `/user/${userInfo._id}/update-information`,
                 {
-                    fullName,
-                    phoneNumber,
-                    address,
-                    sex: sex.value,
-                    dateOfBirth: dateStr,
-                    slogan,
+                    fullName: fullName.trim(),
+                    phoneNumber: phoneNumber.trim(),
+                    address: address.trim(),
+                    sex: sex.value.trim(),
+                    dateOfBirth: dateStr.trim(),
+                    slogan: slogan.trim(),
                 },
             )
 

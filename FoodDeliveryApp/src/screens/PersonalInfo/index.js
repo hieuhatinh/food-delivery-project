@@ -68,7 +68,7 @@ const PersonalInfo = () => {
             </HeaderSecondary>
 
             {isLoading ? (
-                <View style={{height: '100%', width: '100%', top: 0}}>
+                <View style={{ height: '100%', width: '100%', top: 0 }}>
                     <Loading />
                 </View>
             ) : (
@@ -185,6 +185,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: global.textPrimaryColor,
         marginVertical: 10,
+        textTransform: 'capitalize',
     },
     notData: {
         color: global.error,
