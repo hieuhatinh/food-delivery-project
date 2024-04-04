@@ -31,12 +31,13 @@ const ResultByCategory = () => {
     const [resultMeals, setResultMeals] = useState()
 
     useEffect(() => {
+        setLoading(true)
         async function fetchSearchByCategory() {
             let result = await axiosClient.get(
                 `/search/category/${categoryInfo._id}`,
             )
             if (result.status === 200) {
-                setResultMeals(result.data.meals.slice(0,4))
+                setResultMeals(result.data.meals)
                 setLoading(false)
             }
         }
@@ -46,7 +47,7 @@ const ResultByCategory = () => {
         }, 1500)
 
         return () => clearTimeout(idTimeout)
-    }, [])
+    }, [categoryInfo])
 
     // chuyển đến màn hình resultByName khi bấm vào see all
     const handleSeeAllMeals = () => {
@@ -143,7 +144,7 @@ const ResultByCategory = () => {
                             handleSeeAll={handleSeeAllMeals}
                         />
                         <View style={styles.boxMenu}>
-                            {resultMeals.map((item) => (
+                            {resultMeals.slice(0, 4).map((item) => (
                                 <CardMeal key={item._id} {...item} />
                             ))}
                         </View>

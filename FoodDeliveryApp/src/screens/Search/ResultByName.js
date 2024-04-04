@@ -19,7 +19,7 @@ const ResultByName = () => {
             <FlatList
                 data={route.params.data}
                 renderItem={({ item }) => <CardMeal {...item} />}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item._id}
                 numColumns={2}
                 showsVerticalScrollIndicator={false}
                 style={styles.flatlist}

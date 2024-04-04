@@ -52,7 +52,7 @@ export default function Home() {
                     }),
                 )
 
-                setCategories(categoriesResult.data.categories)
+                setCategories(categoriesResult.data.categories.slice(0,5))
                 dispatch(setRestaurants(openRes.data.restaurants))
                 dispatch(setCategoriesRedux(categoriesRedux))
                 setLoading(false)
