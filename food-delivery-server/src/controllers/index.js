@@ -3,6 +3,7 @@ import categoryController from './category.js'
 import restaurantController from './restaurant.js'
 import mealController from './meal.js'
 import searchController from './search.js'
+import cartController from './cart.js'
 
 export {
     userController,
@@ -10,4 +11,5 @@ export {
     restaurantController,
     mealController,
     searchController,
+    cartController,
 }
