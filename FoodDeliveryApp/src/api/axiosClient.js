@@ -45,7 +45,6 @@ axiosClient.interceptors.response.use(
             statusText: response.statusText,
         }
 
-        console.log(response)
         return response
     },
     function (error) {

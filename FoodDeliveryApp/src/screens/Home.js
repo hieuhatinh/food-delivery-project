@@ -21,6 +21,9 @@ import Loading from '../components/Loading'
 import { setRestaurants } from '../store/slice/restaurantSlice'
 import { setCategoriesRedux } from '../store/slice/categoriesSlice'
 
+import * as storage from '../storage'
+import { KEY_USER } from '../storage/keys'
+
 export default function Home() {
     const navigation = useNavigation()
     const dispatch = useDispatch()
