@@ -5,8 +5,10 @@ import { useSelector } from 'react-redux'
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 import AvatarComp from '../../components/AvatarComp'
 import BoundaryScreen from '../../components/BoundaryScreen'
-import storage from '../../storage'
 import MenuItem from '../components/MenuItem'
+
+import * as storage from '../../storage'
+import { KEY_USER } from '../../storage/keys'
 
 const profileCluster = [
     {
@@ -75,10 +77,7 @@ const MenuProfile = ({ navigation }) => {
     const userInfo = useSelector((state) => state.user)
 
     const handleSignOut = () => {
-        storage.remove({
-            key: 'user',
-            id: userInfo.id,
-        })
+        storage.deleteItem(KEY_USER)
 
         navigation.replace('SignIn')
     }

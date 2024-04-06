@@ -16,11 +16,12 @@ import { Link } from '@react-navigation/native'
 import SocialLogin from '../components/SocialLogin'
 import { validEmail } from '../../validation'
 import Loading from '../../components/Loading'
-import storage from '../../storage'
+import * as storage from '../../storage'
 import axiosClient from '../../api/axiosClient'
 import BoundaryScreen from '../../components/BoundaryScreen'
 import Button from '../../components/button/Button'
 import { global } from '../../global'
+import { KEY_USER } from '../../storage/keys'
 
 export default function SignIn({ navigation }) {
     const dispatch = useDispatch()
@@ -53,13 +54,10 @@ export default function SignIn({ navigation }) {
 
             if (user.status === 200) {
                 // lưu token vào storage
-                storage.save({
-                    key: 'user',
-                    id: user.data.userInfo._id,
-                    data: {
-                        token: user.data.token,
-                    },
-                })
+                storage.setItem(
+                    KEY_USER,
+                    user.data.token,
+                )
 
                 // gửi 1 dispatch cập nhật userInfo
                 dispatch({

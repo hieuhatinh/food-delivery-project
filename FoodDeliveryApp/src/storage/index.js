@@ -1,11 +1,15 @@
-import Storage from 'react-native-storage'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as SecureStore from 'expo-secure-store'
 
-const storage = new Storage({
-    size: 20,
-    storageBackend: AsyncStorage,
-    defaultExpires: 1000 * 3600 * 24,
-    enableCache: true,
-})
+const setItem = async (key, value) => {
+    await SecureStore.setItemAsync(key, value)
+}
 
-export default storage
+const getItem = async (key, value) => {
+    await SecureStore.getItemAsync(key, value)
+}
+
+const deleteItem = async (key) => {
+    await SecureStore.deleteItemAsync(key)
+}
+
+export { getItem, setItem, deleteItem }
