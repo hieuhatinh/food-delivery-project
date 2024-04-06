@@ -4,8 +4,9 @@ const setItem = async (key, value) => {
     await SecureStore.setItemAsync(key, value)
 }
 
-const getItem = async (key, value) => {
-    await SecureStore.getItemAsync(key, value)
+const getItem = async (key) => {
+    let token = await SecureStore.getItemAsync(key)
+    return token
 }
 
 const deleteItem = async (key) => {

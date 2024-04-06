@@ -122,17 +122,20 @@ const EditInformation = ({ route }) => {
     const handlePressSubmit = async () => {
         setLoading(true)
         let dateArr = dateOfBirth?.split('-')
-        let dateStr = !!dateArr && `${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`
+        let dateStr = !!dateArr
+            ? `${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`
+            : ''
+            
         try {
             const userInfoUpdate = await axiosClient.patch(
                 `/user/${userInfo._id}/update-information`,
                 {
-                    fullName: fullName.trim(),
-                    phoneNumber: phoneNumber.trim(),
-                    address: address.trim(),
-                    sex: sex.value.trim(),
-                    dateOfBirth: dateStr.trim(),
-                    slogan: slogan.trim(),
+                    fullName: fullName?.trim(),
+                    phoneNumber: phoneNumber?.trim(),
+                    address: address?.trim(),
+                    sex: sex.value?.trim(),
+                    dateOfBirth: dateStr?.trim(),
+                    slogan: slogan?.trim(),
                 },
             )
 

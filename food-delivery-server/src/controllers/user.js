@@ -46,12 +46,12 @@ const updateInfo = async (req, res) => {
     try {
         const user = await userResponsitories.updateInfo({
             id,
-            fullName: fullName.trim(),
-            phoneNumber: phoneNumber.trim(),
-            address: address.trim(),
-            sex: sex.trim(),
-            dateOfBirth: dateOfBirth.trim(),
-            slogan: slogan.trim(),
+            fullName: fullName?.trim(),
+            phoneNumber: phoneNumber?.trim(),
+            address: address?.trim(),
+            sex: sex?.trim(),
+            dateOfBirth: dateOfBirth?.trim(),
+            slogan: slogan?.trim(),
         })
 
         return res.status(200).json({
