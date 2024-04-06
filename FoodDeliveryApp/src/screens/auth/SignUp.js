@@ -46,7 +46,7 @@ export default function SignUp({ navigation }) {
     useEffect(() => {
         if (isFocused) {
             if (userState.isSuccess) {
-                Alert.alert('Thông báo', userState.userInfo.data.message, [
+                Alert.alert('Thông báo', userState.userInfo.message, [
                     {
                         text: 'OK',
                         onPress: () => navigation.navigate('SignIn'),

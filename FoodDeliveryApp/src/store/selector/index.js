@@ -1,3 +1,5 @@
 const selectUser = (state) => state.user
 
-export { selectUser }
+const selectCategories = (state) => state.categories
+
+export { selectUser, selectCategories }

@@ -17,18 +17,27 @@ import CardMeal from '../../components/Card/CardMeal'
 import HeaderSection from '../../components/header/HeaderSection'
 import OpenRestaurantsComp from '../components/OpenRestaurantsComp'
 import CartNorify from '../../components/icon/CartNotify'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import axiosClient from '../../api/axiosClient'
+import { getCategoriesName } from '../../store/slice/categoriesSlice'
 
 const ResultByCategory = () => {
     const navigation = useNavigation()
     const route = useRoute()
-    const allCategory = useSelector((state) => state.categories)
+    const dispatch = useDispatch()
+    // const allCategory = useSelector((state) => state.categories)
 
     const [isOpenDropdown, setIsOpenDropdown] = useState(false)
     const [categoryInfo, setCategoryInfo] = useState({ ...route.params })
     const [loading, setLoading] = useState(true)
     const [resultMeals, setResultMeals] = useState()
+    const [allCategory, setAllCategory] = useState([])
+
+    useEffect(() => {
+        let categories = dispatch(getCategoriesName())
+
+        setAllCategory(categories)
+    })
 
     useEffect(() => {
         setLoading(true)
@@ -53,7 +62,7 @@ const ResultByCategory = () => {
     const handleSeeAllMeals = () => {
         navigation.navigate('ResultByName', {
             title: categoryInfo.categoryName,
-            data: resultMeals 
+            data: resultMeals,
         })
     }
 
@@ -106,7 +115,7 @@ const ResultByCategory = () => {
                                 }}
                             >
                                 <View style={{ height: 40 }} />
-                                {allCategory.map((item, index) => (
+                                {allCategory?.map((item, index) => (
                                     <TouchableOpacity
                                         key={item._id}
                                         style={[

@@ -6,12 +6,12 @@ import { KEY_USER } from '../../storage/keys'
 import { fetchLogin, fetchRegister } from '../actions/userAction'
 
 const initialState = {
-        userInfo: {},
-        errorMessage: null,
-        isLoading: false,
-        isSuccess: false,
-        isError: false,
-    }
+    userInfo: {},
+    errorMessage: null,
+    isLoading: false,
+    isSuccess: false,
+    isError: false,
+}
 
 export const userSlice = createSlice({
     name: 'user',

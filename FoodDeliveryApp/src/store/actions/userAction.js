@@ -4,14 +4,14 @@ import axiosClient from '../../api/axiosClient'
 
 const fetchLogin = createAsyncThunk(
     'user/fetchLogin',
-    async ({ email, password }, {rejectWithValue}) => {
+    async ({ email, password }, { rejectWithValue }) => {
         try {
             let user = await axiosClient.post('/user/login', {
                 email,
                 password,
             })
 
-            return {...user}
+            return { ...user }
         } catch (error) {
             return rejectWithValue(error.response.data.message)
         }
@@ -27,7 +27,7 @@ const fetchRegister = createAsyncThunk(
                 password,
             })
 
-            return { ...user }
+            return { message: user.data.message }
         } catch (error) {
             return rejectWithValue(error.response.data.message)
         }

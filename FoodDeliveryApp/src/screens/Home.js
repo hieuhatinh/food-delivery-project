@@ -7,8 +7,8 @@ import {
     View,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo'
-import { useNavigation } from '@react-navigation/native'
-import { useDispatch } from 'react-redux'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { global } from '../global'
 import CardCategory from '../components/Card/CardCategory'
@@ -18,18 +18,16 @@ import OpenRestaurantsComp from './components/OpenRestaurantsComp'
 import HeaderSection from '../components/header/HeaderSection'
 import axiosClient from '../api/axiosClient'
 import Loading from '../components/Loading'
-import { setRestaurants } from '../store/slice/restaurantSlice'
-import { setCategoriesRedux } from '../store/slice/categoriesSlice'
 
-import * as storage from '../storage'
-import { KEY_USER } from '../storage/keys'
+import { fetchGetCategories } from '../store/actions/categoryAction'
+import { selectCategories } from '../store/selector'
 
 export default function Home() {
     const navigation = useNavigation()
     const dispatch = useDispatch()
+    const categoriesState = useSelector(selectCategories)
+    const isFocused = useIsFocused()
 
-    const [loading, setLoading] = useState(true)
-    const [categories, setCategories] = useState([])
     const [greeting, setGreeting] = useState()
 
     const handlePressAllCategories = () => {
@@ -37,38 +35,41 @@ export default function Home() {
     }
 
     useEffect(() => {
-        async function fetchGets() {
-            let categoriesResult = await axiosClient.get(
-                '/category/get-categories',
-            )
-            let openRes = await axiosClient.get('/restaurant/get-restaurants', {
-                params: {
-                    state: 'open',
-                    limit: 3,
-                },
-            })
-
-            if (categoriesResult.status == 200 && openRes.status === 200) {
-                let categoriesRedux = categoriesResult.data.categories.map(
-                    (item) => ({
-                        _id: item._id,
-                        categoryName: item.categoryName,
-                    }),
-                )
-
-                setCategories(categoriesResult.data.categories.slice(0, 5))
-                dispatch(setRestaurants(openRes.data.restaurants))
-                dispatch(setCategoriesRedux(categoriesRedux))
-                setLoading(false)
-            }
+        if (isFocused) {
+            dispatch(fetchGetCategories({ limit: 5 }))
         }
+        // async function fetchGets() {
+        // let categoriesResult = await axiosClient.get(
+        //     '/category/get-categories',
+        // )
+        //     let openRes = await axiosClient.get('/restaurant/get-restaurants', {
+        //         params: {
+        //             state: 'open',
+        //             limit: 3,
+        //         },
+        //     })
 
-        const idTimeout = setTimeout(() => {
-            fetchGets()
-        }, 3000)
+        //     // if (categoriesResult.status == 200 && openRes.status === 200) {
+        //     //     let categoriesRedux = categoriesResult.data.categories.map(
+        //     //         (item) => ({
+        //     //             _id: item._id,
+        //     //             categoryName: item.categoryName,
+        //     //         }),
+        //     //     )
 
-        return () => clearTimeout(idTimeout)
-    }, [])
+        //     //     setCategories(categoriesResult.data.categories.slice(0, 5))
+        //     //     dispatch(setRestaurants(openRes.data.restaurants))
+        //     //     dispatch(setCategoriesRedux(categoriesRedux))
+        //     //     setLoading(false)
+        //     // }
+        // }
+
+        // const idTimeout = setTimeout(() => {
+        //     fetchGets()
+        // }, 3000)
+
+        // return () => clearTimeout(idTimeout)
+    }, [isFocused])
 
     // lấy buổi (sáng, trưa, chiều, tối) hiện tại
     useEffect(() => {
@@ -90,11 +91,11 @@ export default function Home() {
 
     return (
         <BoundaryScreen>
-            {loading ? (
+            {categoriesState.isLoading ? (
                 <View
                     style={{ height: '100%', width: '100%', top: 0, bottom: 0 }}
                 >
-                    <Loading />
+                    <Loading loading={categoriesState.isLoading} />
                 </View>
             ) : (
                 <ScrollView
@@ -132,7 +133,7 @@ export default function Home() {
                         showsHorizontalScrollIndicator={false}
                     >
                         <View style={[styles.row, { paddingTop: 0 }]}>
-                            {categories?.map((item) => (
+                            {categoriesState.categories?.map((item) => (
                                 <CardCategory key={item._id} {...item} />
                             ))}
                         </View>

@@ -50,8 +50,6 @@ export default function SignIn({ navigation }) {
 
     useEffect(() => {
         if (isFocused === true) {
-            console.log(userState.userInfo?.data)
-            console.log(!!userState.userInfo?.data)
             if (userState.isSuccess && !!userState.userInfo?.data) {
                 // gọi dispatch lưu thông tin người dùng
                 dispatch(
