@@ -122,17 +122,18 @@ const EditInformation = ({ route }) => {
     const handlePressSubmit = async () => {
         setLoading(true)
         let dateArr = dateOfBirth?.split('-')
-        let dateStr = !!dateArr && `${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`
+        let dateStr = !!dateArr ? `${dateArr[2]}-${dateArr[1]}-${dateArr[0]}` : ''
+        
         try {
             const userInfoUpdate = await axiosClient.patch(
                 `/user/${userInfo._id}/update-information`,
                 {
-                    fullName: fullName.trim(),
-                    phoneNumber: phoneNumber.trim(),
-                    address: address.trim(),
-                    sex: sex.value.trim(),
-                    dateOfBirth: dateStr.trim(),
-                    slogan: slogan.trim(),
+                    fullName: fullName?.trim(),
+                    phoneNumber: phoneNumber?.trim(),
+                    address: address?.trim(),
+                    sex: sex.value?.trim() ,
+                    dateOfBirth: dateStr?.trim() ,
+                    slogan: slogan?.trim(),
                 },
             )
 
@@ -153,6 +154,41 @@ const EditInformation = ({ route }) => {
             setLoading(false)
         }
     }
+
+//     const handlePressSubmit = async () => {
+//     setLoading(true);
+//     let dateArr = dateOfBirth?.split("-");
+//     let dateStr = !!dateArr && `${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`;
+//     try {
+//       const userInfoUpdate = await axiosClient.patch(
+//         `/user/${userInfo._id}/update-information`,
+//         {
+//           fullName,
+//           phoneNumber,
+//           address,
+//           sex: sex.value,
+//           dateOfBirth: dateStr,
+//           slogan,
+//         }
+//       );
+
+//       if (userInfoUpdate.status === 200) {
+//         Alert.alert("Thông báo", userInfoUpdate.data.message, [
+//           {
+//             text: "OK",
+//             onPress: () => navigation.navigate("PersonalInfo"),
+//           },
+//         ]);
+
+//         setLoading(false);
+//       }
+//     } catch (error) {
+//       if (error.response.status === 404) {
+//         Alert.alert("Thông báo", error.response.data.message);
+//       }
+//       setLoading(false);
+//     }
+//   };
 
     useEffect(() => {
         setDisableSubmit(
