@@ -1,5 +1,5 @@
 export const global = {
-    primaryColor: '#ff7622', // màu cam
+    primaryColor: '#ff7622', // màu cam 
     secondaryColor: '#121223',
     thirdColor: '#E53935', // màu đỏ
     fourthColor: '#FFCA28', // màu vàng

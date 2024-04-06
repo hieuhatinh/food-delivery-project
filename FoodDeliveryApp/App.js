@@ -18,7 +18,10 @@ import Search from './src/screens/Search'
 import ResultByCategory from './src/screens/Search/ResultByCategory'
 import OpenRestaurants from './src/screens/OpenRestaurants'
 import ResultByName from './src/screens/Search/ResultByName'
-
+import OrderSuccess from './src/screens/OrderSuccess'
+import Payment_Info from './src/screens/Payment_Info'
+import PlaceOrder from './src/screens/PlaceOrder'
+import MyOrder from './src/screens/MyOrder'
 const Stack = createNativeStackNavigator()
 
 function App() {
@@ -27,7 +30,7 @@ function App() {
             <Provider store={store}>
                 <NavigationContainer>
                     <Stack.Navigator
-                        initialRouteName='BottomTabs'
+                        initialRouteName='PlaceOrder'
                         screenOptions={{ headerShown: false }}
                     >
                         <Stack.Screen name='Welcome' component={Welcome} />
@@ -70,6 +73,22 @@ function App() {
                         <Stack.Screen
                             name='ResultByName'
                             component={ResultByName}
+                        />
+                        <Stack.Screen
+                            name='OrderSuccess'
+                            component={OrderSuccess}
+                        />
+                        <Stack.Screen
+                            name='Payment_Info'
+                            component={Payment_Info}
+                        />
+                        <Stack.Screen
+                            name='PlaceOrder'
+                            component={PlaceOrder}
+                        />
+                        <Stack.Screen
+                            name='MyOrder'
+                            component={MyOrder}
                         />
                     </Stack.Navigator>
                 </NavigationContainer>
