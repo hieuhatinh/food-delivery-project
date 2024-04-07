@@ -4,6 +4,7 @@ import restaurantResponsitories from './restaurant.js'
 import mealResponsitories from './meal.js'
 import searchResponsitories from './search.js'
 import cartResponsitories from './cart.js'
+import orderResponsitories from './order.js'
 
 export {
     userResponsitories,
@@ -12,4 +13,5 @@ export {
     mealResponsitories,
     searchResponsitories,
     cartResponsitories,
+    orderResponsitories,
 }

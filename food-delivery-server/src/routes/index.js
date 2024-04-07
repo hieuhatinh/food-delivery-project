@@ -4,6 +4,7 @@ import restaurantRouter from './restaurant.js'
 import userRouter from './user.js'
 import searchRouter from './search.js'
 import cartRouter from './cart.js'
+import orderRouter from './order.js'
 
 function routes(app) {
     app.use('/user', userRouter)
@@ -12,6 +13,7 @@ function routes(app) {
     app.use('/meal', mealRouter)
     app.use('/search', searchRouter)
     app.use('/cart', cartRouter)
+    app.use('/order', orderRouter)
 }
 
 export default routes
