@@ -22,7 +22,7 @@ import { global } from '../../global'
 
 import { fetchLogin } from '../../store/actions/userAction'
 import { selectUser } from '../../store/selector'
-import { saveToken, setUserInfo } from '../../store/slice/userSlice'
+import { saveToken } from '../../store/slice/userSlice'
 
 export default function SignIn({ navigation }) {
     const dispatch = useDispatch()
@@ -50,26 +50,16 @@ export default function SignIn({ navigation }) {
 
     useEffect(() => {
         if (isFocused === true) {
-            if (userState.isSuccess && !!userState.userInfo?.data) {
-                // gọi dispatch lưu thông tin người dùng
-                dispatch(
-                    setUserInfo({
-                        id: userState.userInfo.data.userInfo._id,
-                        email: userState.userInfo.data.userInfo.email,
-                        fullName: userState.userInfo.data.userInfo.fullName,
-                        slogan: userState.userInfo.data.userInfo.slogan,
-                    }),
-                )
-
+            if (userState.isSuccess && !!userState.userInfo) {
                 // gọi dispatch lưu token
-                dispatch(saveToken(userState.userInfo.data.token))
+                dispatch(saveToken(userState.userInfo.token))
 
                 // di chuyển đến Home
                 navigation.replace('BottomTabs')
             }
 
             if (userState.isError) {
-                Alert.alert('Thông báo', userState.errorMessage)
+                Alert.alert('Thông báo', userState.messageNotify)
             }
         }
     }, [userState, isFocused])
@@ -97,7 +87,7 @@ export default function SignIn({ navigation }) {
                     contentContainerStyle={{ alignItems: 'center' }}
                     showsVerticalScrollIndicator={false}
                 >
-                    <Loading loading={userState.isLoading} />
+                    {userState.isLoading && <Loading />}
                     <View style={{ width: '90%' }}>
                         <View style={styles.heading}>
                             <Text style={styles.title1}>Just </Text>

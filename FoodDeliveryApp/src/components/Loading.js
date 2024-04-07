@@ -1,14 +1,12 @@
 import React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
 
-const Loading = ({ loading }) => {
+const Loading = () => {
     return (
         <React.Fragment>
-            {loading && (
-                <View style={styles.container}>
-                    <ActivityIndicator color='#fff' />
-                </View>
-            )}
+            <View style={styles.container}>
+                <ActivityIndicator color='#fff' />
+            </View>
         </React.Fragment>
     )
 }

@@ -22,6 +22,7 @@ import BoundaryScreen from '../../components/BoundaryScreen'
 
 import { fetchRegister } from '../../store/actions/userAction'
 import { selectUser } from '../../store/selector'
+import { reState } from '../../store/slice/userSlice'
 
 export default function SignUp({ navigation }) {
     const dispatch = useDispatch()
@@ -45,8 +46,9 @@ export default function SignUp({ navigation }) {
 
     useEffect(() => {
         if (isFocused) {
+            dispatch(reState())
             if (userState.isSuccess) {
-                Alert.alert('Thông báo', userState.userInfo.message, [
+                Alert.alert('Thông báo', userState.messageNotify, [
                     {
                         text: 'OK',
                         onPress: () => navigation.navigate('SignIn'),
@@ -55,7 +57,7 @@ export default function SignUp({ navigation }) {
             }
 
             if (userState.isError) {
-                Alert.alert('Thông báo', userState.errorMessage)
+                Alert.alert('Thông báo', userState.messageNotify)
             }
         }
     }, [userState, isFocused])
@@ -108,7 +110,7 @@ export default function SignUp({ navigation }) {
                     contentContainerStyle={{ alignItems: 'center' }}
                     showsVerticalScrollIndicator={false}
                 >
-                    <Loading loading={userState.isLoading} />
+                    {userState.isLoading && <Loading />}
                     <View style={{ width: '90%' }}>
                         <View style={styles.heading}>
                             <Text style={styles.title1}>Let's </Text>

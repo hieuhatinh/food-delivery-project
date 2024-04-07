@@ -3,6 +3,7 @@ import { fetchGetCategories } from '../actions/categoryAction'
 
 const initialState = {
     categories: [],
+    categoriesName: [],
     isLoading: false,
     isSuccess: false,
     error: {
@@ -15,12 +16,6 @@ export const categoriesSlice = createSlice({
     name: 'categories',
     initialState,
     reducers: {
-        getCategoriesName: (state, action) => {
-            return state.categories.data.categories.map((item) => ({
-                _id: item._id,
-                categoryName: item.categoryName,
-            }))
-        },
         setCategories: () => initialState,
     },
     extraReducers: (builder) => {

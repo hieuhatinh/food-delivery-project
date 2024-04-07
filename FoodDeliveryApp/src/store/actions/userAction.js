@@ -11,7 +11,7 @@ const fetchLogin = createAsyncThunk(
                 password,
             })
 
-            return { ...user }
+            return user.data
         } catch (error) {
             return rejectWithValue(error.response.data.message)
         }
@@ -27,11 +27,57 @@ const fetchRegister = createAsyncThunk(
                 password,
             })
 
-            return { message: user.data.message }
+            return user.data.message
         } catch (error) {
             return rejectWithValue(error.response.data.message)
         }
     },
 )
 
-export { fetchLogin, fetchRegister }
+const fetchUpdateInfomation = createAsyncThunk(
+    'user/fetchUpdateInfomation',
+    async (
+        { idUser, fullName, phoneNumber, address, sex, dateOfBirth, slogan },
+        { rejectWithValue },
+    ) => {
+        try {
+            let dateArr = dateOfBirth?.split('-')
+            let dateStr = !!dateArr
+                ? `${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`
+                : ''
+
+            const userInfoUpdate = await axiosClient.patch(
+                `/user/${idUser}/update-information`,
+                {
+                    fullName: fullName?.trim(),
+                    phoneNumber: phoneNumber?.trim(),
+                    address: address?.trim(),
+                    sex: sex.value?.trim(),
+                    dateOfBirth: dateStr?.trim(),
+                    slogan: slogan?.trim(),
+                },
+            )
+
+            return userInfoUpdate.data.message
+        } catch (error) {
+            return rejectWithValue(error.response.data.message)
+        }
+    },
+)
+
+const fetchGetUserInfo = createAsyncThunk(
+    'user/fetchGetUserInfo', 
+    async ({idUser}, {rejectWithValue}) => {
+        try {
+            const user = await axiosClient.get(
+                `/user/${idUser}/get-information`,
+            )
+
+            return user.data
+        } catch (error) {
+            rejectWithValue(error.response.data.message)
+        }
+    }
+)
+
+export { fetchLogin, fetchRegister, fetchUpdateInfomation, fetchGetUserInfo }

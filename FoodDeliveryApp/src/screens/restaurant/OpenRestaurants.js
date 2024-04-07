@@ -1,63 +1,31 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
+import { useIsFocused } from '@react-navigation/native'
 
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 import BoundaryScreen from '../../components/BoundaryScreen'
 import CardRestaurant from '../../components/Card/CardRestaurant'
 import CartNorify from '../../components/icon/CartNotify'
 import Loading from '../../components/Loading'
-import axiosClient from '../../api/axiosClient'
 
-const restaurants = [
-    {
-        id: 1,
-        restaurantName: 'rose garden restaurant',
-        image: require('../../assets/images/restaurant.png'),
-        categories: 'Burger - Chiken - Riche - Wings',
-    },
-    {
-        id: 2,
-        restaurantName: 'rose garden restaurant',
-        image: require('../../assets/images/restaurant.png'),
-        categories: 'Burger - Chiken - Riche - Wings',
-    },
-    {
-        id: 3,
-        restaurantName: 'rose garden restaurant',
-        image: require('../../assets/images/restaurant.png'),
-        categories: 'Burger - Chiken - Riche - Wings',
-    },
-]
+import { fetchOpenRes } from '../../store/actions/restaurantAction'
+import { selectRestaurants } from '../../store/selector'
 
 const OpenRestaurants = () => {
-    const [loading, setLoading] = useState(true)
-    const [openRestaurants, setOpenRestaurants] = useState([])
+    const dispatch = useDispatch()
+    const isFocused = useIsFocused()
+    const restaurantsState = useSelector(selectRestaurants)
 
     useEffect(() => {
-        async function fetchOpenRestaurants() {
-            let restaurants = await axiosClient.get(
-                '/restaurant/get-restaurants',
-                {
-                    params: { state: 'open' },
-                },
-            )
-            
-            if (restaurants.status === 200) {
-                setOpenRestaurants(restaurants.data.restaurants)
-                setLoading(false)
-            }
+        if (isFocused) {
+            dispatch(fetchOpenRes({ limit: undefined, state: 'open' }))
         }
-
-        const idTimeout = setTimeout(() => {
-            fetchOpenRestaurants()
-        }, 2000)
-
-        return () => clearTimeout(idTimeout)
-    }, [])
+    }, [isFocused])
 
     return (
         <React.Fragment>
-            {loading ? (
+            {restaurantsState.isLoading ? (
                 <Loading />
             ) : (
                 <BoundaryScreen>
@@ -66,7 +34,7 @@ const OpenRestaurants = () => {
                     </HeaderSecondary>
 
                     <FlatList
-                        data={openRestaurants}
+                        data={restaurantsState.restaurants}
                         renderItem={({ item }) => (
                             <CardRestaurant
                                 {...item}

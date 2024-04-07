@@ -12,7 +12,8 @@ import {
 } from 'react-native'
 import { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome6'
-import { useNavigation } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Button from '../../components/button/Button'
 import HeaderSecondary from '../../components/header/HeaderSecondary'
@@ -20,25 +21,19 @@ import Avatar from '../../components/Avatar'
 import { global } from '../../global'
 import { validDate, validPhoneNumber } from '../../validation'
 import useDebounce from '../../hooks/useDebounce'
-import axiosClient from '../../api/axiosClient'
 import Loading from '../../components/Loading'
 import BoundaryScreen from '../../components/BoundaryScreen'
 
-const items = [
-    { label: 'Male', value: 'male' },
-    { label: 'Female', value: 'female' },
-    { label: 'Other', value: 'Other' },
-]
+import { fetchUpdateInfomation } from '../../store/actions/userAction'
+import { selectUser, selectUserInfo } from '../../store/selector'
+import { itemsSex } from './itemSex'
+import { reState } from '../../store/slice/userSlice'
 
-const EditInformation = ({ route }) => {
-    const { userInfo } = route.params
-
-    // thông tin cũ của người dùng
-    const labelSex =
-        userInfo.sex && items.find((item) => item.value === userInfo.sex).label
-    let dateTimeArr = userInfo.dateOfBirth?.substring(0, 10).split('-')
-    let dateString =
-        !!dateTimeArr && `${dateTimeArr[2]}-${dateTimeArr[1]}-${dateTimeArr[0]}`
+const EditInformation = () => {
+    const dispatch = useDispatch()
+    const userState = useSelector(selectUser)
+    const userInfo = useSelector(selectUserInfo)
+    const isFocused = useIsFocused()
 
     const navigation = useNavigation()
 
@@ -46,18 +41,16 @@ const EditInformation = ({ route }) => {
 
     const [fullName, setFullName] = useState(userInfo.fullName || null)
     const [sex, setSex] = useState({
-        label: labelSex,
-        value: userInfo.sex || null,
+        label: userInfo.sex?.label,
+        value: userInfo.sex?.value || null,
     })
-    const [dateOfBirth, setDateOfBirth] = useState(dateString || null)
+    const [dateOfBirth, setDateOfBirth] = useState(userInfo.dateOfBirth || null)
     const [phoneNumber, setPhoneNumber] = useState(userInfo.phoneNumber || null)
     const [address, setAddress] = useState(userInfo.address || null)
     const [slogan, setSlogan] = useState(userInfo.slogan || null)
     const [isValidDateBirth, setIsValidDateBirth] = useState()
     const [isValidPhoneNumber, setIsValidPhoneNumber] = useState()
     const [disableSubmit, setDisableSubmit] = useState()
-
-    const [loading, setLoading] = useState(false)
 
     // dropdown list item sex
     const toggleDropdown = () => {
@@ -118,45 +111,7 @@ const EditInformation = ({ route }) => {
         setSlogan(slogan)
     }
 
-    // xử lý khi submit
-    const handlePressSubmit = async () => {
-        setLoading(true)
-        let dateArr = dateOfBirth?.split('-')
-        let dateStr = !!dateArr
-            ? `${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`
-            : ''
-            
-        try {
-            const userInfoUpdate = await axiosClient.patch(
-                `/user/${userInfo._id}/update-information`,
-                {
-                    fullName: fullName?.trim(),
-                    phoneNumber: phoneNumber?.trim(),
-                    address: address?.trim(),
-                    sex: sex.value?.trim(),
-                    dateOfBirth: dateStr?.trim(),
-                    slogan: slogan?.trim(),
-                },
-            )
-
-            if (userInfoUpdate.status === 200) {
-                Alert.alert('Thông báo', userInfoUpdate.data.message, [
-                    {
-                        text: 'OK',
-                        onPress: () => navigation.navigate('PersonalInfo'),
-                    },
-                ])
-
-                setLoading(false)
-            }
-        } catch (error) {
-            if (error.response.status === 404) {
-                Alert.alert('Thông báo', error.response.data.message)
-            }
-            setLoading(false)
-        }
-    }
-
+    // disabled submit button
     useEffect(() => {
         setDisableSubmit(
             !(
@@ -167,7 +122,7 @@ const EditInformation = ({ route }) => {
             ),
         )
 
-        if (!!dateOfBirth && dateOfBirth !== dateString) {
+        if (!!dateOfBirth && dateOfBirth !== userInfo.dateOfBirth) {
             setDisableSubmit(!(isValidDateBirth === true))
         }
 
@@ -185,9 +140,42 @@ const EditInformation = ({ route }) => {
         isValidPhoneNumber,
     ])
 
+    // xử lý khi submit
+    const handlePressSubmit = async () => {
+        dispatch(
+            fetchUpdateInfomation({
+                idUser: userInfo._id,
+                fullName,
+                phoneNumber,
+                address,
+                sex,
+                dateOfBirth,
+                slogan,
+            }),
+        )
+    }
+
+    useEffect(() => {
+        if (isFocused) {
+            dispatch(reState())
+            if (userState.isSuccess) {
+                Alert.alert('Thông báo', userState.messageNotify, [
+                    {
+                        text: 'OK',
+                        onPress: () => navigation.navigate('PersonalInfo'),
+                    },
+                ])
+            }
+
+            if (userState.isError) {
+                Alert.alert('Thông báo', userState.messageNotify)
+            }
+        }
+    }, [isFocused, userState])
+
     return (
         <BoundaryScreen>
-            {loading && <Loading />}
+            {userState.isLoading && <Loading />}
             <TouchableWithoutFeedback onPress={handlePressOutside}>
                 <KeyboardAvoidingView
                     style={styles.keyBoardAvoidingView}
@@ -251,7 +239,7 @@ const EditInformation = ({ route }) => {
                                         <Icon name='chevron-down' size={10} />
                                         {isOpen && (
                                             <View style={styles.dropdownMenu}>
-                                                {items.map((item) => (
+                                                {itemsSex.map((item) => (
                                                     <TouchableOpacity
                                                         key={item.value}
                                                         style={

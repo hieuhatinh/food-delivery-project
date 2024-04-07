@@ -1,4 +1,4 @@
-import React, { useDebugValue } from 'react'
+import React from 'react'
 import { View, StyleSheet, Text, ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -8,6 +8,7 @@ import BoundaryScreen from '../../components/BoundaryScreen'
 import MenuItem from '../components/MenuItem'
 
 import { logout } from '../../store/slice/userSlice'
+import { selectUserInfo } from '../../store/selector'
 
 const profileCluster = [
     {
@@ -73,7 +74,7 @@ const supportCluster = [
 ]
 
 const MenuProfile = ({ navigation }) => {
-    const userInfo = useSelector((state) => state.user)
+    const userInfo = useSelector(selectUserInfo)
     const dispatch = useDispatch()
 
     const handleSignOut = () => {

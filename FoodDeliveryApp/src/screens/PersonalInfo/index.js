@@ -1,27 +1,26 @@
 import { Alert, StyleSheet, Text, View } from 'react-native'
 import { useIsFocused, useNavigation } from '@react-navigation/native'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Button from '../../components/button/Button'
 import { global } from '../../global'
-import axiosClient from '../../api/axiosClient'
 import { calculateAge } from '../../caculator'
 import Loading from '../../components/Loading'
 import AvatarComp from '../../components/AvatarComp'
 import BoundaryScreen from '../../components/BoundaryScreen'
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 
+import { selectUser, selectUserInfo } from '../../store/selector'
+import { fetchGetUserInfo } from '../../store/actions/userAction'
+import { reState } from '../../store/slice/userSlice'
+
 const PersonalInfo = () => {
     const navigation = useNavigation()
     const dispatch = useDispatch()
     const isFocused = useIsFocused()
-
-    // lấy id người dùng từ store redux
-    const userId = useSelector((state) => state.user.id)
-
-    const [userInfo, setUserInfo] = useState()
-    const [isLoading, setIsLoading] = useState(true)
+    const userState = useSelector(selectUser)
+    const userInfo = useSelector(selectUserInfo)
 
     const handlePressEdit = () => {
         navigation.navigate('EditInformation', { userInfo })
@@ -29,33 +28,18 @@ const PersonalInfo = () => {
 
     useEffect(() => {
         if (isFocused === true) {
-            const fetchData = async () => {
-                try {
-                    const user = await axiosClient.get(
-                        `/user/${userId}/get-information`,
-                    )
-                    setUserInfo(user.data)
-                    dispatch({
-                        type: 'user/setUserInfo',
-                        payload: {
-                            id: user.data._id,
-                            email: user.data.email,
-                            fullName: user.data.fullName,
-                            slogan: user.data.slogan,
-                        },
-                    })
-
-                    setIsLoading(false)
-                } catch (error) {
-                    if (error.response.status === 404) {
-                        Alert.alert('Thông báo', error.response.data.message)
-                    }
-                    setIsLoading(false)
-                }
-            }
-            fetchData()
+            dispatch(fetchGetUserInfo({idUser: userInfo._id}))
         }
     }, [isFocused])
+
+    useEffect(() => {
+        if (isFocused) {
+            dispatch(reState())
+            if (userState.isError) {
+                Alert.alert('Thông báo', userState.messageNotify)
+            }
+        }
+    }, [isFocused, userState])
 
     return (
         <BoundaryScreen>
@@ -67,7 +51,7 @@ const PersonalInfo = () => {
                 <Text style={styles.title}>Personal Information</Text>
             </HeaderSecondary>
 
-            {isLoading ? (
+            {userState.isLoading ? (
                 <View style={{ height: '100%', width: '100%', top: 0 }}>
                     <Loading />
                 </View>
@@ -159,7 +143,7 @@ const PersonalInfo = () => {
             <Button
                 title='Edit Information'
                 handlePress={handlePressEdit}
-                disabled={isLoading ? true : false}
+                disabled={userState.isLoading}
             />
         </BoundaryScreen>
     )
