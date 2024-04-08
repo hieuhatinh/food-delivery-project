@@ -1,9 +1,12 @@
 import { Text, StyleSheet, View, TouchableOpacity, Image } from 'react-native'
-import HeaderSecondary from '../components/header/HeaderSecondary'
-import { useState } from 'react'
-import OrderOnGoing from './components/OrderOnGoing'
 import { ScrollView } from 'react-native'
+import { useState } from 'react'
+
+import HeaderSecondary from '../components/header/HeaderSecondary'
+import OrderOnGoing from './components/OrderOnGoing'
 import { global } from '../global'
+import BoundaryScreen from '../components/BoundaryScreen'
+
 export default function MyOrder() {
     const DataFoodOnGoing = [
         {
@@ -49,7 +52,7 @@ export default function MyOrder() {
             dateTime: '29 Jan, 12:30',
             item: 1,
             image: require('../assets/images/avatar.png'),
-            status: 'Completed'
+            status: 'Completed',
         },
         {
             id: 235322,
@@ -59,7 +62,7 @@ export default function MyOrder() {
             dateTime: '29 Jan, 12:30',
             item: 1,
             image: require('../assets/images/avatar.png'),
-            status: 'Canceled'
+            status: 'Canceled',
         },
         {
             id: 234534,
@@ -69,7 +72,7 @@ export default function MyOrder() {
             dateTime: '29 Jan, 12:30',
             item: 1,
             image: require('../assets/images/avatar.png'),
-            status: 'Completed'
+            status: 'Completed',
         },
         ,
         {
@@ -80,7 +83,7 @@ export default function MyOrder() {
             dateTime: '29 Jan, 12:30',
             item: 1,
             image: require('../assets/images/avatar.png'),
-            status: 'Canceled'
+            status: 'Canceled',
         },
     ]
 
@@ -88,12 +91,10 @@ export default function MyOrder() {
     const [borderColor1, setBorderColor1] = useState(global.primaryColor)
     const [borderColor2, setBorderColor2] = useState('#CED7DF')
 
-
     const showOnGoing = () => {
         check === true ? setCheck(check) : setCheck(!check)
         setBorderColor1(global.primaryColor)
         setBorderColor2('#CED7DF')
-
     }
     const showHistory = () => {
         check === true ? setCheck(!check) : setCheck(check)
@@ -102,18 +103,24 @@ export default function MyOrder() {
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <HeaderSecondary />
-            </View>
+        <BoundaryScreen>
+            <HeaderSecondary
+                iconRightSecond={{ name: 'dots-three-horizontal' }}
+            >
+                <Text style={styles.title}>My order</Text>
+            </HeaderSecondary>
             <View style={styles.navBar}>
-                <TouchableOpacity style={[styles.btn, 
-                {borderBottomColor: borderColor1}
-                ]} onPress={showOnGoing}>
-                    <Text style={{color: borderColor1}}>Ongoing</Text>
+                <TouchableOpacity
+                    style={[styles.btn, { borderBottomColor: borderColor1 }]}
+                    onPress={showOnGoing}
+                >
+                    <Text style={{ color: borderColor1 }}>Ongoing</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.btn, {borderBlockColor: borderColor2}]} onPress={showHistory}>
-                    <Text style={{color: borderColor2 }}>History</Text>
+                <TouchableOpacity
+                    style={[styles.btn, { borderBlockColor: borderColor2 }]}
+                    onPress={showHistory}
+                >
+                    <Text style={{ color: borderColor2 }}>History</Text>
                 </TouchableOpacity>
             </View>
             {check && (
@@ -126,22 +133,24 @@ export default function MyOrder() {
             {!check && (
                 <ScrollView>
                     {DataFoodHistory.map((item) => (
-                        <OrderOnGoing key={item.id} {...item} btn1='Rate' btn2='Re-Order' display='flex' />
+                        <OrderOnGoing
+                            key={item.id}
+                            {...item}
+                            btn1='Rate'
+                            btn2='Re-Order'
+                            display='flex'
+                        />
                     ))}
                 </ScrollView>
             )}
-        </View>
+        </BoundaryScreen>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 50,
-    },
-    header: {
-        width: '100%',
-        alignItems: 'center',
+    title: {
+        fontSize: 20,
+        fontWeight: '600',
     },
     navBar: {
         flexDirection: 'row',

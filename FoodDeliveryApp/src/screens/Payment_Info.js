@@ -1,24 +1,27 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
 import BoundaryIcon from '../components/button/BoundaryIcon'
 import Icon from 'react-native-vector-icons/Entypo'
+import BoundaryScreen from '../components/BoundaryScreen'
 
-export default function Payment_Info({navigation}) {
+export default function Payment_Info({ navigation }) {
     return (
-        <View style={styles.container}>
-            <View style={styles.btn}>
-                <BoundaryIcon handlePress={() => navigation.goBack()}>
-                    <Icon name='chevron-left' size={20} />
-                </BoundaryIcon>
+        <BoundaryScreen>
+            <View style={styles.container}>
+                <View style={styles.btn}>
+                    <BoundaryIcon handlePress={() => navigation.goBack()}>
+                        <Icon name='chevron-left' size={20} />
+                    </BoundaryIcon>
+                </View>
+                <View style={styles.image}>
+                    <Image source={require('../assets/images/SadCloud.png')} />
+                </View>
+                <View style={styles.box}>
+                    <Text style={styles.title}>
+                        Currently we only pay in cash. Please sympathize.
+                    </Text>
+                </View>
             </View>
-            <View style={styles.image}>
-                <Image source={require('../assets/images/SadCloud.png')} />
-            </View>
-            <View style={styles.box}>
-                <Text style={styles.title}>
-                    Currently we only pay in cash. Please sympathize.
-                </Text>
-            </View>
-        </View>
+        </BoundaryScreen>
     )
 }
 
@@ -27,6 +30,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        width: '100%',
     },
     btn: {
         position: 'absolute',

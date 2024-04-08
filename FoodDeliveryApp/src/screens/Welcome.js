@@ -59,8 +59,7 @@ const styles = StyleSheet.create({
     },
     button: {
         gap: 30,
-        width: '100%',
-        alignItems: 'center',
+        width: '90%',
         marginTop: 20,
     },
 })

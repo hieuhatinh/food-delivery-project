@@ -58,7 +58,7 @@ const PersonalInfo = () => {
             </HeaderSecondary>
 
             {isLoading ? (
-                <View style={{height: '100%', width: '100%', top: 0}}>
+                <View style={{ height: '100%', width: '100%', top: 0 }}>
                     <Loading />
                 </View>
             ) : (
@@ -145,11 +145,14 @@ const PersonalInfo = () => {
                     </View>
                 </View>
             )}
-            <Button
-                title='Edit Information'
-                handlePress={handlePressEdit}
-                disabled={isLoading ? true : false}
-            />
+
+            <View style={styles.viewButton}>
+                <Button
+                    title='Edit Information'
+                    handlePress={handlePressEdit}
+                    disabled={isLoading ? true : false}
+                />
+            </View>
         </BoundaryScreen>
     )
 }
@@ -178,6 +181,10 @@ const styles = StyleSheet.create({
     notData: {
         color: global.error,
         fontSize: 14,
+    },
+    viewButton: {
+        width: '95%',
+        marginBottom: 10,
     },
 })
 

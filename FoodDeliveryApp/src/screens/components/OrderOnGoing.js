@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, Image } from 'react-native'
 import React from 'react'
+
 import Button from '../../components/button/Button'
 import Icon from 'react-native-vector-icons/Entypo'
 
@@ -21,7 +22,7 @@ const OrderOnGoing = ({
         ? (colorStatus = '#059C6A')
         : (colorStatus = '#FF0000')
     return (
-        <View>
+        <View style={{ width: '100%' }}>
             <View style={[styles.row, { paddingVertical: 20 }]}>
                 <Text>{loai_mon_an}</Text>
                 <Text
@@ -75,7 +76,7 @@ const OrderOnGoing = ({
                         // handlePress={() => navigation.navigate('OrderSuccess')}
                     />
                 </View>
-                <View style={[styles.btn2, { alignItems: 'flex-end' }]}>
+                <View style={styles.btn2}>
                     <Button
                         height={50}
                         title={btn2}
@@ -122,13 +123,15 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     box2: {
-        margin: 20,
+        marginVertical: 20,
         paddingTop: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
     },
     btn2: {
-        width: 160,
+        flex: 1,
+        marginHorizontal: 5,
     },
     id: {
         textDecorationLine: 'underline',

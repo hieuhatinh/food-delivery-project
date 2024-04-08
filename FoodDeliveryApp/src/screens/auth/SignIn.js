@@ -74,7 +74,10 @@ export default function SignIn({ navigation }) {
 
                 // hiển thị thông báo đăng nhập thành công
                 Alert.alert('Thông báo', user.data.message, [
-                    { text: 'OK', onPress: () => navigation.replace('Home') },
+                    {
+                        text: 'OK',
+                        onPress: () => navigation.replace('BottomTabs'),
+                    },
                 ])
                 setLoading(false)
             }
@@ -247,9 +250,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     styleViewButton: {
-        alignItems: 'center',
         marginTop: 30,
-        width: '100%',
     },
     text1: {
         paddingTop: 100,

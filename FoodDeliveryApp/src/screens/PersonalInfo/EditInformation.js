@@ -380,11 +380,14 @@ const EditInformation = ({ route }) => {
                                 </View>
                             </View>
                         </View>
-                        <Button
-                            title='Submit'
-                            handlePress={handlePressSubmit}
-                            disabled={disableSubmit}
-                        />
+
+                        <View style={styles.viewButton}>
+                            <Button
+                                title='Submit'
+                                handlePress={handlePressSubmit}
+                                disabled={disableSubmit}
+                            />
+                        </View>
                     </ScrollView>
                 </KeyboardAvoidingView>
             </TouchableWithoutFeedback>
@@ -451,6 +454,9 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 15,
         width: '80%',
+    },
+    viewButton: {
+        width: '100%',
     },
 
     // dropdown

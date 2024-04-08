@@ -293,9 +293,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     styleViewButton: {
-        alignItems: 'center',
         marginTop: 30,
-        width: '100%',
     },
     box4: {
         flexDirection: 'row',
