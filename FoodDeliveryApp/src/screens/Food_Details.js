@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { View,StyleSheet,Text,Image } from "react-native";
 import BoundaryIcon from '../components/button/BoundaryIcon'
 import Icon from 'react-native-vector-icons/Entypo'
+import Button from "../components/button/Button";
 const Food_Details =() =>{
+    const [click,setClick] = useState(false);
+    const changeColor =() => {
+        setClick(true)
+    }
+
     return (
         <View style= {styles.container}>
             <View style={styles.boxHeader}>
@@ -18,7 +24,12 @@ const Food_Details =() =>{
             </View>
             <Text style={{fontSize:20,fontWeight:'bold'}}>Chicken & Chips</Text>
             <Text style={{color:'#a0a5ba',width:350}}>Prosciutto e funghi is a pizza variety that is topped with tomato sauce.</Text>
-
+            <View>
+                <Text style={{fontSize:13}}>Size:</Text>
+                <BoundaryIcon handlePress={changeColor}>
+                    <Text>M</Text>
+                </BoundaryIcon>
+            </View>
             
 
         </View>
