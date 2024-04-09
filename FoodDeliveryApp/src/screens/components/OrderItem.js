@@ -4,7 +4,7 @@ import React from 'react'
 import Button from '../../components/button/Button'
 import Icon from 'react-native-vector-icons/Entypo'
 
-const OrderOnGoing = ({
+const OrderItem = ({
     loai_mon_an,
     image,
     nameFood,
@@ -23,7 +23,7 @@ const OrderOnGoing = ({
         : (colorStatus = '#FF0000')
     return (
         <View style={{ width: '100%' }}>
-            <View style={[styles.row, { paddingVertical: 20 }]}>
+            <View style={[styles.row, { paddingTop: 20, paddingBottom: 10 }]}>
                 <Text>{loai_mon_an}</Text>
                 <Text
                     style={{
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         paddingTop: 20,
         borderTopWidth: 1,
-        borderTopColor: '#6B6E82',
+        borderTopColor: '#eef2f5',
         flexDirection: 'row',
         alignItems: 'center',
     },
@@ -145,4 +145,4 @@ const styles = StyleSheet.create({
         color: '#6B6E82',
     },
 })
-export default OrderOnGoing
+export default OrderItem

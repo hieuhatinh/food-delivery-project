@@ -1,153 +1,213 @@
-import { Text, StyleSheet, View, TouchableOpacity, Image } from 'react-native'
+import {
+    Text,
+    StyleSheet,
+    View,
+    useWindowDimensions,
+} from 'react-native'
 import { ScrollView } from 'react-native'
 import { useState } from 'react'
+import {
+    TabView,
+    SceneMap,
+    TabBar,
+    TabBarIndicator,
+} from 'react-native-tab-view'
 
 import HeaderSecondary from '../components/header/HeaderSecondary'
-import OrderOnGoing from './components/OrderOnGoing'
+import OrderItem from './components/OrderItem'
 import { global } from '../global'
-import BoundaryScreen from '../components/BoundaryScreen'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
+const DataFoodOnGoing = [
+    {
+        id: 123456,
+        loai_mon_an: 'Food',
+        nameFood: 'Pizza Hut',
+        price: 45,
+        item: 1,
+        image: require('../assets/images/avatar.png'),
+    },
+    {
+        id: 235322,
+        loai_mon_an: 'Food',
+        nameFood: 'Pizza Hut',
+        price: 45,
+        item: 1,
+        image: require('../assets/images/avatar.png'),
+    },
+    {
+        id: 234534,
+        loai_mon_an: 'Food',
+        nameFood: 'Pizza Hut',
+        price: 45,
+        item: 1,
+        image: require('../assets/images/avatar.png'),
+    },
+    ,
+    {
+        id: 454532,
+        loai_mon_an: 'Food',
+        nameFood: 'Pizza Hut',
+        price: 45,
+        item: 1,
+        image: require('../assets/images/avatar.png'),
+    },
+]
+const DataFoodHistory = [
+    {
+        id: 123456,
+        loai_mon_an: 'Food',
+        nameFood: 'Pizza Hut',
+        price: 45,
+        dateTime: '29 Jan, 12:30',
+        item: 1,
+        image: require('../assets/images/avatar.png'),
+        status: 'Completed',
+    },
+    {
+        id: 235322,
+        loai_mon_an: 'Food',
+        nameFood: 'Pizza Hut',
+        price: 45,
+        dateTime: '29 Jan, 12:30',
+        item: 1,
+        image: require('../assets/images/avatar.png'),
+        status: 'Canceled',
+    },
+    {
+        id: 234534,
+        loai_mon_an: 'Food',
+        nameFood: 'Pizza Hut',
+        price: 45,
+        dateTime: '29 Jan, 12:30',
+        item: 1,
+        image: require('../assets/images/avatar.png'),
+        status: 'Completed',
+    },
+    ,
+    {
+        id: 454532,
+        loai_mon_an: 'Food',
+        nameFood: 'Pizza Hut',
+        price: 45,
+        dateTime: '29 Jan, 12:30',
+        item: 1,
+        image: require('../assets/images/avatar.png'),
+        status: 'Canceled',
+    },
+]
+
+const OnGoing = () => {
+    return (
+        <ScrollView>
+            {DataFoodOnGoing.map((item) => (
+                <OrderItem key={item.id} {...item} />
+            ))}
+        </ScrollView>
+    )
+}
+
+const History = () => {
+    return (
+        <ScrollView>
+            {DataFoodHistory.map((item) => (
+                <OrderItem
+                    key={item.id}
+                    {...item}
+                    btn1='Rate'
+                    btn2='Re-Order'
+                    display='flex'
+                />
+            ))}
+        </ScrollView>
+    )
+}
+
+const renderScene = SceneMap({
+    ongoing: OnGoing,
+    history: History,
+})
+
+const renderTabBar = (props) => (
+    <TabBar
+        {...props}
+        renderIndicator={(indicatorProps) => {
+            const width =
+                indicatorProps.getTabWidth(
+                    indicatorProps.navigationState.index,
+                ) - 30
+            return (
+                <TabBarIndicator
+                    {...indicatorProps}
+                    width={width}
+                    style={{
+                        backgroundColor: global.primaryColor,
+                        marginLeft: 15
+                    }}
+                />
+            )
+        }}
+        renderLabel={({ route, focused, color }) => (
+            <Text style={{ color, textTransform: 'capitalize' }}>
+                {route.title}
+            </Text>
+        )}
+        style={{ backgroundColor: '#fff' }}
+        activeColor={global.primaryColor}
+        inactiveColor={global.secondaryColor}
+    />
+)
 
 export default function MyOrder() {
-    const DataFoodOnGoing = [
-        {
-            id: 123456,
-            loai_mon_an: 'Food',
-            nameFood: 'Pizza Hut',
-            price: 45,
-            item: 1,
-            image: require('../assets/images/avatar.png'),
-        },
-        {
-            id: 235322,
-            loai_mon_an: 'Food',
-            nameFood: 'Pizza Hut',
-            price: 45,
-            item: 1,
-            image: require('../assets/images/avatar.png'),
-        },
-        {
-            id: 234534,
-            loai_mon_an: 'Food',
-            nameFood: 'Pizza Hut',
-            price: 45,
-            item: 1,
-            image: require('../assets/images/avatar.png'),
-        },
-        ,
-        {
-            id: 454532,
-            loai_mon_an: 'Food',
-            nameFood: 'Pizza Hut',
-            price: 45,
-            item: 1,
-            image: require('../assets/images/avatar.png'),
-        },
-    ]
-    const DataFoodHistory = [
-        {
-            id: 123456,
-            loai_mon_an: 'Food',
-            nameFood: 'Pizza Hut',
-            price: 45,
-            dateTime: '29 Jan, 12:30',
-            item: 1,
-            image: require('../assets/images/avatar.png'),
-            status: 'Completed',
-        },
-        {
-            id: 235322,
-            loai_mon_an: 'Food',
-            nameFood: 'Pizza Hut',
-            price: 45,
-            dateTime: '29 Jan, 12:30',
-            item: 1,
-            image: require('../assets/images/avatar.png'),
-            status: 'Canceled',
-        },
-        {
-            id: 234534,
-            loai_mon_an: 'Food',
-            nameFood: 'Pizza Hut',
-            price: 45,
-            dateTime: '29 Jan, 12:30',
-            item: 1,
-            image: require('../assets/images/avatar.png'),
-            status: 'Completed',
-        },
-        ,
-        {
-            id: 454532,
-            loai_mon_an: 'Food',
-            nameFood: 'Pizza Hut',
-            price: 45,
-            dateTime: '29 Jan, 12:30',
-            item: 1,
-            image: require('../assets/images/avatar.png'),
-            status: 'Canceled',
-        },
-    ]
+    const layout = useWindowDimensions()
+    const insets = useSafeAreaInsets()
 
-    const [check, setCheck] = useState(true)
-    const [borderColor1, setBorderColor1] = useState(global.primaryColor)
-    const [borderColor2, setBorderColor2] = useState('#CED7DF')
-
-    const showOnGoing = () => {
-        check === true ? setCheck(check) : setCheck(!check)
-        setBorderColor1(global.primaryColor)
-        setBorderColor2('#CED7DF')
-    }
-    const showHistory = () => {
-        check === true ? setCheck(!check) : setCheck(check)
-        setBorderColor1('#CED7DF')
-        setBorderColor2(global.primaryColor)
-    }
+    const [index, setIndex] = useState(0)
+    const [routes] = useState([
+        { key: 'ongoing', title: 'Ongoing' },
+        { key: 'history', title: 'History' },
+    ])
 
     return (
-        <BoundaryScreen>
-            <HeaderSecondary
-                iconRightSecond={{ name: 'dots-three-horizontal' }}
-            >
-                <Text style={styles.title}>My order</Text>
-            </HeaderSecondary>
-            <View style={styles.navBar}>
-                <TouchableOpacity
-                    style={[styles.btn, { borderBottomColor: borderColor1 }]}
-                    onPress={showOnGoing}
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right,
+                },
+            ]}
+        >
+            <View style={styles.viewHeader}>
+                <HeaderSecondary
+                    iconRightSecond={{ name: 'dots-three-horizontal' }}
                 >
-                    <Text style={{ color: borderColor1 }}>Ongoing</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.btn, { borderBlockColor: borderColor2 }]}
-                    onPress={showHistory}
-                >
-                    <Text style={{ color: borderColor2 }}>History</Text>
-                </TouchableOpacity>
+                    <Text style={styles.title}>My order</Text>
+                </HeaderSecondary>
             </View>
-            {check && (
-                <ScrollView>
-                    {DataFoodOnGoing.map((item) => (
-                        <OrderOnGoing key={item.id} {...item} />
-                    ))}
-                </ScrollView>
-            )}
-            {!check && (
-                <ScrollView>
-                    {DataFoodHistory.map((item) => (
-                        <OrderOnGoing
-                            key={item.id}
-                            {...item}
-                            btn1='Rate'
-                            btn2='Re-Order'
-                            display='flex'
-                        />
-                    ))}
-                </ScrollView>
-            )}
-        </BoundaryScreen>
+            <TabView
+                renderTabBar={renderTabBar}
+                navigationState={{ index, routes }}
+                renderScene={renderScene}
+                onIndexChange={setIndex}
+                initialLayout={{ width: layout.width }}
+                lazy
+            />
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    viewHeader: {
+        alignItems: 'center',
+        marginTop: 10,
+    },
     title: {
         fontSize: 20,
         fontWeight: '600',
