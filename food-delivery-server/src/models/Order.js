@@ -19,12 +19,13 @@ const orderSchema = new Schema({
     totalPayment: {
         type: Number,
         require: true,
+        default: 0,
     },
     note: {
         type: String,
         require: false,
     },
-    userId: {
+    idUser: {
         type: Schema.Types.ObjectId,
         ref: 'Users',
     },
@@ -32,6 +33,24 @@ const orderSchema = new Schema({
         type: String,
         require: true,
     },
+    meals: [
+        {
+            mealId: {
+                type: Schema.Types.ObjectId,
+                ref: 'Meals',
+            },
+            size: {
+                type: String,
+                require: false,
+            },
+            quantity: {
+                type: Number,
+                require: true,
+                default: 1,
+            },
+            _id: false,
+        },
+    ],
 })
 
 const OrderModel = mongoose.model('Orders', orderSchema)

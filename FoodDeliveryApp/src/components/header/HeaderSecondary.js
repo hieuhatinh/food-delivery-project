@@ -32,6 +32,7 @@ const HeaderSecondary = ({
                 {iconRightFirst && (
                     <BoundaryIcon
                         backgroundColor={iconRightFirst.backgroundColor}
+                        handlePress={iconRightFirst.handlePress}
                     >
                         <Icon
                             name={iconRightFirst.name}

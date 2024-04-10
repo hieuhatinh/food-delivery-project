@@ -11,7 +11,7 @@ const getCategory = async (req, res) => {
             message: 'Lấy thông tin thành công',
         })
     } catch (error) {
-        return res.status(404).json({
+        return res.status(error.statusCode || 404).json({
             message: error.message,
         })
     }
@@ -32,31 +32,10 @@ const createNewCategory = async (req, res) => {
             message: 'Lấy thông tin thành công',
         })
     } catch (error) {
-        return res.status(error.statusCode).json({
+        return res.status(error.statusCode || 404).json({
             message: error.message,
         })
     }
 }
 
-const searchByCategory = async (req, res) => {
-    const limit = parseInt(req.query.limit)
-    const { idCategory } = req.params
-
-    try {
-        const result = await categoryResponsitories.searchByCategory({
-            limit,
-            idCategory,
-        })
-
-        return res.status(200).json({
-            ...result,
-            message: 'Lấy thông tin thành công',
-        })
-    } catch (error) {
-        return res.status(404).json({
-            message: error.message,
-        })
-    }
-}
-
-export default { getCategory, searchByCategory, createNewCategory }
+export default { getCategory, createNewCategory }

@@ -19,6 +19,7 @@ import HeaderSection from '../components/header/HeaderSection'
 import axiosClient from '../api/axiosClient'
 import Loading from '../components/Loading'
 import { setRestaurants } from '../store/slice/restaurantSlice'
+import { setCategoriesRedux } from '../store/slice/categoriesSlice'
 
 export default function Home() {
     const navigation = useNavigation()
@@ -26,6 +27,7 @@ export default function Home() {
 
     const [loading, setLoading] = useState(true)
     const [categories, setCategories] = useState([])
+    const [greeting, setGreeting] = useState()
 
     const handlePressAllCategories = () => {
         navigation.navigate('AllCategories')
@@ -33,24 +35,54 @@ export default function Home() {
 
     useEffect(() => {
         async function fetchGets() {
-            let categories = await axiosClient.get('/category/get-categories')
+            let categoriesResult = await axiosClient.get(
+                '/category/get-categories',
+            )
             let openRes = await axiosClient.get('/restaurant/get-restaurants', {
                 params: {
                     state: 'open',
-                    limit: 4,
+                    limit: 3,
                 },
             })
 
-            if (categories.status == 200 && openRes.status === 200) {
-                setCategories(categories.data.categories)
+            if (categoriesResult.status == 200 && openRes.status === 200) {
+                let categoriesRedux = categoriesResult.data.categories.map(
+                    (item) => ({
+                        _id: item._id,
+                        categoryName: item.categoryName,
+                    }),
+                )
+
+                setCategories(categoriesResult.data.categories.slice(0, 5))
                 dispatch(setRestaurants(openRes.data.restaurants))
+                dispatch(setCategoriesRedux(categoriesRedux))
                 setLoading(false)
             }
         }
 
-        setTimeout(() => {
+        const idTimeout = setTimeout(() => {
             fetchGets()
         }, 3000)
+
+        return () => clearTimeout(idTimeout)
+    }, [])
+
+    // lấy buổi (sáng, trưa, chiều, tối) hiện tại
+    useEffect(() => {
+        const currentTime = new Date()
+        const currentHour = currentTime.getHours()
+
+        let greeting = ''
+
+        if (currentHour < 12) {
+            greeting = 'Good morning'
+        } else if (currentHour < 18) {
+            greeting = 'Good afternoon'
+        } else {
+            greeting = 'Good evening'
+        }
+
+        setGreeting(greeting)
     }, [])
 
     return (
@@ -62,16 +94,17 @@ export default function Home() {
                     <Loading />
                 </View>
             ) : (
-                <ScrollView showsVerticalScrollIndicator={false}>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={{ width: '100%' }}
+                >
                     {/* Header */}
                     <HeaderHome />
 
                     {/* Search */}
                     <View style={[styles.row, { marginLeft: 20 }]}>
                         <Text>Hey Septa, </Text>
-                        <Text style={{ fontWeight: '700' }}>
-                            Good Afternoon!
-                        </Text>
+                        <Text style={{ fontWeight: '700' }}>{greeting}</Text>
                     </View>
                     <TouchableOpacity
                         style={styles.search}

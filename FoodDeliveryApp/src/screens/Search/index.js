@@ -1,12 +1,14 @@
+import React, { useState } from 'react'
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo'
 
 import SuggestRestaurants from '../components/SuggestRestaurants'
 import BoundaryScreen from '../../components/BoundaryScreen'
 import HeaderSecondary from '../../components/header/HeaderSecondary'
-import React from 'react'
 import CardMeal from '../../components/Card/CardMeal'
 import CartNorify from '../../components/icon/CartNotify'
+import axiosClient from '../../api/axiosClient'
+import Loading from '../../components/Loading'
 
 const recentKeywords = [
     { id: 1, suggestName: 'Burge' },
@@ -76,78 +78,114 @@ const popularFood = [
 ]
 
 export default function Search({ navigation }) {
+    const [searchValue, setSearchValue] = useState()
+    const [loading, setLoading] = useState(false)
+
+    const handleChangeSearch = (value) => {
+        setSearchValue(value)
+    }
+
+    const handleEnter = async () => {
+        setLoading(true)
+
+        setTimeout(async () => {
+            let resultSearch = await axiosClient.get(
+                `/search/meal?searchValue=${searchValue?.trim().toLowerCase()}`,
+            )
+            if (resultSearch.status === 200) {
+                setLoading(false)
+                navigation.navigate('ResultByName', {
+                    title: searchValue,
+                    data: resultSearch.data.meals,
+                })
+            }
+        }, 1500)
+    }
+
     return (
         <BoundaryScreen>
             {/* Header */}
             <HeaderSecondary iconNotify={<CartNorify />}>
                 <Text style={styles.title}>Search</Text>
             </HeaderSecondary>
-
-            <ScrollView
-                style={styles.container}
-                showsVerticalScrollIndicator={false}
-            >
-                <View style={{ marginTop: 10 }}>
-                    <TextInput
-                        placeholder='What will you like to eat?'
-                        style={styles.search}
-                    />
-                    <Icon
-                        name='magnifying-glass'
-                        size={25}
-                        style={styles.iconSearch}
-                    />
-                </View>
-
-                {/* Recent Keywords */}
-                <React.Fragment>
-                    <Text style={styles.sectionTitle}>Recent Keywords</Text>
-                    <ScrollView
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        style={styles.row}
-                    >
-                        {recentKeywords.map((item) => (
-                            <View key={item.id} style={styles.recentKeyword}>
-                                <Text>{item.suggestName}</Text>
-                            </View>
-                        ))}
-                    </ScrollView>
-                </React.Fragment>
-
-                {/* Suggest restaurants */}
-                <View style={styles.viewSuggestRes}>
-                    <Text style={styles.sectionTitle}>
-                        Suggested Restaurants
-                    </Text>
-                    <View>
-                        {suggestRestaurants.map((item) => (
-                            <SuggestRestaurants
-                                key={item.id}
-                                restaurant={item.restaurant}
-                                image={item.image}
-                                rate={item.rate}
-                            />
-                        ))}
+            {loading ? (
+                <Loading />
+            ) : (
+                <ScrollView
+                    style={styles.container}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <View style={{ marginTop: 10 }}>
+                        <TextInput
+                            placeholder='What will you like to eat?'
+                            style={styles.search}
+                            value={searchValue}
+                            onChangeText={handleChangeSearch}
+                            // onKeyPress={handleEnter}
+                            onSubmitEditing={handleEnter}
+                        />
+                        <Icon
+                            name='magnifying-glass'
+                            size={25}
+                            style={styles.iconSearch}
+                        />
                     </View>
-                </View>
 
-                {/* Popular FastFood */}
-                <React.Fragment>
-                    <Text style={styles.sectionTitle}>Popular Fast food</Text>
-                    <View style={styles.boxPopularFastFood}>
-                        {popularFood.map((item) => (
-                            <CardMeal
-                                key={item.id}
-                                mealName={item.nameFood}
-                                price={item.price}
-                                image={item.image}
-                                restaurantName={item.restaurant}
-                            />
-                        ))}
+                    {/* Recent Keywords */}
+                    <React.Fragment>
+                        <Text style={styles.sectionTitle}>Recent Keywords</Text>
+                        <ScrollView
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            style={styles.row}
+                        >
+                            {recentKeywords.map((item) => (
+                                <View
+                                    key={item.id}
+                                    style={styles.recentKeyword}
+                                >
+                                    <Text>{item.suggestName}</Text>
+                                </View>
+                            ))}
+                        </ScrollView>
+                    </React.Fragment>
+
+                    {/* Suggest restaurants */}
+                    <View style={styles.viewSuggestRes}>
+                        <Text style={styles.sectionTitle}>
+                            Suggested Restaurants
+                        </Text>
+                        <View>
+                            {suggestRestaurants.map((item) => (
+                                <SuggestRestaurants
+                                    key={item.id}
+                                    restaurant={item.restaurant}
+                                    image={item.image}
+                                    rate={item.rate}
+                                />
+                            ))}
+                        </View>
                     </View>
-                </React.Fragment>
-            </ScrollView>
+
+                    {/* Popular FastFood */}
+                    {/* <React.Fragment>
+                        <Text style={styles.sectionTitle}>
+                            Popular Fast food
+                        </Text>
+                        <View style={styles.boxPopularFastFood}>
+                            {popularFood.map((item) => (
+                                <CardMeal
+                                    key={item.id}
+                                    mealName={item.nameFood}
+                                    price={item.price}
+                                    image={item.image}
+                                    restaurantName={item.restaurant}
+                                />
+                            ))}
+                        </View>
+                    </React.Fragment> */}
+                </ScrollView>
+            )}
         </BoundaryScreen>
     )
 }

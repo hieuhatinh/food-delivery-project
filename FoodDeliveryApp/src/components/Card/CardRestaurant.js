@@ -1,22 +1,32 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome6'
+import { useNavigation } from '@react-navigation/native'
+
 import { global } from '../../global'
 
-const CardRestaurant = ({ restaurantName, categories }) => {
-    console.log(categories)
+const CardRestaurant = (props) => {
+    const navigation = useNavigation()
+
+    const handlePress = () => {
+        navigation.navigate('DetailRestaurant')
+    }
 
     return (
-        <TouchableOpacity style={styles.container} activeOpacity={0.9}>
+        <TouchableOpacity
+            style={styles.container}
+            activeOpacity={0.9}
+            onPress={handlePress}
+        >
             <Image
-                source={require('../../assets/images/salats.png')}
+                source={{ uri: props.imageURI }}
                 resizeMode='cover'
                 style={styles.image}
             />
             <Text style={styles.restaurantName} numberOfLines={1}>
-                {restaurantName}
+                {props.restaurantName}
             </Text>
             <Text style={styles.categories} numberOfLines={1}>
-                {categories}
+                {props.categories}
             </Text>
             <View style={styles.footer_Icon}>
                 <View style={styles.info}>
@@ -51,7 +61,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     restaurantName: {
-        fontSize: 20,
+        fontSize: 16,
         textTransform: 'capitalize',
     },
     categories: {

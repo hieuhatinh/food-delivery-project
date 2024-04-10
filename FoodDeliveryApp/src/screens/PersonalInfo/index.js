@@ -1,7 +1,7 @@
 import { Alert, StyleSheet, Text, View } from 'react-native'
 import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Button from '../../components/button/Button'
 import { global } from '../../global'
@@ -14,6 +14,7 @@ import HeaderSecondary from '../../components/header/HeaderSecondary'
 
 const PersonalInfo = () => {
     const navigation = useNavigation()
+    const dispatch = useDispatch()
     const isFocused = useIsFocused()
 
     // lấy id người dùng từ store redux
@@ -34,6 +35,15 @@ const PersonalInfo = () => {
                         `/user/${userId}/get-information`,
                     )
                     setUserInfo(user.data)
+                    dispatch({
+                        type: 'user/setUserInfo',
+                        payload: {
+                            id: user.data._id,
+                            email: user.data.email,
+                            fullName: user.data.fullName,
+                            slogan: user.data.slogan,
+                        },
+                    })
 
                     setIsLoading(false)
                 } catch (error) {
@@ -177,6 +187,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: global.textPrimaryColor,
         marginVertical: 10,
+        textTransform: 'capitalize',
     },
     notData: {
         color: global.error,

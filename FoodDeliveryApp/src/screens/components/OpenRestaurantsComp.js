@@ -29,6 +29,7 @@ const OpenRestaurantsComp = () => {
                         categories={item.categories
                             .map((item) => item.categoryName)
                             .join('-')}
+                        imageURI={item.image.path}
                     />
                 ))}
             </View>

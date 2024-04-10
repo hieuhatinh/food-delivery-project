@@ -5,21 +5,33 @@ const mealSchema = new Schema({
         type: String,
         require: true,
     },
-    price: {
-        type: Number,
-        require: true,
-    },
-    artWork: {
-        type: Schema.Types.ObjectId,
-        ref: 'Image',
-        require: false,
+    priceAndSize: [
+        {
+            price: {
+                type: Number,
+                require: true,
+            },
+            size: {
+                type: String,
+                require: false,
+            },
+            _id: false,
+        },
+    ],
+    artwork: {
+        fileName: {
+            type: String,
+            require: true,
+        },
+        path: String,
+        mimetype: String,
+        uploadTime: {
+            type: Date,
+            default: Date.now,
+        },
     },
     describe: {
         type: String,
-        require: false,
-    },
-    size: {
-        type: [String],
         require: false,
     },
     restaurant: {
