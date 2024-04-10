@@ -10,29 +10,30 @@ import {
     View,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { useDispatch } from 'react-redux'
-import { Link } from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useIsFocused } from '@react-navigation/native'
 
 import SocialLogin from '../components/SocialLogin'
 import { validEmail } from '../../validation'
 import Loading from '../../components/Loading'
-import storage from '../../storage'
-import axiosClient from '../../api/axiosClient'
 import BoundaryScreen from '../../components/BoundaryScreen'
 import Button from '../../components/button/Button'
 import { global } from '../../global'
 
+import { fetchLogin } from '../../store/actions/userAction'
+import { selectUser } from '../../store/selector'
+import { saveToken } from '../../store/slice/userSlice'
+
 export default function SignIn({ navigation }) {
     const dispatch = useDispatch()
+    const userState = useSelector(selectUser)
+    const isFocused = useIsFocused()
 
     const [isSelected, setSelection] = useState(true)
-    const [passWord, setPassWord] = useState('')
+    const [password, setPassWord] = useState('')
     const [email, setEmail] = useState('')
     const [checkEmail, setCheckEmail] = useState(false)
     const [isDisabled, setIsDisabled] = useState(true)
-
-    // loading và thông báo
-    const [loading, setLoading] = useState(false)
 
     const handleChangeEmail = (value) => {
         setEmail(value.trim())
@@ -44,50 +45,24 @@ export default function SignIn({ navigation }) {
 
     // xử lý submit form
     const submit = async () => {
-        setLoading(true)
-        try {
-            let user = await axiosClient.post('/user/login', {
-                email,
-                password: passWord,
-            })
+        dispatch(fetchLogin({ email, password }))
+    }
 
-            if (user.status === 200) {
-                // lưu token vào storage
-                storage.save({
-                    key: 'user',
-                    id: user.data.userInfo._id,
-                    data: {
-                        token: user.data.token,
-                    },
-                })
+    useEffect(() => {
+        if (isFocused === true) {
+            if (userState.isSuccess && !!userState.userInfo) {
+                // gọi dispatch lưu token
+                dispatch(saveToken(userState.userInfo.token))
 
-                // gửi 1 dispatch cập nhật userInfo
-                dispatch({
-                    type: 'user/setUserInfo',
-                    payload: {
-                        id: user.data.userInfo._id,
-                        email: user.data.userInfo.email,
-                        fullName: user.data.userInfo.fullName,
-                        slogan: user.data.userInfo.slogan,
-                    },
-                })
-
-                // hiển thị thông báo đăng nhập thành công
-                Alert.alert('Thông báo', user.data.message, [
-                    {
-                        text: 'OK',
-                        onPress: () => navigation.replace('BottomTabs'),
-                    },
-                ])
-                setLoading(false)
+                // di chuyển đến Home
+                navigation.replace('BottomTabs')
             }
-        } catch (error) {
-            if (error.response.status === 404) {
-                Alert.alert('Thông báo', error.response.data.message)
-                setLoading(false)
+
+            if (userState.isError) {
+                Alert.alert('Thông báo', userState.messageNotify)
             }
         }
-    }
+    }, [userState, isFocused])
 
     // check validation
     useEffect(() => {
@@ -98,8 +73,8 @@ export default function SignIn({ navigation }) {
             setIsDisabled(!isValidEmail)
         } else setCheckEmail(true)
 
-        setIsDisabled(!(isValidEmail && !!passWord))
-    }, [email, passWord])
+        setIsDisabled(!(isValidEmail && !!password))
+    }, [email, password])
 
     const showPassword = () => {
         setSelection(!isSelected)
@@ -112,7 +87,7 @@ export default function SignIn({ navigation }) {
                     contentContainerStyle={{ alignItems: 'center' }}
                     showsVerticalScrollIndicator={false}
                 >
-                    {loading === true && <Loading />}
+                    {userState.isLoading && <Loading />}
                     <View style={{ width: '90%' }}>
                         <View style={styles.heading}>
                             <Text style={styles.title1}>Just </Text>
@@ -167,7 +142,7 @@ export default function SignIn({ navigation }) {
                                 placeholder='*********'
                                 secureTextEntry={isSelected}
                                 onChangeText={handleChangePassword}
-                                value={passWord}
+                                value={password}
                             />
                             <Icon
                                 name='eye'

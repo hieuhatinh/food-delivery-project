@@ -55,7 +55,7 @@ const updateInfo = async (req, res) => {
         })
 
         return res.status(200).json({
-            ...user,
+            user,
             message: 'Cập nhật thông tin thành công',
         })
     } catch (error) {
@@ -72,7 +72,7 @@ const getUserInfo = async (req, res) => {
         const user = await userResponsitories.getUserInfo({ id })
 
         return res.status(200).json({
-            ...user,
+            userInfo: user,
             message: 'Lấy thông tin thành công',
         })
     } catch (error) {

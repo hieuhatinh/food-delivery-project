@@ -5,10 +5,11 @@ import { useSelector } from 'react-redux'
 
 import CardRestaurant from '../../components/Card/CardRestaurant'
 import HeaderSection from '../../components/header/HeaderSection'
+import { selectRestaurants } from '../../store/selector'
 
 const OpenRestaurantsComp = () => {
     const navigation = useNavigation()
-    const restaurants = useSelector((state) => state.restaurants)
+    const restaurantState = useSelector(selectRestaurants)
 
     const handlePressOpenRes = () => {
         navigation.navigate('OpenRestaurants')
@@ -22,7 +23,7 @@ const OpenRestaurantsComp = () => {
             />
 
             <View>
-                {restaurants.map((item) => (
+                {restaurantState.restaurants?.map((item) => (
                     <CardRestaurant
                         key={item._id}
                         {...item}

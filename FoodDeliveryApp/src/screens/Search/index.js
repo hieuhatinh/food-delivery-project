@@ -1,14 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo'
+import { useDispatch, useSelector } from 'react-redux'
 
 import SuggestRestaurants from '../components/SuggestRestaurants'
 import BoundaryScreen from '../../components/BoundaryScreen'
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 import CardMeal from '../../components/Card/CardMeal'
 import CartNorify from '../../components/icon/CartNotify'
-import axiosClient from '../../api/axiosClient'
 import Loading from '../../components/Loading'
+
+import { selectSearch } from '../../store/selector'
+import { fetchSearchByName } from '../../store/actions/searchAction'
 
 const recentKeywords = [
     { id: 1, suggestName: 'Burge' },
@@ -78,29 +81,28 @@ const popularFood = [
 ]
 
 export default function Search({ navigation }) {
+    const dispatch = useDispatch()
+    const searchState = useSelector(selectSearch)
+
     const [searchValue, setSearchValue] = useState()
-    const [loading, setLoading] = useState(false)
 
     const handleChangeSearch = (value) => {
         setSearchValue(value)
     }
 
     const handleEnter = async () => {
-        setLoading(true)
-
-        setTimeout(async () => {
-            let resultSearch = await axiosClient.get(
-                `/search/meal?searchValue=${searchValue?.trim().toLowerCase()}`,
-            )
-            if (resultSearch.status === 200) {
-                setLoading(false)
-                navigation.navigate('ResultByName', {
-                    title: searchValue,
-                    data: resultSearch.data.meals,
-                })
-            }
-        }, 1500)
+        dispatch(fetchSearchByName({searchValue}))
+        
     }
+
+    useEffect(() => {
+        if (searchState.isSuccess) {
+            navigation.navigate('ResultByName', {
+                title: searchValue,
+                data: searchState.meals,
+            })
+        }
+    }, [searchState])
 
     return (
         <BoundaryScreen>
@@ -108,7 +110,7 @@ export default function Search({ navigation }) {
             <HeaderSecondary iconNotify={<CartNorify />}>
                 <Text style={styles.title}>Search</Text>
             </HeaderSecondary>
-            {loading ? (
+            {searchState.isLoading ? (
                 <Loading />
             ) : (
                 <ScrollView
@@ -121,7 +123,6 @@ export default function Search({ navigation }) {
                             style={styles.search}
                             value={searchValue}
                             onChangeText={handleChangeSearch}
-                            // onKeyPress={handleEnter}
                             onSubmitEditing={handleEnter}
                         />
                         <Icon

@@ -1,12 +1,14 @@
 import React from 'react'
 import { View, StyleSheet, Text, ScrollView } from 'react-native'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 import AvatarComp from '../../components/AvatarComp'
 import BoundaryScreen from '../../components/BoundaryScreen'
-import storage from '../../storage'
 import MenuItem from '../components/MenuItem'
+
+import { logout } from '../../store/slice/userSlice'
+import { selectUserInfo } from '../../store/selector'
 
 const profileCluster = [
     {
@@ -72,13 +74,11 @@ const supportCluster = [
 ]
 
 const MenuProfile = ({ navigation }) => {
-    const userInfo = useSelector((state) => state.user)
+    const userInfo = useSelector(selectUserInfo)
+    const dispatch = useDispatch()
 
     const handleSignOut = () => {
-        storage.remove({
-            key: 'user',
-            id: userInfo.id,
-        })
+        dispatch(logout())
 
         navigation.replace('SignIn')
     }

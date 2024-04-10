@@ -43,8 +43,7 @@ const login = async ({ email, password }) => {
 
     return {
         message: 'Đăng nhập thành công',
-        token,
-        userInfo: { ...user._doc, password: 'Not show' },
+        userInfo: { ...user._doc, token, password: 'Not show' },
     }
 }
 

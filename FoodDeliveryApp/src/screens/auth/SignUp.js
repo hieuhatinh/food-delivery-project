@@ -9,21 +9,29 @@ import {
     TextInput,
     View,
 } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { Link } from '@react-navigation/native'
+import { Link, useIsFocused } from '@react-navigation/native'
 
 import SocialLogin from '../components/SocialLogin'
 import { validEmail } from '../../validation'
 import Loading from '../../components/Loading'
-import axiosClient from '../../api/axiosClient'
 import { global } from '../../global'
 import Button from '../../components/button/Button'
 import BoundaryScreen from '../../components/BoundaryScreen'
 
+import { fetchRegister } from '../../store/actions/userAction'
+import { selectUser } from '../../store/selector'
+import { reState } from '../../store/slice/userSlice'
+
 export default function SignUp({ navigation }) {
+    const dispatch = useDispatch()
+    const userState = useSelector(selectUser)
+    const isFocused = useIsFocused()
+
     const [isOpenSecurePassword, setIsOpenSecurePassword] = useState(true)
     const [isOpenSecureRePassword, setIsOpenSecureRePassword] = useState(true)
-    const [passWord, setPassWord] = useState('')
+    const [password, setPassWord] = useState('')
     const [rePassword, setRePassword] = useState('')
     const [email, setEmail] = useState('')
     const [checkEmail, setCheckEmail] = useState()
@@ -31,34 +39,28 @@ export default function SignUp({ navigation }) {
     const [checkRePassWord, setCheckRePassWord] = useState()
     const [isDisabled, setIsDisabled] = useState(true)
 
-    // loading và thông báo
-    const [loading, setLoading] = useState(false)
-
-    // chuyển hướng màn hình
-    const handleNavigate = () => navigation.navigate('SignIn')
-
     // xử lý submit form
     const submit = async () => {
-        setLoading(true)
-        try {
-            let newUser = await axiosClient.post('/user/register', {
-                email,
-                password: passWord,
-            })
+        dispatch(fetchRegister({ email, password }))
+    }
 
-            if (newUser.status === 200) {
-                Alert.alert('Thông báo', newUser.data.message, [
-                    { text: 'OK', onPress: handleNavigate },
+    useEffect(() => {
+        if (isFocused) {
+            dispatch(reState())
+            if (userState.isSuccess) {
+                Alert.alert('Thông báo', userState.messageNotify, [
+                    {
+                        text: 'OK',
+                        onPress: () => navigation.navigate('SignIn'),
+                    },
                 ])
-                setLoading(false)
             }
-        } catch (error) {
-            if (error.response.status === 404) {
-                Alert.alert('Thông báo', error.response.data.message)
-                setLoading(false)
+
+            if (userState.isError) {
+                Alert.alert('Thông báo', userState.messageNotify)
             }
         }
-    }
+    }, [userState, isFocused])
 
     // check validation
     useEffect(() => {
@@ -68,18 +70,18 @@ export default function SignUp({ navigation }) {
             setCheckEmail(validEmail(email))
         } else setCheckEmail(true)
 
-        if (!!passWord) {
-            isValidPassword = passWord.length > 8
+        if (!!password) {
+            isValidPassword = password.length > 8
             setCheckPassWord(isValidPassword)
         } else setCheckPassWord(true)
 
         if (!!rePassword) {
-            isValidRePassword = passWord === rePassword
+            isValidRePassword = password === rePassword
             setCheckRePassWord(isValidRePassword)
         } else setCheckRePassWord(true)
 
         setIsDisabled(!(isValidEmail && isValidPassword && isValidRePassword))
-    }, [email, passWord, rePassword])
+    }, [email, password, rePassword])
 
     const showPassword = () => {
         setIsOpenSecurePassword(!isOpenSecurePassword)
@@ -108,7 +110,7 @@ export default function SignUp({ navigation }) {
                     contentContainerStyle={{ alignItems: 'center' }}
                     showsVerticalScrollIndicator={false}
                 >
-                    {loading === true && <Loading />}
+                    {userState.isLoading && <Loading />}
                     <View style={{ width: '90%' }}>
                         <View style={styles.heading}>
                             <Text style={styles.title1}>Let's </Text>
@@ -163,7 +165,7 @@ export default function SignUp({ navigation }) {
                                 placeholder='*********'
                                 secureTextEntry={isOpenSecurePassword}
                                 onChangeText={handleChangePassword}
-                                value={passWord}
+                                value={password}
                             />
                             <Icon
                                 name='eye'

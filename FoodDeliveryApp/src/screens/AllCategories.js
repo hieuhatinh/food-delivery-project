@@ -1,36 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { FlatList, StyleSheet, Text } from 'react-native'
+import { useSelector } from 'react-redux'
+import { useIsFocused } from '@react-navigation/native'
 
 import HeaderSecondary from '../components/header/HeaderSecondary'
 import BoundaryScreen from '../components/BoundaryScreen'
 import CardCategory from '../components/Card/CardCategory'
 import CartNorify from '../components/icon/CartNotify'
 import Loading from '../components/Loading'
-import axiosClient from '../api/axiosClient'
+import { selectCategories } from '../store/selector'
 
 const AllCategories = () => {
-    const [loading, setLoading] = useState(true)
-    const [categories, setCategories] = useState([])
-
-    useEffect(() => {
-        async function fetchCategories() {
-            let categories = await axiosClient.get('/category/get-categories')
-            if (categories.status === 200) {
-                setCategories(categories.data.categories)
-                setLoading(false)
-            }
-        }
-
-        const idTimeout = setTimeout(() => {
-            fetchCategories()
-        }, 2000)
-
-        return () => clearTimeout(idTimeout)
-    }, [])
+    const categoriesState = useSelector(selectCategories)
 
     return (
         <React.Fragment>
-            {loading ? (
+            {categoriesState.isLoading ? (
                 <Loading />
             ) : (
                 <BoundaryScreen>
@@ -39,7 +24,7 @@ const AllCategories = () => {
                     </HeaderSecondary>
 
                     <FlatList
-                        data={categories}
+                        data={categoriesState.categories}
                         renderItem={({ item }) => <CardCategory {...item} />}
                         keyExtractor={(item) => item._id}
                         numColumns={2}

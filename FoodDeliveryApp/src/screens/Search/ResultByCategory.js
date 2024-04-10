@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux'
 
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 import { global } from '../../global'
@@ -17,43 +18,30 @@ import CardMeal from '../../components/Card/CardMeal'
 import HeaderSection from '../../components/header/HeaderSection'
 import OpenRestaurantsComp from '../components/OpenRestaurantsComp'
 import CartNorify from '../../components/icon/CartNotify'
-import { useSelector } from 'react-redux'
-import axiosClient from '../../api/axiosClient'
+
+import { selectCategoriesName, selectLimitSearch, selectSearch } from '../../store/selector'
+import { fetchSearchByCategory } from '../../store/actions/searchAction'
 
 const ResultByCategory = () => {
     const navigation = useNavigation()
     const route = useRoute()
-    const allCategory = useSelector((state) => state.categories)
+    const dispatch = useDispatch()
+    const allCategory = useSelector(selectCategoriesName)
+    const resultSearchState = useSelector(selectSearch)
+    const resultSearchLimit = useSelector(selectLimitSearch)
 
     const [isOpenDropdown, setIsOpenDropdown] = useState(false)
     const [categoryInfo, setCategoryInfo] = useState({ ...route.params })
-    const [loading, setLoading] = useState(true)
-    const [resultMeals, setResultMeals] = useState()
 
     useEffect(() => {
-        setLoading(true)
-        async function fetchSearchByCategory() {
-            let result = await axiosClient.get(
-                `/search/category/${categoryInfo._id}`,
-            )
-            if (result.status === 200) {
-                setResultMeals(result.data.meals)
-                setLoading(false)
-            }
-        }
-
-        let idTimeout = setTimeout(() => {
-            fetchSearchByCategory()
-        }, 1500)
-
-        return () => clearTimeout(idTimeout)
+        dispatch(fetchSearchByCategory({ idCategory: categoryInfo._id }))
     }, [categoryInfo])
 
     // chuyển đến màn hình resultByName khi bấm vào see all
     const handleSeeAllMeals = () => {
         navigation.navigate('ResultByName', {
             title: categoryInfo.categoryName,
-            data: resultMeals 
+            data: resultSearchState.meals,
         })
     }
 
@@ -106,7 +94,7 @@ const ResultByCategory = () => {
                                 }}
                             >
                                 <View style={{ height: 40 }} />
-                                {allCategory.map((item, index) => (
+                                {allCategory?.map((item, index) => (
                                     <TouchableOpacity
                                         key={item._id}
                                         style={[
@@ -133,7 +121,7 @@ const ResultByCategory = () => {
                 showsVerticalScrollIndicator={false}
                 style={styles.scrollView}
             >
-                {loading ? (
+                {resultSearchState.isLoading ? (
                     <View>
                         <ActivityIndicator />
                     </View>
@@ -144,7 +132,7 @@ const ResultByCategory = () => {
                             handleSeeAll={handleSeeAllMeals}
                         />
                         <View style={styles.boxMenu}>
-                            {resultMeals.slice(0, 4).map((item) => (
+                            {resultSearchLimit.map((item) => (
                                 <CardMeal key={item._id} {...item} />
                             ))}
                         </View>
