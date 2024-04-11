@@ -8,6 +8,7 @@ import store from './src/store'
 
 import SignIn from './src/screens/auth/SignIn'
 import Food_Details from './src/screens/Food_Details'
+import Restaurant_View from './src/screens/Restaurant_View'
 const Stack = createNativeStackNavigator()
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
                         initialRouteName='Welcome'
                         screenOptions={{ headerShown: false }}
                     >
+                        
                         <Stack.Screen name='Food_Details' component={Food_Details} />
                     </Stack.Navigator>
                 </NavigationContainer>
