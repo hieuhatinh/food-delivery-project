@@ -21,6 +21,11 @@ import OrderSuccess from './src/screens/OrderSuccess'
 import Payment_Info from './src/screens/Payment_Info'
 import Cart from './src/screens/Cart'
 import MyOrder from './src/screens/MyOrder'
+import OpenRestaurants from './src/screens/restaurant/OpenRestaurants'
+import DetailRestaurant from './src/screens/restaurant/DetailRestaurant'
+
+// test
+
 const Stack = createNativeStackNavigator()
 
 function App() {
@@ -29,7 +34,7 @@ function App() {
             <Provider store={store}>
                 <NavigationContainer>
                     <Stack.Navigator
-                        initialRouteName='OrderSuccess'
+                        initialRouteName='Welcome'
                         screenOptions={{ headerShown: false }}
                     >
                         <Stack.Screen name='Welcome' component={Welcome} />
@@ -77,7 +82,6 @@ function App() {
                             component={ResultByName}
                         />
 
-                        <Stack.Screen name='Cart' component={Cart} />
                         <Stack.Screen
                             name='OrderSuccess'
                             component={OrderSuccess}
@@ -86,7 +90,6 @@ function App() {
                             name='Payment_Info'
                             component={Payment_Info}
                         />
-                        <Stack.Screen name='MyOrder' component={MyOrder} />
                     </Stack.Navigator>
                 </NavigationContainer>
             </Provider>

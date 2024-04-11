@@ -11,6 +11,10 @@ const mealCartSchema = new Schema(
             required: true,
             default: 1,
         },
+        size: {
+            type: String, 
+            require: true
+        }
     },
     { _id: false },
 )

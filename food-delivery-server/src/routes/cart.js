@@ -18,6 +18,13 @@ cartRouter.patch(
     cartController.addToCart,
 )
 
+// update quantity
+cartRouter.patch(
+    '/update-quantity/:idCart/:idMeal', 
+    authenticateToken, 
+    cartController.updateQuantity
+)
+
 // xoá món ăn khỏi giỏ hàng
 cartRouter.delete(
     '/delete-meal/:idCart/:idMeal',

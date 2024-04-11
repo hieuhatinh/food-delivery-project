@@ -9,24 +9,87 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo'
 import Checkbox from 'expo-checkbox'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { global } from '../../global'
+import { setQuantityMeal, setSelectItem } from '../../store/slice/cartSlice'
+import useDebounce from '../../hooks/useDebounce'
+import {
+    fetchDeleteMeal,
+    fetchUpdateQuantity,
+} from '../../store/actions/cartAction'
+import { selectIdCart } from '../../store/selector'
 
-export default function MealItemInCart({ nameFood, price, image, number }) {
-    const [quantity, setQuantity] = useState(number)
-    const [isChecked, setIsChecked] = useState(false)
+export default function MealItemInCart(props) {
+    const dispatch = useDispatch()
+    const idCart = useSelector(selectIdCart)
+
+    const [isPress, setIsPress] = useState(false)
+
+    let { mealId, size, quantity, isChecked } = props
+
+    let price = mealId.priceAndSize.find((item) => item.size === size).price
+
+    let priceVnd = price.toLocaleString('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    })
+
+    useDebounce(quantity, 1000, () => {
+        if (isPress) {
+            dispatch(
+                fetchUpdateQuantity({
+                    idCart,
+                    idMeal: mealId._id,
+                    quantity,
+                    size,
+                    typeFetch: 'updateQuantity',
+                }),
+            )
+
+            setIsPress(false)
+        }
+    })
 
     const onClickPlus = () => {
-        setQuantity(quantity + 1)
+        setIsPress(true)
+        dispatch(
+            setQuantityMeal({
+                _id: mealId._id,
+                quantity: quantity + 1,
+            }),
+        )
     }
+
     const onClickMinus = () => {
+        setIsPress(true)
         if (quantity > 1) {
-            setQuantity(quantity - 1)
+            dispatch(
+                setQuantityMeal({
+                    _id: mealId._id,
+                    quantity: quantity - 1,
+                }),
+            )
         }
     }
 
-    const handleChecked = () => {
-        setIsChecked(!isChecked)
+    const handleCheckedItem = () => {
+        dispatch(
+            setSelectItem({
+                _id: mealId._id,
+                isChecked: !isChecked,
+            }),
+        )
+    }
+
+    const removeItem = () => {
+        dispatch(
+            fetchDeleteMeal({
+                idMeal: mealId._id,
+                idCart,
+                typeFetch: 'removeItem',
+            }),
+        )
     }
 
     const handleMoveToTrash = () => {
@@ -36,7 +99,7 @@ export default function MealItemInCart({ nameFood, price, image, number }) {
             [
                 {
                     text: 'Chắc chắn',
-                    onPress: () => console.log('sure'),
+                    onPress: removeItem,
                     style: 'destructive',
                 },
                 {
@@ -52,15 +115,20 @@ export default function MealItemInCart({ nameFood, price, image, number }) {
             <View style={styles.viewLeft}>
                 <Checkbox
                     value={isChecked}
-                    onValueChange={handleChecked}
+                    onValueChange={handleCheckedItem}
                     style={styles.checkbox}
                 />
                 <View style={styles.orderBox}>
-                    <Image source={image} style={styles.image} />
+                    <Image
+                        source={{ uri: mealId.artwork.path }}
+                        style={styles.image}
+                    />
                     <View style={styles.viewInfo}>
                         <View>
-                            <Text style={styles.nameFood}>{nameFood}</Text>
-                            <Text style={styles.price}>${price}</Text>
+                            <Text style={styles.nameFood}>
+                                {mealId.foodName}
+                            </Text>
+                            <Text style={styles.price}>{priceVnd}</Text>
                         </View>
                         <View style={styles.viewNumberMeal}>
                             <View style={styles.icon}>

@@ -24,7 +24,6 @@ const createNewOrder = async ({
         'priceAndSize',
     )
 
-
     let totalPayment = orderPopulateMeals.meals.reduce((total, item) => {
         let resultFindPrice = item.mealId.priceAndSize.find(
             (value) => value.size === item.size,

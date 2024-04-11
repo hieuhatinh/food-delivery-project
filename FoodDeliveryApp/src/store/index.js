@@ -4,6 +4,7 @@ import userReducer from './slice/userSlice'
 import restaurantsReducer from './slice/restaurantSlice'
 import categoriesReducer from './slice/categoriesSlice'
 import searchReducer from './slice/searchSlice'
+import cartReducer from './slice/cartSlice'
 
 export default configureStore({
     reducer: {
@@ -11,5 +12,6 @@ export default configureStore({
         restaurants: restaurantsReducer,
         categories: categoriesReducer,
         search: searchReducer,
+        cart: cartReducer
     },
 })

@@ -21,6 +21,10 @@ const selectUserInfo = createSelector([selectUser], (result) => {
     }
 })
 
+const selectIdCart = createSelector([selectUser], (result) => {
+    return result.userInfo.cartId
+})
+
 // categories
 const selectCategories = (state) => state.categories
 
@@ -53,13 +57,40 @@ const selectLimitSearch = createSelector([selectSearch], (result) => {
     return result.meals.slice(0, 4)
 })
 
+// cart
+const selectCart = (state) => state.cart
+
+const selectorTotalPrice = createSelector([selectCart], (result) => {
+    let total = result.mealsInCart.meals.reduce((sum, item) => {
+        if (item.isChecked) {
+            let price = item.mealId.priceAndSize.find(
+                (priceSize) => priceSize.size === item.size,
+            ).price
+            return sum + price * item.quantity
+        }
+
+        return sum
+    }, 0)
+
+    return total?.toLocaleString('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    })
+})
+
+const selectTypeFetch = createSelector([selectCart], (result) => result.typeFetch)
+
 export {
     selectUser,
     selectUserInfo,
+    selectIdCart,
     selectCategories,
     selectCategoriesName,
     selectLimitCategories,
     selectRestaurants,
     selectSearch,
     selectLimitSearch,
+    selectCart,
+    selectorTotalPrice,
+    selectTypeFetch,
 }

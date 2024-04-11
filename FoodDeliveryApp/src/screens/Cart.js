@@ -1,6 +1,7 @@
-import { useState } from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect } from 'react'
+import { ScrollView, StyleSheet, Text, View, Alert, Image } from 'react-native'
 import Checkbox from 'expo-checkbox'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Button from '../components/button/Button'
 import MealItemInCart from './components/MealItemInCart'
@@ -8,84 +9,92 @@ import BoundaryScreen from '../components/BoundaryScreen'
 import HeaderSecondary from '../components/header/HeaderSecondary'
 import { global } from '../global'
 
-const data = [
-    {
-        id: 1,
-        image: require('../assets/images/avatar.png'),
-        number: 1,
-        nameFood: 'Phở bò',
-        price: 30,
-    },
-    {
-        id: 2,
-        image: require('../assets/images/avatar.png'),
-        number: 1,
-        nameFood: 'Phở bò',
-        price: 30,
-    },
-    {
-        id: 3,
-        image: require('../assets/images/avatar.png'),
-        number: 1,
-        nameFood: 'Phở bò',
-        price: 30,
-    },
-    {
-        id: 4,
-        image: require('../assets/images/avatar.png'),
-        number: 1,
-        nameFood: 'Phở bò',
-        price: 30,
-    },
-    {
-        id: 5,
-        image: require('../assets/images/avatar.png'),
-        number: 1,
-        nameFood: 'Phở bò',
-        price: 30,
-    },
-]
-export default function Cart({ navigation }) {
-    const [isSelectAll, setIsSelectAll] = useState(false)
-    var sumPrice = 0
+import { setSelectAll } from '../store/slice/cartSlice'
+import {
+    selectCart,
+    selectIdCart,
+    selectMealsInCart,
+    selectTypeFetch,
+    selectorTotalPrice,
+} from '../store/selector'
+import Loading from '../components/Loading'
+import { fetchGetAllMealsInCart } from '../store/actions/cartAction'
 
-    data.forEach((item) => (sumPrice += item.price * item.number))
+export default function Cart({ navigation }) {
+    const dispatch = useDispatch()
+    const totalPrice = useSelector(selectorTotalPrice)
+    const idCart = useSelector(selectIdCart)
+    const typeFetch = useSelector(selectTypeFetch)
+    const { isLoading, error, isSuccess, mealsInCart } = useSelector(selectCart)
+    let { isCheckedAll, meals } = mealsInCart
 
     const handleSelectAll = () => {
-        setIsSelectAll(!isSelectAll)
+        dispatch(setSelectAll(!isCheckedAll))
     }
+
+    useEffect(() => {
+        dispatch(fetchGetAllMealsInCart({ idCart }))
+    }, [typeFetch])
+
+    useEffect(() => {
+        if (error.isError) {
+            Alert.alert('Lỗi', error.message, [
+                {
+                    text: 'Ok',
+                    onPress: () => navigation.replace('BottomTabs'),
+                    style: 'destructive',
+                },
+            ])
+        }
+    }, [error])
 
     return (
         <BoundaryScreen>
-            <HeaderSecondary>
+            <HeaderSecondary iconLeft={false}>
                 <Text style={styles.title}>Cart</Text>
             </HeaderSecondary>
-            <ScrollView
-                contentContainerStyle={{ alignItems: 'center' }}
-                style={{ width: '100%' }}
-            >
-                {data.map((item) => (
-                    <MealItemInCart key={item.id} {...item} />
-                ))}
-            </ScrollView>
+            {isLoading ? (
+                <React.Fragment>
+                    <Loading />
+                    <View style={{ width: '100%', height: '100%', flex: 1 }} />
+                </React.Fragment>
+            ) : meals.length === 0 ? (
+                <View style={styles.viewEmptyCart}>
+                    <Image
+                        source={require('../assets/images/empty-cart.png')}
+                        style={styles.imageEmptyCart}
+                    />
+                    <Text style={styles.textEmpty}>Giỏ hàng trống</Text>
+                </View>
+            ) : (
+                <ScrollView
+                    contentContainerStyle={{ alignItems: 'center' }}
+                    style={{ width: '100%' }}
+                >
+                    {meals.map((item) => (
+                        <MealItemInCart key={item.mealId._id} {...item} />
+                    ))}
+                </ScrollView>
+            )}
             <View style={styles.footer}>
                 <View style={styles.viewCheckboxAndTotal}>
                     <View style={styles.viewCheckbox}>
                         <Checkbox
-                            value={isSelectAll}
+                            value={isCheckedAll}
                             onValueChange={handleSelectAll}
                         />
                         <Text style={styles.selectAll}>Chọn tất cả</Text>
                     </View>
                     <View style={styles.total}>
                         <Text>TOTAl: </Text>
-                        <Text style={styles.totalPrice}> $ {sumPrice}</Text>
+                        <Text style={styles.totalPrice}>{totalPrice || 0}</Text>
                     </View>
                 </View>
                 <Button
                     height={50}
                     title={'PLACE ORDER'}
                     handlePress={() => navigation.navigate('OrderSuccess')}
+                    disabled={isLoading || meals.length === 0}
                 />
             </View>
         </BoundaryScreen>
@@ -104,6 +113,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f5fa',
         padding: 20,
         width: '100%',
+        position: 'relative',
+        bottom: 0,
     },
     viewCheckboxAndTotal: {
         flexDirection: 'row',
@@ -127,6 +138,22 @@ const styles = StyleSheet.create({
     },
     totalPrice: {
         fontSize: 20,
+        fontWeight: '500',
+    },
+
+    // empty cart
+    viewEmptyCart: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    imageEmptyCart: {
+        height: 200,
+        width: 200,
+    },
+    textEmpty: {
+        fontSize: 18,
+        color: global.error,
         fontWeight: '500',
     },
 })

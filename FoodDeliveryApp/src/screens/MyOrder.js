@@ -1,9 +1,4 @@
-import {
-    Text,
-    StyleSheet,
-    View,
-    useWindowDimensions,
-} from 'react-native'
+import { Text, StyleSheet, View, useWindowDimensions } from 'react-native'
 import { ScrollView } from 'react-native'
 import { useState } from 'react'
 import {
@@ -142,7 +137,7 @@ const renderTabBar = (props) => (
                     width={width}
                     style={{
                         backgroundColor: global.primaryColor,
-                        marginLeft: 15
+                        marginLeft: 15,
                     }}
                 />
             )
@@ -182,6 +177,7 @@ export default function MyOrder() {
         >
             <View style={styles.viewHeader}>
                 <HeaderSecondary
+                    iconLeft={false}
                     iconRightSecond={{ name: 'dots-three-horizontal' }}
                 >
                     <Text style={styles.title}>My order</Text>

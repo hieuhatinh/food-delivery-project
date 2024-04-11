@@ -27,12 +27,6 @@ const profileCluster = [
 
 const orderAndPaymentCluster = [
     {
-        title: 'Cart',
-        iconName: 'id-card-o',
-        colorIcon: '#369aff',
-        screenNameToNavigate: 'Notification',
-    },
-    {
         title: 'Favourite',
         iconName: 'heart-o',
         colorIcon: '#b13cfa',

@@ -8,6 +8,11 @@ import { global } from '../../global'
 const CardMeal = (props) => {
     const navigation = useNavigation()
 
+    let priceVnd = props?.priceAndSize[0]?.price.toLocaleString('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    })
+
     const handlePressPlus = () => {
         console.log('press plus')
     }
@@ -40,10 +45,7 @@ const CardMeal = (props) => {
                 </Text>
                 <View style={styles.footer}>
                     <Text style={styles.price}>
-                        {props?.priceAndSize[0]?.price.toLocaleString('vi-VN', {
-                            style: 'currency',
-                            currency: 'VND',
-                        })}
+                        {priceVnd}
                     </Text>
                     <TouchableOpacity activeOpacity={0.8} onPress={handlePressPlus}>
                         <Icon

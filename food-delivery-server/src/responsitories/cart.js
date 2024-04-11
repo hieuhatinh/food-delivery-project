@@ -13,26 +13,44 @@ const getAllMealInCart = async ({ idCart }) => {
     return result._doc
 }
 
-const addToCart = async ({ cartId, mealId, quantity }) => {
-    const cart = await CartModel.findById(new Types.ObjectId(cartId))
+const addToCart = async ({ cartId, mealId, quantity, size }) => {
+    if (quantity < 0) {
+        throw new ErrorHandler('số lượng không < 0.', 400)
+    }
+
+    cartId = new Types.ObjectId(cartId)
+    mealId = new Types.ObjectId(mealId)
+
+    const cart = await CartModel.findById(cartId)
 
     if (!cart) {
         throw new ErrorHandler('Giỏ hàng không tồn tại.', 404)
     }
 
-    const meal = await MealModel.findById(new Types.ObjectId(mealId))
+    const meal = await MealModel.findById(mealId)
     if (!meal) {
         throw new ErrorHandler('Món ăn không tồn tại.', 404)
+    }
+
+    let priceSize = meal.priceAndSize.find((item) => item.size === size)
+
+    if (!priceSize) {
+        throw new ErrorHandler('Trong món ăn không có size này.', 404)
     }
 
     let mealInCart
     mealInCart = await CartModel.findOneAndUpdate(
         {
             _id: cartId,
-            'meals.mealId': mealId,
+            meals: {
+                $elemMatch: {
+                    mealId: mealId,
+                    size: size,
+                },
+            },
         },
         {
-            $set: { 'meals.$.quantity': quantity },
+            $inc: { 'meals.$.quantity': quantity },
         },
         {
             new: true,
@@ -42,13 +60,72 @@ const addToCart = async ({ cartId, mealId, quantity }) => {
     if (!mealInCart) {
         mealInCart = await CartModel.findByIdAndUpdate(
             {
-                cartId,
+                _id: cartId,
             },
             {
-                $push: { meals: { mealId, quantity } },
+                $push: {
+                    meals: {
+                        mealId,
+                        quantity,
+                        size,
+                    },
+                },
             },
             { new: true, upsert: true },
         )
+    }
+
+    return mealInCart._doc
+}
+
+const updateQuantity = async ({ cartId, mealId, quantity, size }) => {
+    if (quantity < 0) {
+        throw new ErrorHandler('số lượng không < 0.', 400)
+    }
+
+    cartId = new Types.ObjectId(cartId)
+    mealId = new Types.ObjectId(mealId)
+
+    const cart = await CartModel.findById(cartId)
+
+    if (!cart) {
+        throw new ErrorHandler('Giỏ hàng không tồn tại.', 404)
+    }
+
+    const meal = await MealModel.findById(mealId)
+    if (!meal) {
+        throw new ErrorHandler('Món ăn không tồn tại.', 404)
+    }
+
+    let priceSize = meal.priceAndSize.find((item) => item.size === size)
+
+    if (!priceSize) {
+        throw new ErrorHandler('Trong món ăn không có size này.', 404)
+    }
+
+    let mealInCart
+    mealInCart = await CartModel.findOneAndUpdate(
+        {
+            _id: cartId,
+            meals: {
+                $elemMatch: {
+                    mealId: mealId,
+                    size: size,
+                },
+            },
+        },
+        {
+            $set: {
+                'meals.$.quantity': quantity,
+            },
+        },
+        {
+            new: true,
+        },
+    )
+
+    if (!mealInCart) {
+        throw new ErrorHandler('Không có món ăn này trong giỏ hàng', 404)
     }
 
     return mealInCart._doc
@@ -76,4 +153,4 @@ const removeFromCart = async ({ cartId, mealId }) => {
     return result
 }
 
-export default { getAllMealInCart, addToCart, removeFromCart }
+export default { getAllMealInCart, addToCart, updateQuantity, removeFromCart }
