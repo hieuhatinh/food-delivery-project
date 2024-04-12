@@ -64,6 +64,25 @@ const updateQuantity = async (req, res) => {
     }
 }
 
+const countQuantityMeals = async (req, res) => {
+    try {
+        let { idCart } = req.params
+
+        const quantityMeals = await cartResponsitories.countQuantityMeals({
+            cartId: idCart,
+        })
+
+        return res.status(200).json({
+            quantityMeals,
+            message: 'Đếm thành công',
+        })
+    } catch (error) {
+        return res.status(error.statusCode || 404).json({
+            message: error.message,
+        })
+    }
+}
+
 const removeFromCart = async (req, res) => {
     try {
         let { idCart, idMeal } = req.params
@@ -84,4 +103,10 @@ const removeFromCart = async (req, res) => {
     }
 }
 
-export default { getAllMealInCart, addToCart, removeFromCart, updateQuantity }
+export default {
+    getAllMealInCart,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    countQuantityMeals,
+}

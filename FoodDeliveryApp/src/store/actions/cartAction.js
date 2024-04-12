@@ -56,4 +56,24 @@ const fetchDeleteMeal = createAsyncThunk(
     },
 )
 
-export { fetchGetAllMealsInCart, fetchUpdateQuantity, fetchDeleteMeal }
+const fetchCountQuantity = createAsyncThunk(
+    'cart/fetchCountQuantity',
+    async ({ idCart }, { rejectWithValue }) => {
+        try {
+            let result = await axiosClient.get(
+                `/cart/count-quantity-meals/${idCart}`,
+            )
+
+            return result.data.quantityMeals
+        } catch (error) {
+            rejectWithValue(error.response.data.message)
+        }
+    },
+)
+
+export {
+    fetchGetAllMealsInCart,
+    fetchUpdateQuantity,
+    fetchDeleteMeal,
+    fetchCountQuantity,
+}

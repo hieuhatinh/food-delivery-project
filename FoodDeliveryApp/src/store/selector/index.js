@@ -78,7 +78,15 @@ const selectorTotalPrice = createSelector([selectCart], (result) => {
     })
 })
 
-const selectTypeFetch = createSelector([selectCart], (result) => result.typeFetch)
+const selectTypeFetch = createSelector(
+    [selectCart],
+    (result) => result.typeFetch,
+)
+
+const selectNumberMeals = createSelector(
+    [selectCart],
+    (result) => result.numberMeals,
+)
 
 export {
     selectUser,
@@ -93,4 +101,5 @@ export {
     selectCart,
     selectorTotalPrice,
     selectTypeFetch,
+    selectNumberMeals,
 }

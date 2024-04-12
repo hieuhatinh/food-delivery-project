@@ -25,6 +25,13 @@ cartRouter.patch(
     cartController.updateQuantity
 )
 
+// đếm số lượng món trong giỏ hàng
+cartRouter.get(
+    '/count-quantity-meals/:idCart', 
+    authenticateToken, 
+    cartController.countQuantityMeals
+)
+
 // xoá món ăn khỏi giỏ hàng
 cartRouter.delete(
     '/delete-meal/:idCart/:idMeal',

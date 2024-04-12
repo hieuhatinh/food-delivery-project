@@ -131,6 +131,16 @@ const updateQuantity = async ({ cartId, mealId, quantity, size }) => {
     return mealInCart._doc
 }
 
+const countQuantityMeals = async ({cartId}) => {
+    const cart = await CartModel.findById(new Types.ObjectId(cartId))
+
+    if (!cart) {
+        throw new ErrorHandler('Giỏ hàng không tồn tại.', 404)
+    }
+
+    return cart.meals.length
+}
+
 const removeFromCart = async ({ cartId, mealId }) => {
     const cart = await CartModel.findById(new Types.ObjectId(cartId))
 
@@ -153,4 +163,10 @@ const removeFromCart = async ({ cartId, mealId }) => {
     return result
 }
 
-export default { getAllMealInCart, addToCart, updateQuantity, removeFromCart }
+export default {
+    getAllMealInCart,
+    addToCart,
+    updateQuantity,
+    countQuantityMeals,
+    removeFromCart,
+}
