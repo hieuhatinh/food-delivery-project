@@ -41,12 +41,14 @@ const HeaderSecondary = ({
                         />
                     </BoundaryIcon>
                 )}
-                <BoundaryIcon>
-                    {iconRightSecond?.name && (
-                        <Icon name={iconRightSecond.name} size={20} />
-                    )}
-                    {iconNotify}
-                </BoundaryIcon>
+                {!!iconRightSecond && (
+                    <BoundaryIcon>
+                        {iconRightSecond?.name && (
+                            <Icon name={iconRightSecond.name} size={20} />
+                        )}
+                        {iconNotify}
+                    </BoundaryIcon>
+                )}
             </View>
         </View>
     )

@@ -8,7 +8,8 @@ import store from './src/store'
 
 import SignIn from './src/screens/auth/SignIn'
 import Food_Details from './src/screens/Food_Details'
-import Restaurant_View from './src/screens/Restaurant_View'
+import RestaurantView from './src/screens/restaurant/Restaurant_View'
+
 const Stack = createNativeStackNavigator()
 
 function App() {
@@ -17,11 +18,17 @@ function App() {
             <Provider store={store}>
                 <NavigationContainer>
                     <Stack.Navigator
-                        initialRouteName='Welcome'
+                        initialRouteName='RestaurantView'
                         screenOptions={{ headerShown: false }}
                     >
-                        
-                        <Stack.Screen name='Food_Details' component={Food_Details} />
+                        <Stack.Screen
+                            name='Food_Details'
+                            component={Food_Details}
+                        />
+                        <Stack.Screen
+                            name='RestaurantView'
+                            component={RestaurantView}
+                        />
                     </Stack.Navigator>
                 </NavigationContainer>
             </Provider>

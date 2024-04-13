@@ -3,6 +3,7 @@ import Icon from 'react-native-vector-icons/FontAwesome6'
 import { useNavigation } from '@react-navigation/native'
 
 import { global } from '../../global'
+import Rate from '../Rate'
 
 const CardRestaurant = (props) => {
     const navigation = useNavigation()
@@ -28,24 +29,8 @@ const CardRestaurant = (props) => {
             <Text style={styles.categories} numberOfLines={1}>
                 {props.categories}
             </Text>
-            <View style={styles.footer_Icon}>
-                <View style={styles.info}>
-                    <Icon name='star' color={global.primaryColor} size={20} />
-                    <Text>4.7</Text>
-                </View>
-                <View style={styles.info}>
-                    <Icon
-                        name='truck-fast'
-                        color={global.primaryColor}
-                        size={20}
-                    />
-                    <Text>Free</Text>
-                </View>
-                <View style={styles.info}>
-                    <Icon name='clock' color={global.primaryColor} size={20} />
-                    <Text>20 min</Text>
-                </View>
-            </View>
+            
+            <Rate />
         </TouchableOpacity>
     )
 }
@@ -67,16 +52,6 @@ const styles = StyleSheet.create({
     categories: {
         fontSize: 14,
         color: '#a0a5ba',
-    },
-    footer_Icon: {
-        flexDirection: 'row',
-        gap: 30,
-        marginTop: 10,
-    },
-    info: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
     },
 })
 
