@@ -6,10 +6,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
 import store from './src/store'
 
-import Welcome from './src/screens/Welcome'
-import Notification from './src/screens/Notification'
-import PersonalInfo from './src/screens/PersonalInfo'
-import EditInformation from './src/screens/PersonalInfo/EditInformation'
 import SignIn from './src/screens/auth/SignIn'
 import SignUp from './src/screens/auth/SignUp'
 import BottomTabs from './src/screens/Tabs/BottomTabs'
@@ -19,12 +15,10 @@ import ResultByCategory from './src/screens/Search/ResultByCategory'
 import ResultByName from './src/screens/Search/ResultByName'
 import OrderSuccess from './src/screens/OrderSuccess'
 import Payment_Info from './src/screens/Payment_Info'
-import Cart from './src/screens/Cart'
-import MyOrder from './src/screens/MyOrder'
 import OpenRestaurants from './src/screens/restaurant/OpenRestaurants'
-import DetailRestaurant from './src/screens/restaurant/DetailRestaurant'
-
-// test
+import Food_Details from './src/screens/Food_Details'
+import RestaurantView from './src/screens/restaurant/Restaurant_View'
+import Welcome from './src/screens/Welcome'
 
 const Stack = createNativeStackNavigator()
 
@@ -34,21 +28,14 @@ function App() {
             <Provider store={store}>
                 <NavigationContainer>
                     <Stack.Navigator
-                        initialRouteName='Welcome'
+                        initialRouteName='RestaurantView'
                         screenOptions={{ headerShown: false }}
                     >
                         <Stack.Screen name='Welcome' component={Welcome} />
                         <Stack.Screen name='SignIn' component={SignIn} />
                         <Stack.Screen name='SignUp' component={SignUp} />
-                        <Stack.Screen
-                            name='BottomTabs'
-                            component={BottomTabs}
-                        />
-                        {/* Person infomation */}
-                        <Stack.Screen
-                            name='PersonalInfo'
-                            component={PersonalInfo}
-                        />
+                        <Stack.Screen name='BottomTabs' component={BottomTabs} />
+
                         <Stack.Screen
                             name='EditInformation'
                             component={EditInformation}
@@ -68,8 +55,8 @@ function App() {
                             component={OpenRestaurants}
                         />
                         <Stack.Screen
-                            name='DetailRestaurant'
-                            component={DetailRestaurant}
+                            name='RestaurantView'
+                            component={RestaurantView}
                         />
                         {/* Search and result */}
                         <Stack.Screen name='Search' component={Search} />
@@ -80,6 +67,11 @@ function App() {
                         <Stack.Screen
                             name='ResultByName'
                             component={ResultByName}
+                        />
+
+                        <Stack.Screen
+                            name='Food_Details'
+                            component={Food_Details}
                         />
 
                         <Stack.Screen
