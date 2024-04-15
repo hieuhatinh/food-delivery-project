@@ -20,6 +20,8 @@ import ResultByName from './src/screens/Search/ResultByName'
 import DetailRestaurant from './src/screens/restaurant/DetailRestaurant'
 import OpenRestaurants from './src/screens/restaurant/OpenRestaurants'
 import DetailMeal from './src/screens/DetailMeal'
+import MyCart2 from './src/screens/MyCart2'
+import EditAddressAndContact from './src/screens/EditAddressAndContact'
 
 const Stack = createNativeStackNavigator()
 
@@ -29,7 +31,7 @@ function App() {
             <Provider store={store}>
                 <NavigationContainer>
                     <Stack.Navigator
-                        initialRouteName='Welcome'
+                        initialRouteName='MyCart2'
                         screenOptions={{ headerShown: false }}
                     >
                         <Stack.Screen name='Welcome' component={Welcome} />
@@ -82,6 +84,9 @@ function App() {
                             name='DetailMeal'
                             component={DetailMeal}
                         />
+
+                        <Stack.Screen name='MyCart2' component={MyCart2} />
+                        <Stack.Screen name='EditAddressAndContact' component={EditAddressAndContact} />
                     </Stack.Navigator>
                 </NavigationContainer>
             </Provider>
@@ -90,3 +95,5 @@ function App() {
 }
 
 export default App
+
+
