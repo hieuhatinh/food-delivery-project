@@ -30,7 +30,7 @@ const getInfoARestaurant = async (req, res) => {
         })
 
         return res.status(200).json({
-            ...result,
+            restaurantInfo: result,
             message: 'Lấy thông tin thành công',
         })
     } catch (error) {

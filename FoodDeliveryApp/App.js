@@ -19,8 +19,16 @@ import OpenRestaurants from './src/screens/restaurant/OpenRestaurants'
 import Food_Details from './src/screens/Food_Details'
 import RestaurantView from './src/screens/restaurant/Restaurant_View'
 import Welcome from './src/screens/Welcome'
+import EditInformation from './src/screens/PersonalInfo/EditInformation'
+import Notification from './src/screens/Notification'
 
 const Stack = createNativeStackNavigator()
+
+// thêm món ăn vào giỏ hàng
+// chuyển đổi danjg tiền tệ ở selector (không làm ở view) let priceVnd = props?.priceAndSize[0]?.price.toLocaleString('vi-VN', {
+    //     style: 'currency',
+    //     currency: 'VND',
+    // })
 
 function App() {
     return (
@@ -28,13 +36,16 @@ function App() {
             <Provider store={store}>
                 <NavigationContainer>
                     <Stack.Navigator
-                        initialRouteName='RestaurantView'
+                        initialRouteName='Welcome'
                         screenOptions={{ headerShown: false }}
                     >
                         <Stack.Screen name='Welcome' component={Welcome} />
                         <Stack.Screen name='SignIn' component={SignIn} />
                         <Stack.Screen name='SignUp' component={SignUp} />
-                        <Stack.Screen name='BottomTabs' component={BottomTabs} />
+                        <Stack.Screen
+                            name='BottomTabs'
+                            component={BottomTabs}
+                        />
 
                         <Stack.Screen
                             name='EditInformation'

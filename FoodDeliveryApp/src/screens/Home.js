@@ -19,7 +19,7 @@ import HeaderSection from '../components/header/HeaderSection'
 import Loading from '../components/Loading'
 
 import { fetchGetCategories } from '../store/actions/categoryAction'
-import { selectLimitCategories } from '../store/selector'
+import { selectLimitCategories } from '../store/selector/categorySelector'
 import { fetchOpenRes } from '../store/actions/restaurantAction'
 
 export default function Home() {

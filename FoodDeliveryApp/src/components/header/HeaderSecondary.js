@@ -46,9 +46,9 @@ const HeaderSecondary = ({
                         {iconRightSecond?.name && (
                             <Icon name={iconRightSecond.name} size={20} />
                         )}
-                        {iconNotify}
                     </BoundaryIcon>
                 )}
+                {!!iconNotify && iconNotify}
             </View>
         </View>
     )

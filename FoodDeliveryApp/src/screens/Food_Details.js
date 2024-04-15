@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     View,
     StyleSheet,
@@ -7,73 +7,127 @@ import {
     TouchableOpacity,
     ScrollView,
 } from 'react-native'
-import BoundaryIcon from '../components/button/BoundaryIcon'
 import Icon from 'react-native-vector-icons/Entypo'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigation, useRoute } from '@react-navigation/native'
+
+import BoundaryIcon from '../components/button/BoundaryIcon'
 import Button from '../components/button/Button'
 import BoundaryScreen from '../components/BoundaryScreen'
 import HeaderSecondary from '../components/header/HeaderSecondary'
 import { global } from '../global'
+import CartNotify from '../components/icon/CartNotify'
 
-const size = [
-    { id: 1, sizeName: 'M' },
-    { id: 2, sizeName: 'L' },
-    { id: 3, sizeName: 'XL' },
-]
+import { fetchMealDetail } from '../store/actions/mealAction'
+import {
+    selectMeal,
+    selectSizeAndQuantity,
+    selectSizesMeal,
+} from '../store/selector/mealSelector'
+import Loading from '../components/Loading'
+import { setQuantity, setSize } from '../store/slice/mealSlice'
+
 const Food_Details = () => {
-    const [click, setClick] = useState(1)
-    const [count, setCount] = useState(0)
+    const route = useRoute()
+    const dispatch = useDispatch()
+    const navigation = useNavigation()
+
+    const { isLoading, error, isSuccess, mealInfo } = useSelector(selectMeal)
+    const sizes = useSelector(selectSizesMeal)
+    const sizeAndQuantity = useSelector(selectSizeAndQuantity)
+
     function handleClickPlus() {
-        setCount(count + 1)
+        dispatch(setQuantity(sizeAndQuantity.quantity + 1))
     }
+
     function handleClickMinus() {
-        setCount(count - 1)
+        if (sizeAndQuantity.quantity > 1) {
+            dispatch(setQuantity(sizeAndQuantity.quantity - 1))
+        }
     }
+
+    function handleSetSize(size) {
+        dispatch(setSize(size))
+    }
+
+    const handleNavigate = () => {
+        navigation.navigate('RestaurantView', {
+            idRestaurant: mealInfo.restaurant._id,
+        })
+    }
+
+    useEffect(() => {
+        dispatch(fetchMealDetail({ idMeal: route.params?.idMeal }))
+    }, [])
 
     return (
         <BoundaryScreen>
-            <HeaderSecondary>
+            <HeaderSecondary iconNotify={<CartNotify />}>
                 <Text style={styles.title}>Details</Text>
             </HeaderSecondary>
-            <ScrollView >
-                <Image
-                    source={require('../assets/images/Heading Image.png')}
-                    style={styles.image}
-                />
-                <View style={styles.viewInfo}>
-
-                <View style={styles.restaurantName}>
+            {isLoading ? (
+                <React.Fragment>
+                    <Loading />
+                    <View style={{ flex: 1 }} />
+                </React.Fragment>
+            ) : (
+                <ScrollView style={styles.scrollView}>
                     <Image
-                        source={require('../assets/images/Ellipse 1295.png')}
+                        source={{ uri: mealInfo?.artwork?.path }}
+                        style={styles.image}
+                        resizeMode='contain'
                     />
-                    <Text style={{ fontSize: 14 }}>Uttora Coffee House</Text>
-                </View>
-                <Text style={styles.foodName}>
-                    Chicken & Chips
-                </Text>
-                <Text style={styles.foodDescribe}>
-                    Prosciutto e funghi is a pizza variety that is topped with
-                    tomato sauce.
-                </Text>
+                    <View style={styles.viewInfo}>
+                        <TouchableOpacity
+                            onPress={handleNavigate}
+                            activeOpacity={0.8}
+                            style={styles.viewRestaurantName}
+                        >
+                            <Image
+                                source={require('../assets/images/Ellipse 1295.png')}
+                            />
+                            <Text style={styles.restaurantName}>
+                                {mealInfo?.restaurant?.restaurantName}
+                            </Text>
+                        </TouchableOpacity>
+                        <Text style={styles.foodName}>
+                            {mealInfo?.foodName}
+                        </Text>
+                        <Text style={styles.foodDescribe}>
+                            {mealInfo.describe}
+                        </Text>
 
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        gap: 10,
-                    }}
-                >
-                    <Text style={{ fontSize: 13 }}>Size:</Text>
-                    {size.map((item) => (
-                        <BoundaryIcon key={item.id}>
-                            <Text>{item.sizeName}</Text>
-                        </BoundaryIcon>
-                    ))}
-                </View>
-                </View>
-            </ScrollView>
+                        {sizes?.length > 1 && !!sizes[0] && (
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    gap: 10,
+                                }}
+                            >
+                                <Text style={{ fontSize: 13 }}>Size:</Text>
+                                {sizes.map((item) => (
+                                    <BoundaryIcon
+                                        backgroundColor={
+                                            item === sizeAndQuantity.size &&
+                                            global.primaryColor
+                                        }
+                                        key={item}
+                                        handlePress={() => handleSetSize(item)}
+                                    >
+                                        <Text>{item}</Text>
+                                    </BoundaryIcon>
+                                ))}
+                            </View>
+                        )}
+                    </View>
+                </ScrollView>
+            )}
             <View style={styles.box}>
                 <View style={styles.boxP1}>
-                    <Text style={{ fontSize: 28 }}>$32</Text>
+                    <Text style={{ fontSize: 28 }}>
+                        {sizeAndQuantity?.price}
+                    </Text>
                     <View style={styles.buttonClick}>
                         <TouchableOpacity onPress={handleClickMinus}>
                             <Icon
@@ -82,7 +136,9 @@ const Food_Details = () => {
                                 style={styles.icon}
                             />
                         </TouchableOpacity>
-                        <Text style={{ color: 'white' }}> {count} </Text>
+                        <Text style={{ color: 'white' }}>
+                            {sizeAndQuantity?.quantity}
+                        </Text>
                         <TouchableOpacity onPress={handleClickPlus}>
                             <Icon
                                 name='circle-with-plus'
@@ -92,7 +148,7 @@ const Food_Details = () => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <Button title='ADD TO CART' />
+                <Button title='ADD TO CART' disabled={isLoading} />
             </View>
         </BoundaryScreen>
     )
@@ -102,33 +158,45 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '600',
     },
+    scrollView: {
+        width: '100%',
+    },
     image: {
-        width: "100%", 
+        flex: 1,
+        width: '100%',
         height: 200,
-        borderRadius: 20, 
-        marginTop: 15
+        borderRadius: 20,
+        marginTop: 15,
     },
     viewInfo: {
-        marginHorizontal: 15
+        marginHorizontal: 15,
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        width: '100%',
     },
-    restaurantName: {
+    viewRestaurantName: {
         flexDirection: 'row',
         alignItems: 'center',
         marginVertical: 10,
-        padding: 14,
-        gap: 10,
-        width: 190,
+        padding: 10,
+        maxWidth: 250,
         borderWidth: 1,
-        borderRadius: 20,
+        borderRadius: 15,
         borderColor: '#e8e8e8',
     },
-    foodName: { 
-        fontSize: 20, 
-        fontWeight: 'bold' 
+    restaurantName: {
+        fontSize: 14,
+        flexWrap: 'wrap',
+        marginLeft: 10,
+        marginRight: 15,
     },
-    foodDescribe: { 
-        color: global.textFifthColor, 
-        marginVertical: 15
+    foodName: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    foodDescribe: {
+        color: global.textFifthColor,
+        marginVertical: 15,
     },
     box: {
         backgroundColor: '#f0f5fa',

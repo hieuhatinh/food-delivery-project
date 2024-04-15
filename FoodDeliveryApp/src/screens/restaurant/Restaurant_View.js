@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     ScrollView,
     StyleSheet,
@@ -7,57 +7,51 @@ import {
     Image,
     TouchableOpacity,
 } from 'react-native'
-import Icon from 'react-native-vector-icons/Entypo'
+import { useRoute } from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux'
+
 import { global } from '../../global'
-import SuggestRestaurants from '../components/SuggestRestaurants'
 import BoundaryScreen from '../../components/BoundaryScreen'
 import HeaderSecondary from '../../components/header/HeaderSecondary'
-// import CardMeal from '../../components/Card/CardMeal'
-import CartNorify from '../../components/icon/CartNotify'
-import axiosClient from '../../api/axiosClient'
+import CartNotify from '../../components/icon/CartNotify'
 import Loading from '../../components/Loading'
 import CardMeal from '../../components/Card/CardMeal'
 import Rate from '../../components/Rate'
 
-const categories = [
-    { id: 1, suggestName: 'Burge' },
-    { id: 2, suggestName: 'Burge' },
-    { id: 3, suggestName: 'Burge' },
-    { id: 4, suggestName: 'Burge' },
-    { id: 5, suggestName: 'Burge' },
-    { id: 6, suggestName: 'Burge' },
-]
-
-const meals = [
-    {
-        _id: 1,
-        artwork: {
-            path: 'https://images.pexels.com/photos/2282532/pexels-photo-2282532.jpeg?auto=compress&cs=tinysrgb&w=600',
-        },
-        foodName: 'Burger',
-        restaurant: {
-            restaurantName: 'Restaurant Danh Hieu',
-        },
-        priceAndSize: {
-            price: '34323',
-            size: 'L',
-        },
-    },
-]
+import { fetchDetailRestaurant } from '../../store/actions/restaurantInfoAction'
+import {
+    selectCategoriesInRes,
+    selectInfoCategoryInRes,
+    selectRestaurantInfo,
+} from '../../store/selector/restaurantSelector'
+import { setSelectCategory } from '../../store/slice/restaurantInfoSlice'
+import Icon from 'react-native-vector-icons/Entypo'
 
 export default function RestaurantView({ navigation }) {
-    const [isClick, setClick] = useState(1)
-    const [loading, setLoading] = useState(false)
+    const route = useRoute()
+    const dispatch = useDispatch()
+    const { isLoading, error, isSuccess, restaurantInfo } =
+        useSelector(selectRestaurantInfo)
+    const categoriesInRes = useSelector(selectCategoriesInRes)
+    const infoCategoryInRes = useSelector(selectInfoCategoryInRes)
+
+    useEffect(() => {
+        dispatch(
+            fetchDetailRestaurant({ idRestaurant: route.params.idRestaurant }),
+        )
+    }, [])
+
+    const handleChangeCategoryName = (categoryName) => {
+        dispatch(setSelectCategory(categoryName))
+    }
 
     return (
         <BoundaryScreen>
             {/* Header */}
-            <HeaderSecondary
-                iconNotify={<Icon name='dots-three-horizontal' size={15} />}
-            >
+            <HeaderSecondary iconNotify={<CartNotify />}>
                 <Text style={styles.title}>Restaurant View</Text>
             </HeaderSecondary>
-            {loading ? (
+            {isLoading ? (
                 <Loading />
             ) : (
                 <ScrollView
@@ -65,47 +59,55 @@ export default function RestaurantView({ navigation }) {
                     showsVerticalScrollIndicator={false}
                 >
                     <Image
-                        source={require('../../assets/images/Image.png')}
+                        source={{ uri: restaurantInfo.image?.path }}
                         style={styles.image}
                         resizeMode='cover'
                     />
-                    <Text style={styles.restaurantName}>Spicy restaurant</Text>
-                    <Text style={styles.introduce}>
-                        Maecenas sed diam eget risus varius blandit sit amet non
-                        magna. Integer posuere erat a ante venenatis dapibus
-                        posuere velit aliquet.
+                    <Text style={styles.restaurantName}>
+                        {restaurantInfo.restaurantName}
                     </Text>
+                    <Text style={styles.introduce}>
+                        {restaurantInfo.introduce}
+                    </Text>
+                    <View style={styles.restaurantAddress}>
+                        <Icon
+                            name='location-pin'
+                            color={global.primaryColor}
+                            size={25}
+                        />
+                        <Text>{restaurantInfo.address}</Text>
+                    </View>
 
-                    <Rate />
+                    <Rate star={restaurantInfo.rate} />
 
                     <ScrollView
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
                         style={styles.viewCategories}
                     >
-                        {categories.map((item) => (
+                        {categoriesInRes?.map((item) => (
                             <TouchableOpacity
-                                key={item.id}
+                                key={item}
                                 style={{
-                                    ...styles.recentKeyword,
+                                    ...styles.viewCategory,
                                     backgroundColor:
-                                        item.id === isClick
+                                        item ===
+                                        infoCategoryInRes.categoryName.toLowerCase()
                                             ? global.primaryColor
                                             : 'white',
                                 }}
-                                onPress={() => {
-                                    setClick(item.id)
-                                }}
+                                onPress={() => handleChangeCategoryName(item)}
                             >
                                 <Text
                                     style={{
                                         color:
-                                            item.id != isClick
+                                            item !=
+                                            infoCategoryInRes.categoryName.toLowerCase()
                                                 ? global.secondaryColor
                                                 : 'white',
                                     }}
                                 >
-                                    {item.suggestName}
+                                    {item}
                                 </Text>
                             </TouchableOpacity>
                         ))}
@@ -117,11 +119,11 @@ export default function RestaurantView({ navigation }) {
                             marginTop: 10,
                         }}
                     >
-                        Burger
+                        {infoCategoryInRes.categoryName}
                     </Text>
 
-                    <View style={{ flexDirection: 'row' }}>
-                        {meals.map((item) => (
+                    <View style={styles.viewMeals}>
+                        {infoCategoryInRes.meals.map((item) => (
                             <CardMeal key={item._id} {...item} />
                         ))}
                     </View>
@@ -137,7 +139,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
     container: {
-        marginHorizontal: 10,
+        width: '95%',
     },
     image: {
         width: '100%',
@@ -154,6 +156,10 @@ const styles = StyleSheet.create({
         color: '#A0A5BA',
         marginVertical: 10,
     },
+    restaurantAddress: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     viewCategories: {
         marginTop: 20,
     },
@@ -165,14 +171,21 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginTop: 20,
     },
-    recentKeyword: {
-        width: 90,
+    viewCategory: {
+        width: 110,
         height: 50,
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: '#EDEDED',
         borderRadius: 100,
+        padding: 5,
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 10,
+        marginHorizontal: 5,
+    },
+    viewMeals: {
+        flexDirection: 'row',
+        flex: 1,
+        flexWrap: 'wrap',
+        marginBottom: 20,
     },
 })

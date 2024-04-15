@@ -8,7 +8,7 @@ import BoundaryScreen from '../../components/BoundaryScreen'
 import MenuItem from '../components/MenuItem'
 
 import { logout } from '../../store/slice/userSlice'
-import { selectUserInfo } from '../../store/selector'
+import { selectUserInfo } from '../../store/selector/userSelector'
 
 const profileCluster = [
     {

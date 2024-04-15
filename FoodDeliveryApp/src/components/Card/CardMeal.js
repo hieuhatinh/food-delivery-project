@@ -17,11 +17,14 @@ const CardMeal = (props) => {
         console.log('press plus')
     }
 
+    const handlePressCart = () =>
+        navigation.navigate('Food_Details', { idMeal: props._id })
+
     return (
         <TouchableOpacity
             style={styles.container}
             activeOpacity={0.8}
-            onPress={() => navigation.navigate('DetailMeal')}
+            onPress={handlePressCart}
         >
             <Image
                 source={{ uri: props?.artwork?.path }}
@@ -44,10 +47,11 @@ const CardMeal = (props) => {
                     {props?.restaurant?.restaurantName}
                 </Text>
                 <View style={styles.footer}>
-                    <Text style={styles.price}>
-                        {priceVnd}
-                    </Text>
-                    <TouchableOpacity activeOpacity={0.8} onPress={handlePressPlus}>
+                    <Text style={styles.price}>{priceVnd}</Text>
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={handlePressPlus}
+                    >
                         <Icon
                             name='circle-with-plus'
                             size={32}

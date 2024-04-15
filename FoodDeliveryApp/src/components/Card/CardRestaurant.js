@@ -1,15 +1,13 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome6'
+import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
-import { global } from '../../global'
 import Rate from '../Rate'
 
 const CardRestaurant = (props) => {
     const navigation = useNavigation()
 
     const handlePress = () => {
-        navigation.navigate('DetailRestaurant')
+        navigation.navigate('RestaurantView', { idRestaurant: props._id })
     }
 
     return (
@@ -29,7 +27,7 @@ const CardRestaurant = (props) => {
             <Text style={styles.categories} numberOfLines={1}>
                 {props.categories}
             </Text>
-            
+
             <Rate />
         </TouchableOpacity>
     )

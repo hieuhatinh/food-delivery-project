@@ -1,23 +1,45 @@
+import { useEffect } from 'react'
 import { StyleSheet, Text } from 'react-native'
 import { View } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo'
-import { global } from '../../global'
+import { useNavigation } from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux'
 
-const CartNorify = () => {
+import { global } from '../../global'
+import BoundaryIcon from '../button/BoundaryIcon'
+
+import { selectIdCart } from '../../store/selector/userSelector'
+import { selectNumberMeals } from '../../store/selector/cartSelector'
+import { fetchCountQuantity } from '../../store/actions/cartAction'
+
+const CartNotify = () => {
+    const navigation = useNavigation()
+    const dispatch = useDispatch()
+    const idCart = useSelector(selectIdCart)
+    const numberMeals = useSelector(selectNumberMeals)
+
+    useEffect(() => {
+        dispatch(fetchCountQuantity({ idCart }))
+    }, [])
+
+    const handleNavigate = () => {
+        navigation.navigate('BottomTabs', { screen: 'Cart' })
+    }
+
     return (
-        <View>
+        <BoundaryIcon handlePress={handleNavigate}>
             <Icon size={20} name='shopping-basket' />
             <View style={styles.viewNumber}>
-                <Text style={styles.number}>2</Text>
+                <Text style={styles.number}>{numberMeals}</Text>
             </View>
-        </View>
+        </BoundaryIcon>
     )
 }
 
 const styles = StyleSheet.create({
     viewNumber: {
-        top: -10,
-        right: -10,
+        top: 2,
+        right: 2,
         borderRadius: 10,
         height: 20,
         width: 20,
@@ -28,8 +50,8 @@ const styles = StyleSheet.create({
     },
     number: {
         color: '#fff',
-        fontSize: 12
+        fontSize: 12,
     },
 })
 
-export default CartNorify
+export default CartNotify

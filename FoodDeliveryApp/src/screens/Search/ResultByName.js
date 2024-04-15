@@ -5,14 +5,14 @@ import { useRoute } from '@react-navigation/native'
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 import BoundaryScreen from '../../components/BoundaryScreen'
 import CardMeal from '../../components/Card/CardMeal'
-import CartNorify from '../../components/icon/CartNotify'
+import CartNotify from '../../components/icon/CartNotify'
 
 const ResultByName = () => {
     const route = useRoute()
 
     return (
         <BoundaryScreen>
-            <HeaderSecondary iconNotify={<CartNorify />}>
+            <HeaderSecondary iconNotify={<CartNotify />}>
                 <Text style={styles.title}>{route.params.title}</Text>
             </HeaderSecondary>
 

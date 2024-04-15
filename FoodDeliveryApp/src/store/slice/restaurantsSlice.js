@@ -15,11 +15,7 @@ const initialState = {
 export const restaurantsSlice = createSlice({
     name: 'restaurants',
     initialState,
-    reducers: {
-        setRestaurants(state, action) {
-            return action.payload
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(fetchOpenRes.pending, (state, action) => {
@@ -40,6 +36,6 @@ export const restaurantsSlice = createSlice({
     },
 })
 
-export const { setRestaurants } = restaurantsSlice.actions
+export const {  } = restaurantsSlice.actions
 
 export default restaurantsSlice.reducer

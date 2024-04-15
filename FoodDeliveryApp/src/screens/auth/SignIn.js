@@ -21,7 +21,7 @@ import Button from '../../components/button/Button'
 import { global } from '../../global'
 
 import { fetchLogin } from '../../store/actions/userAction'
-import { selectUser } from '../../store/selector'
+import { selectUser } from '../../store/selector/userSelector'
 import { saveToken } from '../../store/slice/userSlice'
 
 export default function SignIn({ navigation }) {

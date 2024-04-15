@@ -17,9 +17,13 @@ import BoundaryScreen from '../../components/BoundaryScreen'
 import CardMeal from '../../components/Card/CardMeal'
 import HeaderSection from '../../components/header/HeaderSection'
 import OpenRestaurantsComp from '../components/OpenRestaurantsComp'
-import CartNorify from '../../components/icon/CartNotify'
+import CartNotify from '../../components/icon/CartNotify'
 
-import { selectCategoriesName, selectLimitSearch, selectSearch } from '../../store/selector'
+import { selectCategoriesName } from '../../store/selector/categorySelector'
+import {
+    selectLimitSearch,
+    selectSearch,
+} from '../../store/selector/searchSelector'
 import { fetchSearchByCategory } from '../../store/actions/searchAction'
 
 const ResultByCategory = () => {
@@ -67,7 +71,7 @@ const ResultByCategory = () => {
                     name: 'magnifying-glass',
                     handlePress: handlePressSearchIcon,
                 }}
-                iconNotify={<CartNorify />}
+                iconNotify={<CartNotify />}
             >
                 <View>
                     <TouchableOpacity

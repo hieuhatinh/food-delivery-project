@@ -11,7 +11,7 @@ import AvatarComp from '../../components/AvatarComp'
 import BoundaryScreen from '../../components/BoundaryScreen'
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 
-import { selectUser, selectUserInfo } from '../../store/selector'
+import { selectUser, selectUserInfo } from '../../store/userSelector'
 import { fetchGetUserInfo } from '../../store/actions/userAction'
 import { reState } from '../../store/slice/userSlice'
 

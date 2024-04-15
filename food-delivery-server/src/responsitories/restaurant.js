@@ -35,8 +35,22 @@ const getInfoARestaurant = async ({ idRestaurant }) => {
         {
             $lookup: {
                 from: 'meals',
-                localField: 'categories_info._id',
-                foreignField: 'category',
+                let: {
+                    categoryId: '$categories_info._id',
+                    restaurantId: '$_id',
+                },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $and: [
+                                    { $eq: ['$category', '$$categoryId'] },
+                                    { $eq: ['$restaurant', '$$restaurantId'] },
+                                ],
+                            },
+                        },
+                    },
+                ],
                 as: 'meals',
             },
         },
@@ -48,16 +62,19 @@ const getInfoARestaurant = async ({ idRestaurant }) => {
                 _id: {
                     restaurantId: '$_id',
                     restaurantName: '$restaurantName',
-                    restaurantAddress: '$address',
-                    restaurantState: '$state',
+                    image: '$image',
+                    address: '$address',
+                    state: '$state',
+                    rate: '$rate',
+                    introduce: '$introduce',
                     categoryName: '$categories_info.categoryName',
                 },
                 meals: {
                     $push: {
                         _id: '$meals._id',
                         foodName: '$meals.foodName',
-                        price: '$meals.price',
-                        size: '$meals.size',
+                        priceAndSize: '$meals.priceAndSize',
+                        artwork: '$meals.artwork',
                     },
                 },
             },
@@ -66,8 +83,11 @@ const getInfoARestaurant = async ({ idRestaurant }) => {
             $group: {
                 _id: '$_id.restaurantId',
                 restaurantName: { $first: '$_id.restaurantName' },
-                restaurantAddress: { $first: '$_id.restaurantAddress' },
-                restaurantState: { $first: '$_id.restaurantState' },
+                address: { $first: '$_id.address' },
+                state: { $first: '$_id.state' },
+                image: { $first: '$_id.image' },
+                rate: { $first: '$_id.rate' },
+                introduce: { $first: '$_id.introduce' },
                 categories: {
                     $push: {
                         categoryName: '$_id.categoryName',
@@ -77,58 +97,6 @@ const getInfoARestaurant = async ({ idRestaurant }) => {
             },
         },
     ])
-
-    // const info = await CategoryResModel.aggregate([
-    //     {
-    //         $match: { restaurant: idRestaurant },
-    //     },
-    //     {
-    //         $lookup: {
-    //             from: 'categories',
-    //             localField: 'category',
-    //             foreignField: '_id',
-    //             as: 'categories_info',
-    //         },
-    //     },
-    //     {
-    //         $lookup: {
-    //             from: 'restaurants',
-    //             localField: 'restaurant',
-    //             foreignField: '_id',
-    //             as: 'restaurant_info',
-    //         },
-    //     },
-    //     {
-    //         $unwind: '$categories_info',
-    //     },
-    //     {
-    //         $unwind: '$restaurant_info',
-    //     },
-    //     {
-    //         $lookup: {
-    //             from: 'meals',
-    //             localField: 'categories_info._id',
-    //             foreignField: 'category',
-    //             as: 'meals',
-    //         },
-    //     },
-    //     {
-    //         $group: {
-    //             _id: '$restaurant_info._id',
-    //             restaurantName: { $first: '$restaurant_info.restaurantName' },
-    //             restaurantAddress: {
-    //                 $first: '$restaurant_info.address',
-    //             },
-    //             restaurantState: { $first: '$restaurant_info.state' },
-    //             menu: {
-    //                 $push: {
-    //                     categoryName: '$categories_info.categoryName',
-    //                     meals: '$meals',
-    //                 },
-    //             },
-    //         },
-    //     },
-    // ])
 
     return { ...info[0] }
 }

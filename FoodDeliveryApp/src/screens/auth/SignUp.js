@@ -21,7 +21,7 @@ import Button from '../../components/button/Button'
 import BoundaryScreen from '../../components/BoundaryScreen'
 
 import { fetchRegister } from '../../store/actions/userAction'
-import { selectUser } from '../../store/selector'
+import { selectUser } from '../../store/selector/userSelector'
 import { reState } from '../../store/slice/userSlice'
 
 export default function SignUp({ navigation }) {

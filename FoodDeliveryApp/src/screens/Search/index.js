@@ -7,10 +7,10 @@ import SuggestRestaurants from '../components/SuggestRestaurants'
 import BoundaryScreen from '../../components/BoundaryScreen'
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 import CardMeal from '../../components/Card/CardMeal'
-import CartNorify from '../../components/icon/CartNotify'
+import CartNotify from '../../components/icon/CartNotify'
 import Loading from '../../components/Loading'
 
-import { selectSearch } from '../../store/selector'
+import { selectSearch } from '../../store/selector/searchSelector'
 import { fetchSearchByName } from '../../store/actions/searchAction'
 
 const recentKeywords = [
@@ -107,7 +107,7 @@ export default function Search({ navigation }) {
     return (
         <BoundaryScreen>
             {/* Header */}
-            <HeaderSecondary iconNotify={<CartNorify />}>
+            <HeaderSecondary iconNotify={<CartNotify />}>
                 <Text style={styles.title}>Search</Text>
             </HeaderSecondary>
             {searchState.isLoading ? (

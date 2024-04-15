@@ -5,7 +5,8 @@ import { useSelector } from 'react-redux'
 
 import CardRestaurant from '../../components/Card/CardRestaurant'
 import HeaderSection from '../../components/header/HeaderSection'
-import { selectRestaurants } from '../../store/selector'
+
+import { selectRestaurants } from '../../store/selector/restaurantSelector'
 
 const OpenRestaurantsComp = () => {
     const navigation = useNavigation()

@@ -1,14 +1,14 @@
 import React from 'react'
 import { FlatList, StyleSheet, Text } from 'react-native'
 import { useSelector } from 'react-redux'
-import { useIsFocused } from '@react-navigation/native'
 
 import HeaderSecondary from '../components/header/HeaderSecondary'
 import BoundaryScreen from '../components/BoundaryScreen'
 import CardCategory from '../components/Card/CardCategory'
-import CartNorify from '../components/icon/CartNotify'
+import CartNotify from '../components/icon/CartNotify'
 import Loading from '../components/Loading'
-import { selectCategories } from '../store/selector'
+
+import { selectCategories } from '../store/selector/categorySelector'
 
 const AllCategories = () => {
     const categoriesState = useSelector(selectCategories)
@@ -19,7 +19,7 @@ const AllCategories = () => {
                 <Loading />
             ) : (
                 <BoundaryScreen>
-                    <HeaderSecondary iconNotify={<CartNorify />}>
+                    <HeaderSecondary iconNotify={<CartNotify />}>
                         <Text style={styles.title}>All Categories</Text>
                     </HeaderSecondary>
 

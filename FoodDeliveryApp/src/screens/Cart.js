@@ -10,13 +10,12 @@ import HeaderSecondary from '../components/header/HeaderSecondary'
 import { global } from '../global'
 
 import { setSelectAll } from '../store/slice/cartSlice'
+import { selectIdCart } from '../store/selector/userSelector'
 import {
     selectCart,
-    selectIdCart,
-    selectMealsInCart,
     selectTypeFetch,
     selectorTotalPrice,
-} from '../store/selector'
+} from '../store/selector/cartSelector'
 import Loading from '../components/Loading'
 import { fetchGetAllMealsInCart } from '../store/actions/cartAction'
 

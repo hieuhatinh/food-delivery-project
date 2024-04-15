@@ -25,7 +25,7 @@ import Loading from '../../components/Loading'
 import BoundaryScreen from '../../components/BoundaryScreen'
 
 import { fetchUpdateInfomation } from '../../store/actions/userAction'
-import { selectUser, selectUserInfo } from '../../store/selector'
+import { selectUser, selectUserInfo } from '../../store/selector/userSelector'
 import { itemsSex } from './itemSex'
 import { reState } from '../../store/slice/userSlice'
 

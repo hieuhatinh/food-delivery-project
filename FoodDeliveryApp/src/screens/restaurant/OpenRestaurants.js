@@ -6,11 +6,11 @@ import { useIsFocused } from '@react-navigation/native'
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 import BoundaryScreen from '../../components/BoundaryScreen'
 import CardRestaurant from '../../components/Card/CardRestaurant'
-import CartNorify from '../../components/icon/CartNotify'
+import CartNotify from '../../components/icon/CartNotify'
 import Loading from '../../components/Loading'
 
 import { fetchOpenRes } from '../../store/actions/restaurantAction'
-import { selectRestaurants } from '../../store/selector'
+import { selectRestaurants } from '../../store/selector/restaurantSelector'
 
 const OpenRestaurants = () => {
     const dispatch = useDispatch()
@@ -29,7 +29,7 @@ const OpenRestaurants = () => {
                 <Loading />
             ) : (
                 <BoundaryScreen>
-                    <HeaderSecondary iconNotify={<CartNorify />}>
+                    <HeaderSecondary iconNotify={<CartNotify />}>
                         <Text style={styles.title}>Open Restaurants</Text>
                     </HeaderSecondary>
 

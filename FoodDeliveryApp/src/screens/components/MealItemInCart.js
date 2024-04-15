@@ -18,7 +18,7 @@ import {
     fetchDeleteMeal,
     fetchUpdateQuantity,
 } from '../../store/actions/cartAction'
-import { selectIdCart } from '../../store/selector'
+import { selectIdCart } from '../../store/selector/userSelector'
 
 export default function MealItemInCart(props) {
     const dispatch = useDispatch()

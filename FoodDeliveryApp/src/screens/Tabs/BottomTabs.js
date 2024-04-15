@@ -9,7 +9,9 @@ import Home from '../Home'
 import MenuProfile from '../MenuProfile'
 import Cart from '../Cart'
 import MyOrder from '../MyOrder'
-import { selectIdCart, selectNumberMeals } from '../../store/selector'
+
+import { selectIdCart } from '../../store/selector/userSelector'
+import { selectNumberMeals } from '../../store/selector/cartSelector'
 import { fetchCountQuantity } from '../../store/actions/cartAction'
 
 const Tab = createBottomTabNavigator()

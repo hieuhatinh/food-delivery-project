@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import axiosClient from '../../api/axiosClient'
 
 const fetchOpenRes = createAsyncThunk(
-    'restaurant/fetchOpenRes',
+    'restaurants/fetchOpenRes',
     async ({ limit, state }, { rejectWithValue }) => {
         try {
             let openRes = await axiosClient.get('/restaurant/get-restaurants', {
