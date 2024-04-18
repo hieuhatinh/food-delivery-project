@@ -186,9 +186,9 @@ const EditInformation = () => {
                         iconRightSecond={{
                             name: 'dots-three-horizontal',
                         }}
-                    >
-                        <Text style={styles.title}>Edit Information</Text>
-                    </HeaderSecondary>
+                        title='Edit Information'
+                    />
+
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         style={styles.content}
@@ -397,10 +397,6 @@ const styles = StyleSheet.create({
         flex: 1,
         marginVertical: 25,
         width: '95%',
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: '600',
     },
     viewAvatar: {
         alignItems: 'center',

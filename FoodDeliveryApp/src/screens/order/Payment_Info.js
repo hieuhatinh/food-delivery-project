@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
-import BoundaryIcon from '../components/button/BoundaryIcon'
+import BoundaryIcon from '../../components/button/BoundaryIcon'
 import Icon from 'react-native-vector-icons/Entypo'
-import BoundaryScreen from '../components/BoundaryScreen'
+import BoundaryScreen from '../../components/BoundaryScreen'
 
 export default function Payment_Info({ navigation }) {
     return (
@@ -13,7 +13,9 @@ export default function Payment_Info({ navigation }) {
                     </BoundaryIcon>
                 </View>
                 <View style={styles.image}>
-                    <Image source={require('../assets/images/SadCloud.png')} />
+                    <Image
+                        source={require('../../assets/images/SadCloud.png')}
+                    />
                 </View>
                 <View style={styles.box}>
                     <Text style={styles.title}>

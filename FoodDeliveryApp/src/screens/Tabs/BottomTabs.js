@@ -8,10 +8,13 @@ import { global } from '../../global'
 import Home from '../Home'
 import MenuProfile from '../MenuProfile'
 import Cart from '../Cart'
-import MyOrder from '../MyOrder'
+import MyOrder from '../order'
 
 import { selectIdCart } from '../../store/selector/userSelector'
-import { selectNumberMeals, selectTypeFetch } from '../../store/selector/cartSelector'
+import {
+    selectNumberMeals,
+    selectTypeFetch,
+} from '../../store/selector/cartSelector'
 import { fetchCountQuantity } from '../../store/actions/cartAction'
 import screenName from '../config/screenName'
 

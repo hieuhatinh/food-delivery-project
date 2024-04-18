@@ -1,9 +1,9 @@
 import { StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
 import Icon from 'react-native-vector-icons/Entypo'
-import Button from '../components/button/Button'
-import HeaderSecondary from '../components/header/HeaderSecondary'
-import BoundaryScreen from '../components/BoundaryScreen'
+import Button from '../../components/button/Button'
+import HeaderSecondary from '../../components/header/HeaderSecondary'
+import BoundaryScreen from '../../components/BoundaryScreen'
 
 const EditAddressAndContact = () => {
     const [isedit1, setIsEdit1] = useState(false)
@@ -23,12 +23,14 @@ const EditAddressAndContact = () => {
         setIsEdit3(!isedit3)
     }
     return (
-        <BoundaryScreen style={styles.container}>
-                <HeaderSecondary iconRightSecond={{
-                            name: 'dots-three-horizontal',
-                        }}>
-                    <Text style = {styles.title}>Địa chỉ giao hàng</Text>
-                </HeaderSecondary>
+        <BoundaryScreen>
+            <HeaderSecondary
+                iconRightSecond={{
+                    name: 'dots-three-horizontal',
+                }}
+                title='Địa chỉ giao hàng'
+            />
+
             <View style={styles.box}>
                 <View style={{ paddingBottom: 50 }}>
                     <View style={[styles.row, { paddingTop: 35 }]}>
@@ -68,7 +70,7 @@ const EditAddressAndContact = () => {
                     </View>
                 </View>
             </View>
-            <View style={styles.btn}>
+            <View style={styles.viewButton}>
                 <Button title={'Submit'} />
             </View>
         </BoundaryScreen>
@@ -80,10 +82,6 @@ export default EditAddressAndContact
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: '600',
     },
     box: {
         marginTop: 150,
@@ -106,11 +104,9 @@ const styles = StyleSheet.create({
         paddingRight: 5,
         marginHorizontal: 10,
     },
-    btn: {
-        flex: 1,
-        width: '100%',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-        paddingBottom: 50,
+    viewButton: {
+        width: '90%',
+        marginBottom: 10,
+        marginTop: 20,
     },
 })

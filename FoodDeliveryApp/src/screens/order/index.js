@@ -8,9 +8,9 @@ import {
     TabBarIndicator,
 } from 'react-native-tab-view'
 
-import HeaderSecondary from '../components/header/HeaderSecondary'
-import OrderItem from './components/OrderItem'
-import { global } from '../global'
+import HeaderSecondary from '../../components/header/HeaderSecondary'
+import OrderItem from '../components/OrderItem'
+import { global } from '../../global'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const DataFoodOnGoing = [
@@ -20,7 +20,7 @@ const DataFoodOnGoing = [
         nameFood: 'Pizza Hut',
         price: 45,
         item: 1,
-        image: require('../assets/images/avatar.png'),
+        image: require('../../assets/images/avatar.png'),
     },
     {
         id: 235322,
@@ -28,7 +28,7 @@ const DataFoodOnGoing = [
         nameFood: 'Pizza Hut',
         price: 45,
         item: 1,
-        image: require('../assets/images/avatar.png'),
+        image: require('../../assets/images/avatar.png'),
     },
     {
         id: 234534,
@@ -36,7 +36,7 @@ const DataFoodOnGoing = [
         nameFood: 'Pizza Hut',
         price: 45,
         item: 1,
-        image: require('../assets/images/avatar.png'),
+        image: require('../../assets/images/avatar.png'),
     },
     ,
     {
@@ -45,7 +45,7 @@ const DataFoodOnGoing = [
         nameFood: 'Pizza Hut',
         price: 45,
         item: 1,
-        image: require('../assets/images/avatar.png'),
+        image: require('../../assets/images/avatar.png'),
     },
 ]
 const DataFoodHistory = [
@@ -56,7 +56,7 @@ const DataFoodHistory = [
         price: 45,
         dateTime: '29 Jan, 12:30',
         item: 1,
-        image: require('../assets/images/avatar.png'),
+        image: require('../../assets/images/avatar.png'),
         status: 'Completed',
     },
     {
@@ -66,7 +66,7 @@ const DataFoodHistory = [
         price: 45,
         dateTime: '29 Jan, 12:30',
         item: 1,
-        image: require('../assets/images/avatar.png'),
+        image: require('../../assets/images/avatar.png'),
         status: 'Canceled',
     },
     {
@@ -76,7 +76,7 @@ const DataFoodHistory = [
         price: 45,
         dateTime: '29 Jan, 12:30',
         item: 1,
-        image: require('../assets/images/avatar.png'),
+        image: require('../../assets/images/avatar.png'),
         status: 'Completed',
     },
     ,
@@ -87,7 +87,7 @@ const DataFoodHistory = [
         price: 45,
         dateTime: '29 Jan, 12:30',
         item: 1,
-        image: require('../assets/images/avatar.png'),
+        image: require('../../assets/images/avatar.png'),
         status: 'Canceled',
     },
 ]
@@ -179,10 +179,10 @@ export default function MyOrder() {
                 <HeaderSecondary
                     iconLeft={false}
                     iconRightSecond={{ name: 'dots-three-horizontal' }}
-                >
-                    <Text style={styles.title}>My order</Text>
-                </HeaderSecondary>
+                    title='My order'
+                />
             </View>
+
             <TabView
                 renderTabBar={renderTabBar}
                 navigationState={{ index, routes }}
@@ -203,10 +203,6 @@ const styles = StyleSheet.create({
     viewHeader: {
         alignItems: 'center',
         marginTop: 10,
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: '600',
     },
     navBar: {
         flexDirection: 'row',

@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo'
 import { useNavigation } from '@react-navigation/native'
 
@@ -7,6 +7,7 @@ import { global } from '../../global'
 
 const HeaderSecondary = ({
     children,
+    title,
     iconLeft = true,
     iconRightFirst,
     iconRightSecond,
@@ -27,6 +28,7 @@ const HeaderSecondary = ({
                     </BoundaryIcon>
                 )}
                 {children}
+                {!!title && <Text style={styles.title}>{title}</Text>}
             </View>
             <View style={styles.row}>
                 {iconRightFirst && (
@@ -63,6 +65,10 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         height: global.headerHeight,
         zIndex: 100,
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: '600',
     },
     row: {
         flexDirection: 'row',

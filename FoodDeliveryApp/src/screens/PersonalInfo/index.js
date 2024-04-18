@@ -48,9 +48,8 @@ const PersonalInfo = () => {
                 iconRightSecond={{
                     name: 'dots-three-horizontal',
                 }}
-            >
-                <Text style={styles.title}>Personal Information</Text>
-            </HeaderSecondary>
+                title='Personal Information'
+            />
 
             {userState.isLoading ? (
                 <View style={{ height: '100%', width: '100%', top: 0 }}>
@@ -157,10 +156,6 @@ const styles = StyleSheet.create({
         flex: 1,
         marginVertical: 25,
         width: '95%',
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: '600',
     },
     information: {
         backgroundColor: global.backgroundPrimaryColor,

@@ -88,9 +88,8 @@ const Food_Details = () => {
 
     return (
         <BoundaryScreen>
-            <HeaderSecondary iconNotify={<CartNotify />}>
-                <Text style={styles.title}>Details</Text>
-            </HeaderSecondary>
+            <HeaderSecondary iconNotify={<CartNotify />} title='Details' />
+
             {isLoading || stateCart.isLoading ? (
                 <React.Fragment>
                     <Loading />
@@ -184,10 +183,6 @@ const Food_Details = () => {
     )
 }
 const styles = StyleSheet.create({
-    title: {
-        fontSize: 20,
-        fontWeight: '600',
-    },
     scrollView: {
         width: '100%',
     },

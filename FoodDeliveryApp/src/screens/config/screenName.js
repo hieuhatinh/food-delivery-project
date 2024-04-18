@@ -19,6 +19,8 @@ const screenName = {
     home: 'Home',
     order: 'Order',
     cart: 'Cart',
+    editAddressAndContact: 'EditAddressAndContact',
+    payment: 'Payment',
 }
 
-export default  screenName
+export default screenName

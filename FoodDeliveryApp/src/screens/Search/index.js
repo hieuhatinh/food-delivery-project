@@ -91,8 +91,7 @@ export default function Search({ navigation }) {
     }
 
     const handleEnter = async () => {
-        dispatch(fetchSearchByName({searchValue}))
-        
+        dispatch(fetchSearchByName({ searchValue }))
     }
 
     useEffect(() => {
@@ -107,9 +106,8 @@ export default function Search({ navigation }) {
     return (
         <BoundaryScreen>
             {/* Header */}
-            <HeaderSecondary iconNotify={<CartNotify />}>
-                <Text style={styles.title}>Search</Text>
-            </HeaderSecondary>
+            <HeaderSecondary iconNotify={<CartNotify />} title='Search' />
+
             {searchState.isLoading ? (
                 <Loading />
             ) : (
@@ -191,10 +189,6 @@ export default function Search({ navigation }) {
     )
 }
 const styles = StyleSheet.create({
-    title: {
-        fontSize: 22,
-        fontWeight: '600',
-    },
     container: {
         width: '95%',
     },

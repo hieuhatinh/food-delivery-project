@@ -85,9 +85,8 @@ const MenuProfile = ({ navigation }) => {
                 iconRightSecond={{
                     name: 'dots-three-horizontal',
                 }}
-            >
-                <Text style={styles.title}>Menu Profile</Text>
-            </HeaderSecondary>
+                title='Menu Profile'
+            />
             <ScrollView
                 style={styles.scrollMenu}
                 showsVerticalScrollIndicator={false}
@@ -158,10 +157,6 @@ const styles = StyleSheet.create({
     },
     scrollMenu: {
         width: '95%',
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: '600',
     },
     box: {
         flexDirection: 'row',

@@ -19,9 +19,10 @@ const AllCategories = () => {
                 <Loading />
             ) : (
                 <BoundaryScreen>
-                    <HeaderSecondary iconNotify={<CartNotify />}>
-                        <Text style={styles.title}>All Categories</Text>
-                    </HeaderSecondary>
+                    <HeaderSecondary
+                        iconNotify={<CartNotify />}
+                        title='All Categories'
+                    />
 
                     <FlatList
                         data={categoriesState.categories}
@@ -38,10 +39,6 @@ const AllCategories = () => {
 }
 
 const styles = StyleSheet.create({
-    title: {
-        fontSize: 20,
-        fontWeight: '600',
-    },
     flatlist: {
         width: '95%',
     },

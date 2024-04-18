@@ -12,9 +12,10 @@ const ResultByName = () => {
 
     return (
         <BoundaryScreen>
-            <HeaderSecondary iconNotify={<CartNotify />}>
-                <Text style={styles.title}>{route.params.title}</Text>
-            </HeaderSecondary>
+            <HeaderSecondary
+                iconNotify={<CartNotify />}
+                title={route.params.title}
+            />
 
             <FlatList
                 data={route.params.data}
@@ -29,10 +30,6 @@ const ResultByName = () => {
 }
 
 const styles = StyleSheet.create({
-    title: {
-        fontSize: 20,
-        fontWeight: '600',
-    },
     flatlist: {
         width: '95%',
     },

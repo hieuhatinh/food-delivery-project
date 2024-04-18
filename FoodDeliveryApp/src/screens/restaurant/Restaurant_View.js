@@ -48,9 +48,11 @@ export default function RestaurantView({ navigation }) {
     return (
         <BoundaryScreen>
             {/* Header */}
-            <HeaderSecondary iconNotify={<CartNotify />}>
-                <Text style={styles.title}>Restaurant View</Text>
-            </HeaderSecondary>
+            <HeaderSecondary
+                iconNotify={<CartNotify />}
+                title='Restaurant View'
+            />
+
             {isLoading ? (
                 <Loading />
             ) : (
@@ -134,10 +136,6 @@ export default function RestaurantView({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    title: {
-        fontSize: 22,
-        fontWeight: '600',
-    },
     container: {
         width: '95%',
     },

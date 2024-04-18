@@ -7,58 +7,64 @@ import {
 } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/Entypo'
-import Button from '../components/button/Button'
-import OrderInformation from './components/OrderInformation'
-import BoundaryScreen from '../components/BoundaryScreen'
-import HeaderSecondary from '../components/header/HeaderSecondary'
+import Button from '../../components/button/Button'
+import OrderInformation from '../components/OrderInformation'
+import BoundaryScreen from '../../components/BoundaryScreen'
+import HeaderSecondary from '../../components/header/HeaderSecondary'
+import screenName from '../config/screenName'
 
 export default function Payment({ navigation }) {
     const DataOrder = [
         {
             id: 1,
-            image: require('../assets/images/avatar.png'),
+            image: require('../../assets/images/avatar.png'),
             nameRestaurant: 'Nhà hàng của hiếu',
             priceFood: 35,
             quantity: 4,
         },
         {
             id: 2,
-            image: require('../assets/images/avatar.png'),
+            image: require('../../assets/images/avatar.png'),
             nameRestaurant: 'Nhà hàng của hiếu',
             priceFood: 35,
             quantity: 4,
         },
         {
             id: 3,
-            image: require('../assets/images/avatar.png'),
+            image: require('../../assets/images/avatar.png'),
             nameRestaurant: 'Nhà hàng của hiếu',
             priceFood: 35,
             quantity: 4,
         },
         {
             id: 4,
-            image: require('../assets/images/avatar.png'),
+            image: require('../../assets/images/avatar.png'),
             nameRestaurant: 'Nhà hàng của hiếu',
             priceFood: 35,
             quantity: 4,
         },
         {
             id: 5,
-            image: require('../assets/images/avatar.png'),
+            image: require('../../assets/images/avatar.png'),
             nameRestaurant: 'Nhà hàng của hiếu',
             priceFood: 35,
             quantity: 4,
         },
     ]
+
+    const handleNavigateEditInfo = () => {
+        navigation.navigate(screenName.editAddressAndContact)
+    }
+
     return (
         <BoundaryScreen style={styles.container}>
             <HeaderSecondary
                 iconRightSecond={{
                     name: 'dots-three-horizontal',
                 }}
-            >
-                <Text style={styles.title}>Thanh toán</Text>
-            </HeaderSecondary>
+                title='Thanh toán'
+            />
+
             <View style={styles.colBox}>
                 <TouchableOpacity
                     style={styles.boxAddress}
@@ -89,18 +95,20 @@ export default function Payment({ navigation }) {
                 data={DataOrder}
                 renderItem={({ item }) => <OrderInformation {...item} />}
             />
+
             <View style={styles.footer}>
-                <View style={styles.boxtotalPrice}>
-                    <Text style={styles.titletotalPrice}> TOTAl: </Text>
-                    <Text style={styles.totalPrice}> ${96}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={styles.boxtotalPrice}>
+                        <Text style={styles.titletotalPrice}> TOTAl: </Text>
+                        <Text style={styles.totalPrice}> ${96}</Text>
+                    </View>
+                    <View style={{ flex: 1 }} />
                 </View>
-                <View style={{ alignItems: 'center' }}>
+                <View style={styles.viewButton}>
                     <Button
                         title='Đặt hàng'
                         height={50}
-                        handlePress={() =>
-                            navigation.navigate('EditAddressAndContact')
-                        }
+                        handlePress={handleNavigateEditInfo}
                     />
                 </View>
             </View>
@@ -112,10 +120,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 50,
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: '600',
     },
     colBox: {
         backgroundColor: '#f0f5fa',
@@ -153,8 +157,8 @@ const styles = StyleSheet.create({
         color: '#FF7622',
     },
     footer: {
-        justifyContent: 'flex-end',
-        height: 120,
+        alignItems: 'center',
+        height: 130,
         backgroundColor: '#f0f5fa',
         width: '100%',
     },
@@ -169,6 +173,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingLeft: 20,
-        paddingBottom: 10,
+        paddingTop: 20,
+    },
+    viewButton: {
+        width: '90%',
+        marginBottom: 10,
+        marginTop: 20,
     },
 })

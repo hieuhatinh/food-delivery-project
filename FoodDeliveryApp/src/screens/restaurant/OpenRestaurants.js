@@ -29,9 +29,10 @@ const OpenRestaurants = () => {
                 <Loading />
             ) : (
                 <BoundaryScreen>
-                    <HeaderSecondary iconNotify={<CartNotify />}>
-                        <Text style={styles.title}>Open Restaurants</Text>
-                    </HeaderSecondary>
+                    <HeaderSecondary
+                        iconNotify={<CartNotify />}
+                        title='Open Restaurants'
+                    />
 
                     <FlatList
                         data={restaurantsState.restaurants}
@@ -56,10 +57,6 @@ const OpenRestaurants = () => {
 }
 
 const styles = StyleSheet.create({
-    title: {
-        fontSize: 20,
-        fontWeight: '600',
-    },
     flatlist: {
         width: '92%',
     },

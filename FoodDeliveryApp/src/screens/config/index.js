@@ -1,8 +1,8 @@
 import AllCategories from '../AllCategories'
 import Food_Details from '../Food_Details'
 import Notification from '../Notification'
-import OrderSuccess from '../OrderSuccess'
-import Payment_Info from '../Payment_Info'
+import OrderSuccess from '../order/OrderSuccess'
+import Payment_Info from '../order/Payment_Info'
 import PersonalInfo from '../PersonalInfo'
 import EditInformation from '../PersonalInfo/EditInformation'
 import Search from '../Search'
@@ -15,6 +15,8 @@ import SignUp from '../auth/SignUp'
 import OpenRestaurants from '../restaurant/OpenRestaurants'
 import RestaurantView from '../restaurant/Restaurant_View'
 import screenName from './screenName'
+import EditAddressAndContact from '../order/EditAddressAndContact'
+import Payment from '../order/Payment'
 
 export const screens = [
     {
@@ -81,5 +83,12 @@ export const screens = [
         name: screenName.paymentInfo,
         component: Payment_Info,
     },
+    {
+        name: screenName.payment,
+        component: Payment,
+    },
+    {
+        name: screenName.editAddressAndContact,
+        component: EditAddressAndContact,
+    },
 ]
-

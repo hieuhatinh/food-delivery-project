@@ -11,10 +11,7 @@ import { global } from '../global'
 
 import { resetTypeFetch, setSelectAll } from '../store/slice/cartSlice'
 import { selectIdCart } from '../store/selector/userSelector'
-import {
-    selectCart,
-    selectorTotalPrice,
-} from '../store/selector/cartSelector'
+import { selectCart, selectorTotalPrice } from '../store/selector/cartSelector'
 import Loading from '../components/Loading'
 import { fetchGetAllMealsInCart } from '../store/actions/cartAction'
 import screenName from './config/screenName'
@@ -27,15 +24,18 @@ export default function Cart({ navigation }) {
         useSelector(selectCart)
     let { isCheckedAll, meals } = mealsInCart
 
+    // xử lý check all
     const handleSelectAll = () => {
         dispatch(setSelectAll(!isCheckedAll))
     }
 
+    // lấy thông tin món ăn có trong giỏ hàng
     useEffect(() => {
         dispatch(fetchGetAllMealsInCart({ idCart }))
         dispatch(resetTypeFetch())
     }, [typeFetch])
 
+    // hiển thị lỗi
     useEffect(() => {
         if (error.isError) {
             Alert.alert('Lỗi', error.message, [
@@ -48,11 +48,14 @@ export default function Cart({ navigation }) {
         }
     }, [error])
 
+    const handleNavigate = () => {
+        navigation.navigate(screenName.payment)
+    }
+
     return (
         <BoundaryScreen>
-            <HeaderSecondary iconLeft={false}>
-                <Text style={styles.title}>Cart</Text>
-            </HeaderSecondary>
+            <HeaderSecondary iconLeft={false} title='Cart' />
+
             {isLoading ? (
                 <React.Fragment>
                     <Loading />
@@ -73,11 +76,7 @@ export default function Cart({ navigation }) {
                 >
                     {meals.map((item) => (
                         <MealItemInCart
-                            key={
-                                item.mealId._id +
-                                item.size +
-                                item.quantity
-                            }
+                            key={item.mealId._id + item.size + item.quantity}
                             {...item}
                         />
                     ))}
@@ -99,8 +98,8 @@ export default function Cart({ navigation }) {
                 </View>
                 <Button
                     height={50}
-                    title={'PLACE ORDER'}
-                    handlePress={() => navigation.navigate('OrderSuccess')}
+                    title='Mua hàng'
+                    handlePress={handleNavigate}
                     disabled={isLoading || meals.length === 0}
                 />
             </View>
@@ -109,10 +108,6 @@ export default function Cart({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    title: {
-        fontSize: 20,
-        fontWeight: '600',
-    },
     flatlist: {
         width: '100%',
     },

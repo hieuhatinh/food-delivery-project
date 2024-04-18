@@ -1,8 +1,8 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
 
-import Button from '../components/button/Button'
-import BoundaryScreen from '../components/BoundaryScreen'
-import screenName from './config/screenName'
+import Button from '../../components/button/Button'
+import BoundaryScreen from '../../components/BoundaryScreen'
+import screenName from '../config/screenName'
 
 export default function OrderSuccess({ navigation }) {
     return (
@@ -10,7 +10,7 @@ export default function OrderSuccess({ navigation }) {
             <View style={styles.container}>
                 <View style={styles.box}>
                     <Image
-                        source={require('../assets/images/icon_correct_.png')}
+                        source={require('../../assets/images/icon_correct_.png')}
                     />
                 </View>
 
