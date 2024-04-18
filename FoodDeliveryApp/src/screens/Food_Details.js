@@ -6,6 +6,7 @@ import {
     Image,
     TouchableOpacity,
     ScrollView,
+    Alert,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo'
 import { useDispatch, useSelector } from 'react-redux'
@@ -26,6 +27,10 @@ import {
 } from '../store/selector/mealSelector'
 import Loading from '../components/Loading'
 import { setQuantity, setSize } from '../store/slice/mealSlice'
+import { selectIdCart } from '../store/selector/userSelector'
+import { fetchAddToCart } from '../store/actions/cartAction'
+import { resetTypeFetch } from '../store/slice/cartSlice'
+import { selectCart } from '../store/selector/cartSelector'
 
 const Food_Details = () => {
     const route = useRoute()
@@ -35,6 +40,8 @@ const Food_Details = () => {
     const { isLoading, error, isSuccess, mealInfo } = useSelector(selectMeal)
     const sizes = useSelector(selectSizesMeal)
     const sizeAndQuantity = useSelector(selectSizeAndQuantity)
+    const idCart = useSelector(selectIdCart)
+    const stateCart = useSelector(selectCart)
 
     function handleClickPlus() {
         dispatch(setQuantity(sizeAndQuantity.quantity + 1))
@@ -56,16 +63,35 @@ const Food_Details = () => {
         })
     }
 
+    const handleAddToCart = () => {
+        dispatch(
+            fetchAddToCart({
+                idCart,
+                idMeal: route.params?.idMeal,
+                quantity: sizeAndQuantity.quantity,
+                size: sizeAndQuantity.size,
+                typeFetch: 'addToCart',
+            }),
+        )
+    }
+
     useEffect(() => {
         dispatch(fetchMealDetail({ idMeal: route.params?.idMeal }))
     }, [])
+
+    useEffect(() => {
+        if (stateCart.typeFetch === 'addToCart') {
+            Alert.alert('Thông báo', stateCart.messageSuccess)
+        }
+        dispatch(resetTypeFetch())
+    }, [stateCart.typeFetch])
 
     return (
         <BoundaryScreen>
             <HeaderSecondary iconNotify={<CartNotify />}>
                 <Text style={styles.title}>Details</Text>
             </HeaderSecondary>
-            {isLoading ? (
+            {isLoading || stateCart.isLoading ? (
                 <React.Fragment>
                     <Loading />
                     <View style={{ flex: 1 }} />
@@ -148,7 +174,11 @@ const Food_Details = () => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <Button title='ADD TO CART' disabled={isLoading} />
+                <Button
+                    title='ADD TO CART'
+                    disabled={isLoading}
+                    handlePress={handleAddToCart}
+                />
             </View>
         </BoundaryScreen>
     )

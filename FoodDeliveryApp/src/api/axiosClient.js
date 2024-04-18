@@ -5,8 +5,8 @@ import { KEY_USER } from '../storage/keys'
 
 // const IP_ADRESS = '192.168.24.103'
 // const IP_ADRESS = '192.168.24.105'
-// const IP_ADRESS = '192.168.24.109'
-const IP_ADRESS = '172.20.10.7'
+const IP_ADRESS = '192.168.24.109'
+// const IP_ADRESS = '172.20.10.7'
 
 const axiosClient = axios.create({
     baseURL: `http://${IP_ADRESS}:3000`,
@@ -18,7 +18,7 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(
     async function (request) {
         const token = await storage.getItem(KEY_USER)
-
+        
         const newHeaders = {
             ...request.headers,
             Authorization: `Bearer ${token}`,

@@ -9,21 +9,26 @@ import { global } from '../../global'
 import BoundaryIcon from '../button/BoundaryIcon'
 
 import { selectIdCart } from '../../store/selector/userSelector'
-import { selectNumberMeals } from '../../store/selector/cartSelector'
+import {
+    selectNumberMeals,
+    selectTypeFetch,
+} from '../../store/selector/cartSelector'
 import { fetchCountQuantity } from '../../store/actions/cartAction'
+import screenName from '../../screens/config/screenName'
 
 const CartNotify = () => {
     const navigation = useNavigation()
     const dispatch = useDispatch()
     const idCart = useSelector(selectIdCart)
     const numberMeals = useSelector(selectNumberMeals)
+    const typeFetch = useSelector(selectTypeFetch)
 
     useEffect(() => {
         dispatch(fetchCountQuantity({ idCart }))
-    }, [])
+    }, [typeFetch])
 
     const handleNavigate = () => {
-        navigation.navigate('BottomTabs', { screen: 'Cart' })
+        navigation.navigate(screenName.bottomTabs, { screen: screenName.cart })
     }
 
     return (

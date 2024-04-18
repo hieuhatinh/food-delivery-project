@@ -9,22 +9,22 @@ import BoundaryScreen from '../components/BoundaryScreen'
 import HeaderSecondary from '../components/header/HeaderSecondary'
 import { global } from '../global'
 
-import { setSelectAll } from '../store/slice/cartSlice'
+import { resetTypeFetch, setSelectAll } from '../store/slice/cartSlice'
 import { selectIdCart } from '../store/selector/userSelector'
 import {
     selectCart,
-    selectTypeFetch,
     selectorTotalPrice,
 } from '../store/selector/cartSelector'
 import Loading from '../components/Loading'
 import { fetchGetAllMealsInCart } from '../store/actions/cartAction'
+import screenName from './config/screenName'
 
 export default function Cart({ navigation }) {
     const dispatch = useDispatch()
     const totalPrice = useSelector(selectorTotalPrice)
     const idCart = useSelector(selectIdCart)
-    const typeFetch = useSelector(selectTypeFetch)
-    const { isLoading, error, isSuccess, mealsInCart } = useSelector(selectCart)
+    const { isLoading, error, isSuccess, mealsInCart, typeFetch } =
+        useSelector(selectCart)
     let { isCheckedAll, meals } = mealsInCart
 
     const handleSelectAll = () => {
@@ -33,6 +33,7 @@ export default function Cart({ navigation }) {
 
     useEffect(() => {
         dispatch(fetchGetAllMealsInCart({ idCart }))
+        dispatch(resetTypeFetch())
     }, [typeFetch])
 
     useEffect(() => {
@@ -40,7 +41,7 @@ export default function Cart({ navigation }) {
             Alert.alert('Lỗi', error.message, [
                 {
                     text: 'Ok',
-                    onPress: () => navigation.replace('BottomTabs'),
+                    onPress: () => navigation.replace(screenName.bottomTabs),
                     style: 'destructive',
                 },
             ])
@@ -71,7 +72,14 @@ export default function Cart({ navigation }) {
                     style={{ width: '100%' }}
                 >
                     {meals.map((item) => (
-                        <MealItemInCart key={item.mealId._id} {...item} />
+                        <MealItemInCart
+                            key={
+                                item.mealId._id +
+                                item.size +
+                                item.quantity
+                            }
+                            {...item}
+                        />
                     ))}
                 </ScrollView>
             )}

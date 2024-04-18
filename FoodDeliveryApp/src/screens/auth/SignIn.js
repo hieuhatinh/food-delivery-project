@@ -23,6 +23,7 @@ import { global } from '../../global'
 import { fetchLogin } from '../../store/actions/userAction'
 import { selectUser } from '../../store/selector/userSelector'
 import { saveToken } from '../../store/slice/userSlice'
+import screenName from '../config/screenName'
 
 export default function SignIn({ navigation }) {
     const dispatch = useDispatch()
@@ -55,7 +56,9 @@ export default function SignIn({ navigation }) {
                 dispatch(saveToken(userState.userInfo.token))
 
                 // di chuyển đến Home
-                navigation.replace('BottomTabs')
+                navigation.replace(screenName.bottomTabs, {
+                    screen: screenName.home,
+                })
             }
 
             if (userState.isError) {
@@ -110,7 +113,7 @@ export default function SignIn({ navigation }) {
                         <View style={styles.heading}>
                             <Text style={styles.titel2}>please </Text>
                             <Link
-                                to={{ screen: 'SignUp' }}
+                                to={{ screen: screenName.signUp }}
                                 style={[
                                     styles.titel2,
                                     { color: global.textSixColor },

@@ -77,7 +77,6 @@ userSchema.pre('save', async function (next) {
 
         // Tạo giỏ hàng mới
         const newCart = await CartModel.create({meals: []})
-        console.log(newCart)
         // Liên kết giỏ hàng mới với người dùng
         this.cartId = newCart._id
         next()

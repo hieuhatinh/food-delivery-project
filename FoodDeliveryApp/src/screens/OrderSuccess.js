@@ -2,6 +2,7 @@ import { Image, StyleSheet, Text, View } from 'react-native'
 
 import Button from '../components/button/Button'
 import BoundaryScreen from '../components/BoundaryScreen'
+import screenName from './config/screenName'
 
 export default function OrderSuccess({ navigation }) {
     return (
@@ -21,7 +22,9 @@ export default function OrderSuccess({ navigation }) {
                             outline={true}
                             title={'Home'}
                             handlePress={() =>
-                                navigation.navigate('BottomTabs')
+                                navigation.navigate(screenName.bottomTabs, {
+                                    screen: screenName.home,
+                                })
                             }
                         />
                     </View>
@@ -29,7 +32,11 @@ export default function OrderSuccess({ navigation }) {
                         <Button
                             height={40}
                             title={'My order'}
-                            handlePress={() => navigation.navigate('MyOrder')}
+                            handlePress={() =>
+                                navigation.navigate(screenName.bottomTabs, {
+                                    screen: screenName.order,
+                                })
+                            }
                         />
                     </View>
                 </View>

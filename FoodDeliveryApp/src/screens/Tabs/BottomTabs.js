@@ -11,8 +11,9 @@ import Cart from '../Cart'
 import MyOrder from '../MyOrder'
 
 import { selectIdCart } from '../../store/selector/userSelector'
-import { selectNumberMeals } from '../../store/selector/cartSelector'
+import { selectNumberMeals, selectTypeFetch } from '../../store/selector/cartSelector'
 import { fetchCountQuantity } from '../../store/actions/cartAction'
+import screenName from '../config/screenName'
 
 const Tab = createBottomTabNavigator()
 
@@ -20,21 +21,22 @@ export default function BottomTabs() {
     const dispatch = useDispatch()
     const idCart = useSelector(selectIdCart)
     const numberMeals = useSelector(selectNumberMeals)
+    const typeFetch = useSelector(selectTypeFetch)
 
     useEffect(() => {
         dispatch(fetchCountQuantity({ idCart }))
-    }, [])
+    }, [typeFetch])
 
     return (
         <Tab.Navigator
-            initialRouteName='Home'
+            initialRouteName={screenName.home}
             screenOptions={{
                 tabBarActiveTintColor: global.primaryColor,
                 headerShown: false,
             }}
         >
             <Tab.Screen
-                name='Home'
+                name={screenName.home}
                 component={Home}
                 options={{
                     tabBarLabel: 'Home',
@@ -44,7 +46,7 @@ export default function BottomTabs() {
                 }}
             />
             <Tab.Screen
-                name='Order'
+                name={screenName.order}
                 component={MyOrder}
                 options={{
                     tabBarLabel: 'Order',
@@ -54,7 +56,7 @@ export default function BottomTabs() {
                 }}
             />
             <Tab.Screen
-                name='Cart'
+                name={screenName.cart}
                 component={Cart}
                 options={{
                     tabBarIcon: ({ color, size }) => (
@@ -72,7 +74,7 @@ export default function BottomTabs() {
                 }}
             />
             <Tab.Screen
-                name='MenuProfile'
+                name={screenName.menuProfile}
                 component={MenuProfile}
                 options={{
                     tabBarLabel: 'Menu',

@@ -23,6 +23,7 @@ import BoundaryScreen from '../../components/BoundaryScreen'
 import { fetchRegister } from '../../store/actions/userAction'
 import { selectUser } from '../../store/selector/userSelector'
 import { reState } from '../../store/slice/userSlice'
+import screenName from '../config/screenName'
 
 export default function SignUp({ navigation }) {
     const dispatch = useDispatch()
@@ -51,7 +52,7 @@ export default function SignUp({ navigation }) {
                 Alert.alert('Thông báo', userState.messageNotify, [
                     {
                         text: 'OK',
-                        onPress: () => navigation.navigate('SignIn'),
+                        onPress: () => navigation.navigate(screenName.signIn),
                     },
                 ])
             }
@@ -131,7 +132,7 @@ export default function SignUp({ navigation }) {
                         <View style={styles.heading}>
                             <Text style={styles.titel2}>please </Text>
                             <Link
-                                to={{ screen: 'SignIn' }}
+                                to={{ screen: screenName.signIn }}
                                 style={[
                                     styles.titel2,
                                     { color: global.textSixColor },

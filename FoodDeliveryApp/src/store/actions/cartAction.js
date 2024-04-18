@@ -9,7 +9,7 @@ const fetchGetAllMealsInCart = createAsyncThunk(
             let resultMeals = await axiosClient.get(
                 `/cart/get-all-meal/${idCart}`,
             )
-
+            
             return resultMeals.data.meals
         } catch (error) {
             rejectWithValue(error.response.data.message)
@@ -71,9 +71,31 @@ const fetchCountQuantity = createAsyncThunk(
     },
 )
 
+const fetchAddToCart = createAsyncThunk(
+    'cart/fetchAddToCart',
+    async (
+        { idCart, idMeal, quantity, size, typeFetch },
+        { rejectWithValue },
+    ) => {
+        try {
+            let result = await axiosClient.patch(
+                `/cart/add/${idCart}/${idMeal}?quantity=${quantity}&size=${size}`,
+            )
+
+            return {
+                message: result.data.message,
+                typeFetch,
+            }
+        } catch (error) {
+            rejectWithValue(error.response.data.message)
+        }
+    },
+)
+
 export {
     fetchGetAllMealsInCart,
     fetchUpdateQuantity,
     fetchDeleteMeal,
     fetchCountQuantity,
+    fetchAddToCart,
 }

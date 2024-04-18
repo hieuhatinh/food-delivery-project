@@ -5,6 +5,7 @@ import {
     fetchUpdateQuantity,
     fetchDeleteMeal,
     fetchCountQuantity,
+    fetchAddToCart,
 } from '../actions/cartAction'
 
 const initialState = {
@@ -29,7 +30,9 @@ export const cartSlice = createSlice({
     reducers: {
         setQuantityMeal: (state, action) => {
             let { _id, quantity } = action.payload
-            let meal = state.mealsInCart.meals.find((item) => item.mealId._id === _id)
+            let meal = state.mealsInCart.meals.find(
+                (item) => item.mealId._id === _id,
+            )
             meal.quantity = quantity
         },
         setSelectAll: (state, action) => {
@@ -55,6 +58,9 @@ export const cartSlice = createSlice({
                 (item) => item.mealId._id !== action.payload,
             )
         },
+        resetTypeFetch: (state, action) => {
+            state.typeFetch = null
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -65,7 +71,7 @@ export const cartSlice = createSlice({
                 state.isSuccess = true
                 state.mealsInCart.meals = action.payload.map((item) => ({
                     ...item,
-                    isChecked: false,
+                    isChecked: state.mealsInCart.isCheckedAll,
                 }))
                 state.isLoading = false
             })
@@ -117,6 +123,21 @@ export const cartSlice = createSlice({
                 state.error.message = action.payload
                 state.isLoading = false
             })
+        builder
+            .addCase(fetchAddToCart.pending, (state, action) => {
+                state.isLoading = true
+            })
+            .addCase(fetchAddToCart.fulfilled, (state, action) => {
+                state.isSuccess = true
+                state.messageSuccess = action.payload.message
+                state.typeFetch = action.payload.typeFetch
+                state.isLoading = false
+            })
+            .addCase(fetchAddToCart.rejected, (state, action) => {
+                state.error.isError = true
+                state.error.message = action.payload
+                state.isLoading = false
+            })
     },
 })
 
@@ -125,6 +146,7 @@ export const {
     setSelectAll,
     setSelectItem,
     removeItemFromCart,
+    resetTypeFetch,
 } = cartSlice.actions
 
 export default cartSlice.reducer

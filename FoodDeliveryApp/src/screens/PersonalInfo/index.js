@@ -11,9 +11,10 @@ import AvatarComp from '../../components/AvatarComp'
 import BoundaryScreen from '../../components/BoundaryScreen'
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 
-import { selectUser, selectUserInfo } from '../../store/userSelector'
-import { fetchGetUserInfo } from '../../store/actions/userAction'
 import { reState } from '../../store/slice/userSlice'
+import { selectUser, selectUserInfo } from '../../store/selector/userSelector'
+import screenName from '../config/screenName'
+import { fetchGetUserInfomation } from '../../store/actions/userAction'
 
 const PersonalInfo = () => {
     const navigation = useNavigation()
@@ -23,12 +24,12 @@ const PersonalInfo = () => {
     const userInfo = useSelector(selectUserInfo)
 
     const handlePressEdit = () => {
-        navigation.navigate('EditInformation', { userInfo })
+        navigation.navigate(screenName.editInformation, { userInfo })
     }
 
     useEffect(() => {
-        if (isFocused === true) {
-            dispatch(fetchGetUserInfo({idUser: userInfo._id}))
+        if (isFocused) {
+            dispatch(fetchGetUserInfomation({}))
         }
     }, [isFocused])
 
@@ -144,7 +145,7 @@ const PersonalInfo = () => {
                 <Button
                     title='Edit Information'
                     handlePress={handlePressEdit}
-                    disabled={isLoading ? true : false}
+                    disabled={userState.isLoading ? true : false}
                 />
             </View>
         </BoundaryScreen>

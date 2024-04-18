@@ -28,12 +28,12 @@ export default function MealItemInCart(props) {
 
     let { mealId, size, quantity, isChecked } = props
 
-    let price = mealId.priceAndSize.find((item) => item.size === size).price
-
-    let priceVnd = price.toLocaleString('vi-VN', {
-        style: 'currency',
-        currency: 'VND',
-    })
+    let price = mealId.priceAndSize
+        .find((item) => item.size === size)
+        .price.toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+        })
 
     useDebounce(quantity, 1000, () => {
         if (isPress) {
@@ -125,10 +125,10 @@ export default function MealItemInCart(props) {
                     />
                     <View style={styles.viewInfo}>
                         <View>
-                            <Text style={styles.nameFood}>
+                            <Text style={styles.nameFood} numberOfLines={2}>
                                 {mealId.foodName}
                             </Text>
-                            <Text style={styles.price}>{priceVnd}</Text>
+                            <Text style={styles.price}>{price}</Text>
                         </View>
                         <View style={styles.viewNumberMeal}>
                             <View style={styles.icon}>
@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         flexDirection: 'row',
+        width: '90%'
     },
     checkbox: {
         height: 20,
@@ -192,7 +193,8 @@ const styles = StyleSheet.create({
     },
     nameFood: {
         fontSize: 18,
-        flexWrap: 'wrap',
+        // flexWrap: 'wrap',
+        width: '90%'
     },
     price: {
         fontSize: 20,

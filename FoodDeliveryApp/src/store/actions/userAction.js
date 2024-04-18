@@ -37,7 +37,7 @@ const fetchRegister = createAsyncThunk(
 const fetchUpdateInfomation = createAsyncThunk(
     'user/fetchUpdateInfomation',
     async (
-        { idUser, fullName, phoneNumber, address, sex, dateOfBirth, slogan },
+        { fullName, phoneNumber, address, sex, dateOfBirth, slogan },
         { rejectWithValue },
     ) => {
         try {
@@ -47,7 +47,7 @@ const fetchUpdateInfomation = createAsyncThunk(
                 : ''
 
             const userInfoUpdate = await axiosClient.patch(
-                `/user/${idUser}/update-information`,
+                `/user/update-information`,
                 {
                     fullName: fullName?.trim(),
                     phoneNumber: phoneNumber?.trim(),
@@ -65,19 +65,22 @@ const fetchUpdateInfomation = createAsyncThunk(
     },
 )
 
-const fetchGetUserInfo = createAsyncThunk(
-    'user/fetchGetUserInfo', 
-    async ({idUser}, {rejectWithValue}) => {
+const fetchGetUserInfomation = createAsyncThunk(
+    'user/fetchGetUserInfomation',
+    async ({}, { rejectWithValue }) => {
         try {
-            const user = await axiosClient.get(
-                `/user/${idUser}/get-information`,
-            )
+            const userInfo = await axiosClient.get('/user/get-information')
 
-            return user.data
+            return userInfo.data
         } catch (error) {
-            rejectWithValue(error.response.data.message)
+            return rejectWithValue(error.response.data.message)
         }
-    }
+    },
 )
 
-export { fetchLogin, fetchRegister, fetchUpdateInfomation, fetchGetUserInfo }
+export {
+    fetchLogin,
+    fetchRegister,
+    fetchUpdateInfomation,
+    fetchGetUserInfomation,
+}

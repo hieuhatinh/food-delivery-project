@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import * as storage from '../../storage'
 import { KEY_USER } from '../../storage/keys'
 
-import { fetchGetUserInfo, fetchLogin, fetchRegister, fetchUpdateInfomation } from '../actions/userAction'
+import { fetchGetUserInfomation, fetchLogin, fetchRegister, fetchUpdateInfomation } from '../actions/userAction'
 
 const initialState = {
     userInfo: {},
@@ -79,16 +79,16 @@ export const userSlice = createSlice({
                 state.messageNotify = action.payload
             })
         builder
-            .addCase(fetchGetUserInfo.pending, (state, action) => {
+            .addCase(fetchGetUserInfomation.pending, (state, action) => {
                 state.isLoading = true
             })
-            .addCase(fetchGetUserInfo.fulfilled, (state, action) => {
+            .addCase(fetchGetUserInfomation.fulfilled, (state, action) => {
                 state.isSuccess = true
                 state.messageNotify = action.payload.message
                 state.userInfo = action.payload.userInfo
                 state.isLoading = false
             })
-            .addCase(fetchGetUserInfo.rejected, (state, action) => {
+            .addCase(fetchGetUserInfomation.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.messageNotify = action.payload.message

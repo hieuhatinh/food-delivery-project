@@ -26,7 +26,7 @@ const addToCart = async (req, res) => {
         const mealsInCart = await cartResponsitories.addToCart({
             cartId: idCart,
             mealId: idMeal,
-            quantity,
+            quantity: Number(quantity),
             size,
         })
 

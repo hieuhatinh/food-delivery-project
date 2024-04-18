@@ -9,19 +9,20 @@ import MenuItem from '../components/MenuItem'
 
 import { logout } from '../../store/slice/userSlice'
 import { selectUserInfo } from '../../store/selector/userSelector'
+import screenName from '../config/screenName'
 
 const profileCluster = [
     {
         title: 'Personal Info',
         iconName: 'user-o',
         colorIcon: 'red',
-        screenNameToNavigate: 'PersonalInfo',
+        screenNameToNavigate: screenName.personalInfo,
     },
     {
         title: 'Addresses',
         iconName: 'map-o',
         colorIcon: '#3f3cfa',
-        screenNameToNavigate: 'Notification',
+        screenNameToNavigate: screenName.notification,
     },
 ]
 
@@ -30,19 +31,19 @@ const orderAndPaymentCluster = [
         title: 'Favourite',
         iconName: 'heart-o',
         colorIcon: '#b13cfa',
-        screenNameToNavigate: 'Notification',
+        screenNameToNavigate: screenName.notification,
     },
     {
         title: 'Notifications',
         iconName: 'bell-o',
         colorIcon: '#ffa929',
-        screenNameToNavigate: 'Notification',
+        screenNameToNavigate: screenName.notification,
     },
     {
         title: 'Payment Method',
         iconName: 'cc-visa',
         colorIcon: '#82c1ff',
-        screenNameToNavigate: 'Notification',
+        screenNameToNavigate: screenName.notification,
     },
 ]
 
@@ -51,19 +52,19 @@ const supportCluster = [
         title: 'FAQs',
         iconName: 'tag',
         colorIcon: '#fc9a77',
-        screenNameToNavigate: 'Notification',
+        screenNameToNavigate: screenName.notification,
     },
     {
         title: 'User Reviews',
         iconName: 'odnoklassniki',
         colorIcon: '#2be0e0',
-        screenNameToNavigate: 'Notification',
+        screenNameToNavigate: screenName.notification,
     },
     {
         title: 'Settings',
         iconName: 'gear',
         colorIcon: '#8886fc',
-        screenNameToNavigate: 'Notification',
+        screenNameToNavigate: screenName.notification,
     },
 ]
 
@@ -74,7 +75,7 @@ const MenuProfile = ({ navigation }) => {
     const handleSignOut = () => {
         dispatch(logout())
 
-        navigation.replace('SignIn')
+        navigation.replace(screenName.signIn)
     }
 
     return (
@@ -105,7 +106,7 @@ const MenuProfile = ({ navigation }) => {
                             key={item.title}
                             {...item}
                             onPress={() =>
-                                navigation.navigate(item.screenNameToNavigate)
+                                navigation.navigate(item?.screenNameToNavigate)
                             }
                         />
                     ))}
@@ -117,7 +118,7 @@ const MenuProfile = ({ navigation }) => {
                             key={item.title}
                             {...item}
                             onPress={() =>
-                                navigation.navigate(item.screenNameToNavigate)
+                                navigation.navigate(item?.screenNameToNavigate)
                             }
                         />
                     ))}
@@ -129,7 +130,7 @@ const MenuProfile = ({ navigation }) => {
                             key={item.title}
                             {...item}
                             onPress={() =>
-                                navigation.navigate(item.screenNameToNavigate)
+                                navigation.navigate(item?.screenNameToNavigate)
                             }
                         />
                     ))}

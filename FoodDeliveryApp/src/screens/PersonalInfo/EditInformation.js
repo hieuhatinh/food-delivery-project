@@ -28,6 +28,7 @@ import { fetchUpdateInfomation } from '../../store/actions/userAction'
 import { selectUser, selectUserInfo } from '../../store/selector/userSelector'
 import { itemsSex } from './itemSex'
 import { reState } from '../../store/slice/userSlice'
+import screenName from '../config/screenName'
 
 const EditInformation = () => {
     const dispatch = useDispatch()
@@ -144,7 +145,6 @@ const EditInformation = () => {
     const handlePressSubmit = async () => {
         dispatch(
             fetchUpdateInfomation({
-                idUser: userInfo._id,
                 fullName,
                 phoneNumber,
                 address,
@@ -162,7 +162,8 @@ const EditInformation = () => {
                 Alert.alert('Thông báo', userState.messageNotify, [
                     {
                         text: 'OK',
-                        onPress: () => navigation.navigate('PersonalInfo'),
+                        onPress: () =>
+                            navigation.navigate(screenName.personalInfo),
                     },
                 ])
             }

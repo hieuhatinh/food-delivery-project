@@ -3,6 +3,7 @@ import React from 'react'
 
 import Button from '../components/button/Button'
 import { global } from '../global'
+import screenName from './config/screenName'
 
 export default function Welcome({ navigation }) {
     return (
@@ -21,13 +22,13 @@ export default function Welcome({ navigation }) {
                     title='Log in'
                     backgroundColor={global.fourthColor}
                     height={75}
-                    handlePress={() => navigation.navigate('SignIn')}
+                    handlePress={() => navigation.navigate(screenName.signIn)}
                 />
                 <Button
                     title='Sign up'
                     outline
                     height={75}
-                    handlePress={() => navigation.navigate('SignUp')}
+                    handlePress={() => navigation.navigate(screenName.signUp)}
                 />
             </View>
         </View>
