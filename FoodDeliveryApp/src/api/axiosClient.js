@@ -18,7 +18,7 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(
     async function (request) {
         const token = await storage.getItem(KEY_USER)
-        
+
         const newHeaders = {
             ...request.headers,
             Authorization: `Bearer ${token}`,
