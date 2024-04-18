@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
 import Icon from 'react-native-vector-icons/Entypo'
 import Button from '../components/button/Button'
@@ -24,11 +24,10 @@ const EditAddressAndContact = () => {
     }
     return (
         <BoundaryScreen style={styles.container}>
-
                 <HeaderSecondary iconRightSecond={{
                             name: 'dots-three-horizontal',
                         }}>
-                    <Text style = {{fontSize: 17}}>Địa chỉ giao hàng</Text>
+                    <Text style = {styles.title}>Địa chỉ giao hàng</Text>
                 </HeaderSecondary>
             <View style={styles.box}>
                 <View style={{ paddingBottom: 50 }}>
@@ -82,12 +81,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    title: {
+        fontSize: 20,
+        fontWeight: '600',
+    },
     box: {
         marginTop: 150,
         backgroundColor: '#F0F5FA',
         borderRadius: 10,
         width: '90%',
-
     },
     row: {
         flexDirection: 'row',

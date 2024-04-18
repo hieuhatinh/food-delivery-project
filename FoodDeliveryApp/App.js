@@ -20,7 +20,7 @@ import ResultByName from './src/screens/Search/ResultByName'
 import DetailRestaurant from './src/screens/restaurant/DetailRestaurant'
 import OpenRestaurants from './src/screens/restaurant/OpenRestaurants'
 import DetailMeal from './src/screens/DetailMeal'
-import MyCart2 from './src/screens/MyCart2'
+import Payment from './src/screens/Payment'
 import EditAddressAndContact from './src/screens/EditAddressAndContact'
 
 const Stack = createNativeStackNavigator()
@@ -31,7 +31,7 @@ function App() {
             <Provider store={store}>
                 <NavigationContainer>
                     <Stack.Navigator
-                        initialRouteName='MyCart2'
+                        initialRouteName='Payment'
                         screenOptions={{ headerShown: false }}
                     >
                         <Stack.Screen name='Welcome' component={Welcome} />
@@ -85,7 +85,7 @@ function App() {
                             component={DetailMeal}
                         />
 
-                        <Stack.Screen name='MyCart2' component={MyCart2} />
+                        <Stack.Screen name='Payment' component={Payment} />
                         <Stack.Screen name='EditAddressAndContact' component={EditAddressAndContact} />
                     </Stack.Navigator>
                 </NavigationContainer>

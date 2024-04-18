@@ -12,7 +12,7 @@ import OrderInformation from './components/OrderInformation'
 import BoundaryScreen from '../components/BoundaryScreen'
 import HeaderSecondary from '../components/header/HeaderSecondary'
 
-export default function MyCart2({ navigation }) {
+export default function Payment({ navigation }) {
     const DataOrder = [
         {
             id: 1,
@@ -57,7 +57,7 @@ export default function MyCart2({ navigation }) {
                     name: 'dots-three-horizontal',
                 }}
             >
-                <Text style={{ fontSize: 17 }}>Thanh toán</Text>
+                <Text style={styles.title}>Thanh toán</Text>
             </HeaderSecondary>
             <View style={styles.colBox}>
                 <TouchableOpacity
@@ -75,17 +75,15 @@ export default function MyCart2({ navigation }) {
                     />
                 </TouchableOpacity>
             </View>
-            <View>
-                <View style={styles.boxPayment}>
-                    <Text style={styles.titleAddress}>Payment Method</Text>
-                    <TouchableOpacity
-                        style={{ flexDirection: 'row', paddingRight: 25 }}
-                        onPress={console.log('hello')}
-                    >
-                        <Text style={styles.title2}>Cash</Text>
-                        <Icon name='chevron-thin-right' size={20} />
-                    </TouchableOpacity>
-                </View>
+            <View style={styles.boxPayment}>
+                <Text style={styles.titleAddress}>Payment Method</Text>
+                <TouchableOpacity
+                    style={{ flexDirection: 'row', paddingRight: 25 }}
+                    onPress={console.log('hello')}
+                >
+                    <Text style={styles.title2}>Cash</Text>
+                    <Icon name='chevron-thin-right' size={20} />
+                </TouchableOpacity>
             </View>
             <FlatList
                 data={DataOrder}
@@ -98,7 +96,7 @@ export default function MyCart2({ navigation }) {
                 </View>
                 <View style={{ alignItems: 'center' }}>
                     <Button
-                        title={'Payment'}
+                        title='Đặt hàng'
                         height={50}
                         handlePress={() =>
                             navigation.navigate('EditAddressAndContact')
@@ -114,6 +112,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 50,
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: '600',
     },
     colBox: {
         backgroundColor: '#f0f5fa',
@@ -137,6 +139,7 @@ const styles = StyleSheet.create({
     boxPayment: {
         height: 35,
         marginTop: 5,
+        marginBottom: 10,
         backgroundColor: '#f0f5fa',
         borderRadius: 10,
         flexDirection: 'row',
@@ -151,7 +154,7 @@ const styles = StyleSheet.create({
     },
     footer: {
         justifyContent: 'flex-end',
-        height: 150,
+        height: 120,
         backgroundColor: '#f0f5fa',
         width: '100%',
     },
