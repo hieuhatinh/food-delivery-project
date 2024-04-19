@@ -1,19 +1,21 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
-import axiosClient from '../../api/axiosClient'
+import {
+    userApiGetInfo,
+    userApiLogin,
+    userApiRegister,
+    userApiUpdateInfo,
+} from '../../api/userApi'
 
 const fetchLogin = createAsyncThunk(
     'user/fetchLogin',
     async ({ email, password }, { rejectWithValue }) => {
         try {
-            let user = await axiosClient.post('/user/login', {
-                email,
-                password,
-            })
+            let result = await userApiLogin({ email, password })
 
-            return user.data
+            return result
         } catch (error) {
-            return rejectWithValue(error.response.data.message)
+            return rejectWithValue(error.message)
         }
     },
 )
@@ -22,14 +24,11 @@ const fetchRegister = createAsyncThunk(
     'user/fetchRegister',
     async ({ email, password }, { rejectWithValue }) => {
         try {
-            let user = await axiosClient.post('/user/register', {
-                email,
-                password,
-            })
+            let result = await userApiRegister({ email, password })
 
-            return user.data.message
+            return result
         } catch (error) {
-            return rejectWithValue(error.response.data.message)
+            return rejectWithValue(error.message)
         }
     },
 )
@@ -41,26 +40,18 @@ const fetchUpdateInfomation = createAsyncThunk(
         { rejectWithValue },
     ) => {
         try {
-            let dateArr = dateOfBirth?.split('-')
-            let dateStr = !!dateArr
-                ? `${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`
-                : ''
+            let result = await userApiUpdateInfo({
+                fullName,
+                phoneNumber,
+                address,
+                sex,
+                dateOfBirth,
+                slogan,
+            })
 
-            const userInfoUpdate = await axiosClient.patch(
-                `/user/update-information`,
-                {
-                    fullName: fullName?.trim(),
-                    phoneNumber: phoneNumber?.trim(),
-                    address: address?.trim(),
-                    sex: sex.value?.trim(),
-                    dateOfBirth: dateStr?.trim(),
-                    slogan: slogan?.trim(),
-                },
-            )
-
-            return userInfoUpdate.data.message
+            return result
         } catch (error) {
-            return rejectWithValue(error.response.data.message)
+            return rejectWithValue(error.message)
         }
     },
 )
@@ -69,11 +60,11 @@ const fetchGetUserInfomation = createAsyncThunk(
     'user/fetchGetUserInfomation',
     async ({}, { rejectWithValue }) => {
         try {
-            const userInfo = await axiosClient.get('/user/get-information')
+            let result = await userApiGetInfo()
 
-            return userInfo.data
+            return result
         } catch (error) {
-            return rejectWithValue(error.response.data.message)
+            return rejectWithValue(error.message)
         }
     },
 )

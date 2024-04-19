@@ -90,7 +90,7 @@ const PersonalInfo = () => {
                                     !userInfo.sex && styles.notData,
                                 ]}
                             >
-                                {!!userInfo.sex ? userInfo.sex : 'None'}
+                                {!!userInfo.sex ? userInfo.sex.label : 'None'}
                             </Text>
                         </Text>
 

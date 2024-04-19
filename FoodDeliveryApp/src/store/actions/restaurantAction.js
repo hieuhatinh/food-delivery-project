@@ -1,19 +1,14 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
-import axiosClient from '../../api/axiosClient'
+import { apiGetOpenRes } from '../../api/restaurantApi'
 
 const fetchOpenRes = createAsyncThunk(
     'restaurants/fetchOpenRes',
     async ({ limit, state }, { rejectWithValue }) => {
         try {
-            let openRes = await axiosClient.get('/restaurant/get-restaurants', {
-                params: {
-                    state,
-                    limit,
-                },
-            })
+            let result = await apiGetOpenRes({ limit, state })
 
-            return openRes.data.restaurants
+            return result
         } catch (error) {
             rejectWithValue(error.response.data.message)
         }

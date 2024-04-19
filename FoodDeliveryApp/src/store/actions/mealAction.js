@@ -1,14 +1,14 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
-import axiosClient from '../../api/axiosClient'
+import { apiGetDetailMeal } from '../../api/mealApi'
 
 const fetchMealDetail = createAsyncThunk(
     'meal/fetchMealDetail',
     async ({ idMeal }, { rejectWithValue }) => {
         try {
-            let mealInfo = await axiosClient.get(`/meal/${idMeal}/detail`)
+            let result = await apiGetDetailMeal({ idMeal })
 
-            return mealInfo.data.mealInfo
+            return result
         } catch (error) {
             rejectWithValue(error.response.data.message)
         }

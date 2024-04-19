@@ -1,18 +1,14 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
-import axiosClient from '../../api/axiosClient'
+import { apiSearchByCategory, apiSearchByName } from '../../api/searchApi'
 
 const fetchSearchByName = createAsyncThunk(
     'search/fetchSearchByName',
     async ({ searchValue }, { rejectWithValue }) => {
         try {
-            let resultSearch = await axiosClient.get(`/search/meal`, {
-                params: {
-                    searchValue,
-                },
-            })
+            let result = await apiSearchByName({ searchValue })
 
-            return resultSearch.data.meals
+            return result
         } catch (error) {
             rejectWithValue(error.response.data.message)
         }
@@ -23,11 +19,9 @@ const fetchSearchByCategory = createAsyncThunk(
     'search/fetchSearchByCategory',
     async ({ idCategory }, { rejectWithValue }) => {
         try {
-            let resultSearch = await axiosClient.get(
-                `/search/category/${idCategory}`,
-            )
+            let result = await apiSearchByCategory({ idCategory })
 
-            return resultSearch.data.meals
+            return result
         } catch (error) {
             rejectWithValue(error.response.data.message)
         }
