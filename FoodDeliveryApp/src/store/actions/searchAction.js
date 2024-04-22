@@ -10,7 +10,7 @@ const fetchSearchByName = createAsyncThunk(
 
             return result
         } catch (error) {
-            rejectWithValue(error.response.data.message)
+            rejectWithValue(error.message)
         }
     },
 )
@@ -23,7 +23,7 @@ const fetchSearchByCategory = createAsyncThunk(
 
             return result
         } catch (error) {
-            rejectWithValue(error.response.data.message)
+            rejectWithValue(error.message)
         }
     },
 )

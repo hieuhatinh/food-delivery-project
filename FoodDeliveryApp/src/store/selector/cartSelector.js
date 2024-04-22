@@ -31,4 +31,34 @@ const selectNumberMeals = createSelector(
     (result) => result.numberMeals,
 )
 
-export { selectCart, selectorTotalPrice, selectTypeFetch, selectNumberMeals }
+const selectMealsChecked = createSelector([selectCart], (result) => {
+    let mealsChecked = []
+
+    result.mealsInCart.meals.forEach((item) => {
+        if (item.isChecked) {
+            let price = item.mealId.priceAndSize.find(
+                (p) => p.size === item.size,
+            ).price
+
+            mealsChecked.push({
+                mealId: item.mealId._id,
+                artwork: item.mealId.artwork.path,
+                foodName: item.mealId.foodName,
+                size: item.size,
+                quantity: item.quantity,
+                price,
+            })
+        }
+    })
+
+    return mealsChecked
+})
+
+
+export {
+    selectCart,
+    selectorTotalPrice,
+    selectTypeFetch,
+    selectNumberMeals,
+    selectMealsChecked,
+}

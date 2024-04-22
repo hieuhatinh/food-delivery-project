@@ -1,15 +1,15 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const OrderInformation = ({ image, nameRestaurant, priceFood, quantity }) => {
+const OrderInformation = ({ artwork, foodName, price, quantity, size }) => {
     return (
         <View style={styles.container}>
-            <View style={styles.row }>
-                <View style={{flexDirection: 'row'}}>
-                    <Image source={image} style={styles.image} />
+            <View style={styles.row}>
+                <View style={{ flexDirection: 'row' }}>
+                    <Image source={{ uri: artwork }} style={styles.image} />
                     <View style={styles.infRes}>
-                        <Text style={styles.textRes}>{nameRestaurant}</Text>
-                        <Text style={styles.price}>${priceFood}</Text>
+                        <Text style={styles.textRes}>{foodName} ({!!size && `size: ${size}`})</Text>
+                        <Text style={styles.price}>{price}</Text>
                     </View>
                 </View>
                 <View
@@ -18,7 +18,7 @@ const OrderInformation = ({ image, nameRestaurant, priceFood, quantity }) => {
                         alignItems: 'center',
                     }}
                 >
-                    <Text style={{ fontWeight: '700'}}>X{quantity}</Text>
+                    <Text style={{ fontWeight: '700' }}>X{quantity}</Text>
                 </View>
             </View>
         </View>
@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     textRes: {
         textTransform: 'uppercase',
         width: '70%',
+        marginBottom: 10,
     },
     price: {
         fontWeight: 'bold',

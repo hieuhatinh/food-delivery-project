@@ -10,7 +10,7 @@ const fetchDetailRestaurant = createAsyncThunk(
 
             return result
         } catch (error) {
-            rejectWithValue(error.response.data.message)
+            rejectWithValue(error.message)
         }
     },
 )

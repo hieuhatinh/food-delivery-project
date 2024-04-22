@@ -11,6 +11,9 @@ import screenName from './src/screens/config/screenName'
 
 const Stack = createNativeStackNavigator()
 
+// gọi api sửa thông tin địa chỉ 
+// gọi api tạo đơn đặt hàng
+
 function App() {
     return (
         <SafeAreaProvider>

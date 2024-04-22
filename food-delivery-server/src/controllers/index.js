@@ -5,6 +5,7 @@ import mealController from './meal.js'
 import searchController from './search.js'
 import cartController from './cart.js'
 import orderController from './order.js'
+import deliveryAddressController from './deliveryAddress.js'
 
 export {
     userController,
@@ -13,5 +14,6 @@ export {
     mealController,
     searchController,
     cartController,
-    orderController
+    orderController,
+    deliveryAddressController,
 }

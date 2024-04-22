@@ -5,6 +5,7 @@ import mealResponsitories from './meal.js'
 import searchResponsitories from './search.js'
 import cartResponsitories from './cart.js'
 import orderResponsitories from './order.js'
+import deliveryResponsitories from './deliveryAddress.js'
 
 export {
     userResponsitories,
@@ -14,4 +15,5 @@ export {
     searchResponsitories,
     cartResponsitories,
     orderResponsitories,
+    deliveryResponsitories,
 }

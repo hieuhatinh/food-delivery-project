@@ -11,10 +11,11 @@ import { global } from '../global'
 
 import { resetTypeFetch, setSelectAll } from '../store/slice/cartSlice'
 import { selectIdCart } from '../store/selector/userSelector'
-import { selectCart, selectorTotalPrice } from '../store/selector/cartSelector'
+import { selectCart, selectMealsChecked, selectorTotalPrice } from '../store/selector/cartSelector'
 import Loading from '../components/Loading'
 import { fetchGetAllMealsInCart } from '../store/actions/cartAction'
 import screenName from './config/screenName'
+import { setMealsOrder, setTotalPrice } from '../store/slice/orderSlice'
 
 export default function Cart({ navigation }) {
     const dispatch = useDispatch()
@@ -22,6 +23,7 @@ export default function Cart({ navigation }) {
     const idCart = useSelector(selectIdCart)
     const { isLoading, error, isSuccess, mealsInCart, typeFetch } =
         useSelector(selectCart)
+    const mealsChecked = useSelector(selectMealsChecked)
     let { isCheckedAll, meals } = mealsInCart
 
     // xử lý check all
@@ -48,8 +50,19 @@ export default function Cart({ navigation }) {
         }
     }, [error])
 
-    const handleNavigate = () => {
-        navigation.navigate(screenName.payment)
+    const handlePressPurchase = () => {
+        if (mealsChecked.length < 1) {
+            Alert.alert('Thông báo', 'Bạn cần chọn món để thực hiện thao tác tiếp theo', [
+                {
+                    text: 'Ok',
+                    style: 'default',
+                },
+            ])
+        } else {
+            dispatch(setMealsOrder(mealsChecked))
+            dispatch(setTotalPrice(totalPrice))
+            navigation.navigate(screenName.payment)
+        }
     }
 
     return (
@@ -99,7 +112,7 @@ export default function Cart({ navigation }) {
                 <Button
                     height={50}
                     title='Mua hàng'
-                    handlePress={handleNavigate}
+                    handlePress={handlePressPurchase}
                     disabled={isLoading || meals.length === 0}
                 />
             </View>

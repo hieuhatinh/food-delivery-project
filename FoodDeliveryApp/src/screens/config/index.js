@@ -17,6 +17,8 @@ import RestaurantView from '../restaurant/Restaurant_View'
 import screenName from './screenName'
 import EditAddressAndContact from '../order/EditAddressAndContact'
 import Payment from '../order/Payment'
+import Cart from '../Cart'
+import DeliveryAddresses from '../order/DeliveryAddresses'
 
 export const screens = [
     {
@@ -90,5 +92,13 @@ export const screens = [
     {
         name: screenName.editAddressAndContact,
         component: EditAddressAndContact,
+    },
+    {
+        name: screenName.cart,
+        component: Cart,
+    },
+    {
+        name: screenName.deliveryAddresses,
+        component: DeliveryAddresses,
     },
 ]

@@ -5,56 +5,48 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Icon from 'react-native-vector-icons/Entypo'
+import { useDispatch, useSelector } from 'react-redux'
+import { useIsFocused } from '@react-navigation/native'
+
 import Button from '../../components/button/Button'
 import OrderInformation from '../components/OrderInformation'
 import BoundaryScreen from '../../components/BoundaryScreen'
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 import screenName from '../config/screenName'
 
+import { selectOrder, selectMeals } from '../../store/selector/orderSelector'
+import { selectAddressDeliveryCurrent } from '../../store/selector/deliveryAddressSelector'
+import { fetchGetAllDeliveryAddress, fetchGetDefaultAddress } from '../../store/actions/deliveryAddressAction'
+import { global } from '../../global'
+
 export default function Payment({ navigation }) {
-    const DataOrder = [
-        {
-            id: 1,
-            image: require('../../assets/images/avatar.png'),
-            nameRestaurant: 'Nhà hàng của hiếu',
-            priceFood: 35,
-            quantity: 4,
-        },
-        {
-            id: 2,
-            image: require('../../assets/images/avatar.png'),
-            nameRestaurant: 'Nhà hàng của hiếu',
-            priceFood: 35,
-            quantity: 4,
-        },
-        {
-            id: 3,
-            image: require('../../assets/images/avatar.png'),
-            nameRestaurant: 'Nhà hàng của hiếu',
-            priceFood: 35,
-            quantity: 4,
-        },
-        {
-            id: 4,
-            image: require('../../assets/images/avatar.png'),
-            nameRestaurant: 'Nhà hàng của hiếu',
-            priceFood: 35,
-            quantity: 4,
-        },
-        {
-            id: 5,
-            image: require('../../assets/images/avatar.png'),
-            nameRestaurant: 'Nhà hàng của hiếu',
-            priceFood: 35,
-            quantity: 4,
-        },
-    ]
+    const isFocused = useIsFocused()
+    const dispatch = useDispatch()
+
+    const mealsOrder = useSelector(selectMeals)
+    const { totalPrice } = useSelector(selectOrder)
+    const addressDeliveryCurrent = useSelector(selectAddressDeliveryCurrent)
+
+    console.log(addressDeliveryCurrent)
 
     const handleNavigateEditInfo = () => {
         navigation.navigate(screenName.editAddressAndContact)
     }
+
+    const hanldeChangePaymentMethod = () => {
+        navigation.navigate(screenName.paymentInfo)
+    }
+
+    const handleChangeDeliveryInfo = () => {
+        navigation.navigate(screenName.deliveryAddresses)
+    }
+
+    // lấy địa chỉ mặc định
+    useEffect(() => {
+        dispatch(fetchGetDefaultAddress())
+    }, [])
 
     return (
         <BoundaryScreen style={styles.container}>
@@ -68,12 +60,27 @@ export default function Payment({ navigation }) {
             <View style={styles.colBox}>
                 <TouchableOpacity
                     style={styles.boxAddress}
-                    onPress={console.log('hello')}
+                    onPress={handleChangeDeliveryInfo}
+                    activeOpacity={0.8}
                 >
                     <Text style={{ paddingBottom: 15 }}>DELIVERY ADDRESS</Text>
-                    <Text style={styles.titleAddress}>
-                        2118 Thornridge Cir. Syracuse
-                    </Text>
+                    {!!addressDeliveryCurrent ? (
+                        <View style={styles.info}>
+                            <View style={styles.viewNamePhone}>
+                                <Text style={styles.name}>
+                                    {addressDeliveryCurrent.recipientName}
+                                </Text>
+                                <Text>
+                                    {addressDeliveryCurrent.contactPhoneNumber}
+                                </Text>
+                            </View>
+                            <Text>
+                                {addressDeliveryCurrent.deliveryAddress}
+                            </Text>
+                        </View>
+                    ) : (
+                        <Text style={styles.none}>None</Text>
+                    )}
                     <Icon
                         name='chevron-thin-right'
                         size={20}
@@ -82,17 +89,18 @@ export default function Payment({ navigation }) {
                 </TouchableOpacity>
             </View>
             <View style={styles.boxPayment}>
-                <Text style={styles.titleAddress}>Payment Method</Text>
+                <Text>Payment Method</Text>
                 <TouchableOpacity
                     style={{ flexDirection: 'row', paddingRight: 25 }}
-                    onPress={console.log('hello')}
+                    onPress={hanldeChangePaymentMethod}
+                    activeOpacity={0.8}
                 >
                     <Text style={styles.title2}>Cash</Text>
                     <Icon name='chevron-thin-right' size={20} />
                 </TouchableOpacity>
             </View>
             <FlatList
-                data={DataOrder}
+                data={mealsOrder}
                 renderItem={({ item }) => <OrderInformation {...item} />}
             />
 
@@ -100,7 +108,7 @@ export default function Payment({ navigation }) {
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <View style={styles.boxtotalPrice}>
                         <Text style={styles.titletotalPrice}> TOTAl: </Text>
-                        <Text style={styles.totalPrice}> ${96}</Text>
+                        <Text style={styles.totalPrice}>{totalPrice}</Text>
                     </View>
                     <View style={{ flex: 1 }} />
                 </View>
@@ -132,8 +140,17 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 30,
     },
-    titleAddress: {
-        color: '#A0A5BA',
+    info: {
+        marginLeft: 10,
+        gap: 5,
+    },
+    viewNamePhone: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    name: {
+        fontWeight: '600',
+        marginRight: 10,
     },
     icons: {
         position: 'absolute',
@@ -147,7 +164,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f5fa',
         borderRadius: 10,
         flexDirection: 'row',
-        paddingLeft: 5,
+        paddingLeft: 10,
         justifyContent: 'space-between',
         alignItems: 'center',
         width: '90%',
@@ -179,5 +196,8 @@ const styles = StyleSheet.create({
         width: '90%',
         marginBottom: 10,
         marginTop: 20,
+    },
+    none: {
+        color: global.error,
     },
 })

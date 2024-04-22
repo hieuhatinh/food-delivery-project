@@ -21,6 +21,7 @@ const screenName = {
     cart: 'Cart',
     editAddressAndContact: 'EditAddressAndContact',
     payment: 'Payment',
+    deliveryAddresses: 'DeliveryAddresses'
 }
 
 export default screenName

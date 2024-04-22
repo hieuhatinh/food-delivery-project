@@ -7,6 +7,7 @@ const createNewOrder = async ({
     deliveryAddress,
     note,
     contactPhoneNumber,
+    recipientName,
     meals,
 }) => {
     let newOrder = await OrderModel.create({
@@ -16,21 +17,14 @@ const createNewOrder = async ({
         deliveryAddress,
         note,
         contactPhoneNumber,
+        recipientName,
         meals,
     })
 
-    let orderPopulateMeals = await OrderModel.findById(newOrder._id).populate(
-        'meals.mealId',
-        'priceAndSize',
+    let totalPayment = meals.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0,
     )
-
-    let totalPayment = orderPopulateMeals.meals.reduce((total, item) => {
-        let resultFindPrice = item.mealId.priceAndSize.find(
-            (value) => value.size === item.size,
-        )
-
-        return total + resultFindPrice.price * item.quantity
-    }, 0)
 
     newOrder.totalPayment = totalPayment
     await newOrder.save()
@@ -38,4 +32,19 @@ const createNewOrder = async ({
     return newOrder._doc
 }
 
-export default { createNewOrder }
+const getAllOrder = async ({ idUser, state }) => {
+    let orders = await OrderModel.find({
+        $and: [
+            {
+                idUser,
+            },
+            {
+                state,
+            },
+        ],
+    })
+
+    return orders
+}
+
+export default { createNewOrder, getAllOrder }

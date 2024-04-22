@@ -17,7 +17,7 @@ const fetchGetAllMealsInCart = createAsyncThunk(
 
             return result
         } catch (error) {
-            rejectWithValue(error.response.data.message)
+            rejectWithValue(error.message)
         }
     },
 )
@@ -39,7 +39,7 @@ const fetchUpdateQuantity = createAsyncThunk(
 
             return result
         } catch (error) {
-            rejectWithValue(error.response.data.message)
+            rejectWithValue(error.message)
         }
     },
 )
@@ -52,7 +52,7 @@ const fetchDeleteMeal = createAsyncThunk(
 
             return result
         } catch (error) {
-            rejectWithValue(error.response.data.message)
+            rejectWithValue(error.message)
         }
     },
 )
@@ -65,7 +65,7 @@ const fetchCountQuantity = createAsyncThunk(
 
             return result
         } catch (error) {
-            rejectWithValue(error.response.data.message)
+            rejectWithValue(error.message)
         }
     },
 )
@@ -87,7 +87,7 @@ const fetchAddToCart = createAsyncThunk(
 
             return result
         } catch (error) {
-            rejectWithValue(error.response.data.message)
+            rejectWithValue(error.message)
         }
     },
 )

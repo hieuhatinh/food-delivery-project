@@ -7,6 +7,8 @@ import searchReducer from './slice/searchSlice'
 import cartReducer from './slice/cartSlice'
 import restaurantInfoReducer from './slice/restaurantInfoSlice'
 import mealReducer from './slice/mealSlice'
+import orderReducer from './slice/orderSlice'
+import deliveryAddressReducer from './slice/deliveryAddressSlice'
 
 export default configureStore({
     reducer: {
@@ -16,6 +18,8 @@ export default configureStore({
         categories: categoriesReducer,
         search: searchReducer,
         cart: cartReducer, 
-        meal: mealReducer
+        meal: mealReducer, 
+        order: orderReducer, 
+        deliveryAddress: deliveryAddressReducer
     },
 })
