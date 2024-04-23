@@ -21,7 +21,6 @@ import useDebounce from '../../hooks/useDebounce'
 import { global } from '../../global'
 import Loading from '../../components/Loading'
 
-import screenName from '../config/screenName'
 import { reState } from '../../store/slice/orderSlice'
 import {
     fetchCreateDeliveryAddress,
@@ -34,18 +33,17 @@ const EditAddressAndContact = () => {
     const navigation = useNavigation()
     const route = useRoute()
     const dispatch = useDispatch()
-    const { isLoading, isError, isSuccess, messageNotify } = useSelector(
-        selectDeliveryAddress,
-    )
+    const { isLoading, isError, isSuccess, messageNotify, addresses } =
+        useSelector(selectDeliveryAddress)
     const method = route.params.method.toLowerCase()
     const infoAddress = route.params
 
-    const [name, setName] = useState(infoAddress.recipientName || null)
+    const [name, setName] = useState(infoAddress.recipientName ?? null)
     const [phoneNumber, setPhoneNumber] = useState(
-        infoAddress.contactPhoneNumber || null,
+        infoAddress.contactPhoneNumber ?? null,
     )
-    const [address, setAddress] = useState(infoAddress.deliveryAddress || null)
-    const [isEnabled, setIsEnabled] = useState(infoAddress.isDefault || false)
+    const [address, setAddress] = useState(infoAddress.deliveryAddress ?? null)
+    const [isEnabled, setIsEnabled] = useState(infoAddress.isDefault ?? true)
     const [isValidPhoneNumber, setIsValidPhoneNumber] = useState()
     const [error, setError] = useState()
 
@@ -126,7 +124,7 @@ const EditAddressAndContact = () => {
         dispatch(fetchDeleteDeliveryAddress({ idAddress: infoAddress._id }))
     }
     const handleDeleteAddress = () => {
-        if (infoAddress.isDefault) {
+        if (infoAddress.isDefault && addresses.length > 1) {
             Alert.alert('Cảnh báo', 'Không thể xoá địa chỉ mặc định', [
                 {
                     text: 'OK',

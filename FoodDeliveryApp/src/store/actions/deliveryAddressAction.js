@@ -24,7 +24,7 @@ const fetchCreateDeliveryAddress = createAsyncThunk(
 
             return newAddress
         } catch (error) {
-            rejectWithValue(error.message)
+            return rejectWithValue(error.message)
         }
     },
 )
@@ -37,7 +37,7 @@ const fetchGetAllDeliveryAddress = createAsyncThunk(
 
             return allAddress
         } catch (error) {
-            rejectWithValue(error.message)
+            return rejectWithValue(error.message)
         }
     }
 )
@@ -50,7 +50,7 @@ const fetchGetDefaultAddress = createAsyncThunk(
 
             return defaultAddress
         } catch (error) {
-            rejectWithValue(error.message)
+            return rejectWithValue(error.message)
         }
     },
 )
@@ -63,7 +63,7 @@ const fetchDeleteDeliveryAddress = createAsyncThunk(
 
             return result
         } catch (error) {
-            rejectWithValue(error.message)
+            return rejectWithValue(error.message)
         }
     },
 )
@@ -91,7 +91,7 @@ const fetchUpdateDeliveryAddress = createAsyncThunk(
 
             return result
         } catch (error) {
-            rejectWithValue(error.message)
+            return rejectWithValue(error.message)
         }
     },
 )

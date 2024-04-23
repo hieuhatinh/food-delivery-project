@@ -36,6 +36,9 @@ export const deliveryAddressSlice = createSlice({
                 (item) => item._id === state.selectedIdAddress,
             )
         },
+        reAddressDelivery: (state, action) => {
+            state.addressDeliveryCurrent = null
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -74,6 +77,7 @@ export const deliveryAddressSlice = createSlice({
             .addCase(fetchDeleteDeliveryAddress.fulfilled, (state, action) => {
                 state.isSuccess = true
                 state.messageNotify = action.payload
+                state.addressDeliveryCurrent = null
                 state.isLoading = false
             })
             .addCase(fetchDeleteDeliveryAddress.rejected, (state, action) => {
@@ -102,7 +106,7 @@ export const deliveryAddressSlice = createSlice({
             .addCase(fetchGetDefaultAddress.fulfilled, (state, action) => {
                 state.isSuccess = true
                 state.addressDeliveryCurrent = action.payload.defaultAddress
-                state.selectedIdAddress = action.payload.defaultAddress._id
+                state.selectedIdAddress = action.payload.defaultAddress?._id
                 state.messageNotify = action.payload.message
                 state.isLoading = false
             })
@@ -114,7 +118,11 @@ export const deliveryAddressSlice = createSlice({
     },
 })
 
-export const { reState, setSelectedIdAddress, setDeliveryAddress } =
-    deliveryAddressSlice.actions
+export const {
+    reState,
+    setSelectedIdAddress,
+    setDeliveryAddress,
+    reAddressDelivery,
+} = deliveryAddressSlice.actions
 
 export default deliveryAddressSlice.reducer

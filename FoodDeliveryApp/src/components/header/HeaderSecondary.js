@@ -12,10 +12,11 @@ const HeaderSecondary = ({
     iconRightFirst,
     iconRightSecond,
     iconNotify,
+    handlePressBack,
 }) => {
     const navigation = useNavigation()
 
-    const handlePressBack = () => {
+    const handlePressBackLocal = () => {
         navigation.goBack()
     }
 
@@ -23,7 +24,9 @@ const HeaderSecondary = ({
         <View style={styles.container}>
             <View style={styles.row}>
                 {iconLeft && (
-                    <BoundaryIcon handlePress={handlePressBack}>
+                    <BoundaryIcon
+                        handlePress={handlePressBack ?? handlePressBackLocal}
+                    >
                         <Icon name='chevron-left' size={20} />
                     </BoundaryIcon>
                 )}

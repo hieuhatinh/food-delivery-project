@@ -39,7 +39,7 @@ const getAllOrder = async ({ idUser }) => {
 const getDefaultAddress = async ({ idUser }) => {
     const defaultAddress = await DeliveryAddressModel.findOne({
         idUser,
-        isDefault: true
+        isDefault: true,
     })
 
     return defaultAddress
@@ -53,11 +53,9 @@ const changeDeliveryAddress = async ({
     recipientName,
     isDefault,
 }) => {
-    const existAddress = await DeliveryAddressModel.findOne(
-        {
-            $and: [{ _id: idAddress }, { idUser }],
-        },
-    )
+    const existAddress = await DeliveryAddressModel.findOne({
+        $and: [{ _id: idAddress }, { idUser }],
+    })
 
     if (!existAddress) {
         throw new ErrorHandler('Địa chỉ không tồn tại', 404)
@@ -92,12 +90,14 @@ const deleteAddress = async ({ idUser, idAddress }) => {
         $and: [{ idUser }, { _id: idAddress }],
     })
 
-    if (existAddress.isDefault === true) {
-        throw new ErrorHandler('Không thể xoá địa chỉ mặc định', 403)
-    }
-
     if (!existAddress) {
         throw new ErrorHandler('Không tồn tại địa chỉ này', 404)
+    }
+
+    let count = await DeliveryAddressModel.countDocuments({ idUser })
+
+    if (existAddress.isDefault === true && count > 1) {
+        throw new ErrorHandler('Không thể xoá địa chỉ mặc định', 403)
     }
 
     let result = await existAddress.deleteOne()

@@ -17,9 +17,10 @@ import HeaderSecondary from '../../components/header/HeaderSecondary'
 import screenName from '../config/screenName'
 
 import { selectOrder, selectMeals } from '../../store/selector/orderSelector'
-import { selectAddressDeliveryCurrent } from '../../store/selector/deliveryAddressSelector'
-import { fetchGetAllDeliveryAddress, fetchGetDefaultAddress } from '../../store/actions/deliveryAddressAction'
+import { selectAddressDeliveryCurrent, selectDeliveryAddress } from '../../store/selector/deliveryAddressSelector'
+import { fetchGetDefaultAddress } from '../../store/actions/deliveryAddressAction'
 import { global } from '../../global'
+import { reAddressDelivery } from '../../store/slice/deliveryAddressSlice'
 
 export default function Payment({ navigation }) {
     const isFocused = useIsFocused()
@@ -28,8 +29,6 @@ export default function Payment({ navigation }) {
     const mealsOrder = useSelector(selectMeals)
     const { totalPrice } = useSelector(selectOrder)
     const addressDeliveryCurrent = useSelector(selectAddressDeliveryCurrent)
-
-    console.log(addressDeliveryCurrent)
 
     const handleNavigateEditInfo = () => {
         navigation.navigate(screenName.editAddressAndContact)
@@ -45,8 +44,15 @@ export default function Payment({ navigation }) {
 
     // lấy địa chỉ mặc định
     useEffect(() => {
-        dispatch(fetchGetDefaultAddress())
-    }, [])
+        if (!addressDeliveryCurrent) {
+            dispatch(fetchGetDefaultAddress())
+        } 
+    }, [addressDeliveryCurrent])
+
+    const handlePressBack = () => {
+        dispatch(reAddressDelivery())
+        navigation.goBack()
+    }
 
     return (
         <BoundaryScreen style={styles.container}>
@@ -55,6 +61,7 @@ export default function Payment({ navigation }) {
                     name: 'dots-three-horizontal',
                 }}
                 title='Thanh toán'
+                handlePressBack={handlePressBack}
             />
 
             <View style={styles.colBox}>

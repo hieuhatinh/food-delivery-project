@@ -1,6 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
-import axiosClient from '../../api/axiosClient'
 import {
     apiAddToCart,
     apiCountQuantity,
@@ -17,7 +16,7 @@ const fetchGetAllMealsInCart = createAsyncThunk(
 
             return result
         } catch (error) {
-            rejectWithValue(error.message)
+            return rejectWithValue(error.message)
         }
     },
 )
@@ -39,7 +38,7 @@ const fetchUpdateQuantity = createAsyncThunk(
 
             return result
         } catch (error) {
-            rejectWithValue(error.message)
+            return rejectWithValue(error.message)
         }
     },
 )
@@ -52,7 +51,7 @@ const fetchDeleteMeal = createAsyncThunk(
 
             return result
         } catch (error) {
-            rejectWithValue(error.message)
+            return rejectWithValue(error.message)
         }
     },
 )
@@ -65,7 +64,7 @@ const fetchCountQuantity = createAsyncThunk(
 
             return result
         } catch (error) {
-            rejectWithValue(error.message)
+            return rejectWithValue(error.message)
         }
     },
 )
@@ -87,7 +86,7 @@ const fetchAddToCart = createAsyncThunk(
 
             return result
         } catch (error) {
-            rejectWithValue(error.message)
+            return rejectWithValue(error.message)
         }
     },
 )

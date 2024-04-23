@@ -17,7 +17,7 @@
 
 //             return newAddress
 //         } catch (error) {
-//             rejectWithValue(error.message)
+//             return rejectWithValue(error.message)
 //         }
 //     },
 // )
