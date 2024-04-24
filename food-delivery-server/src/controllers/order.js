@@ -29,18 +29,19 @@ const createNewOrder = async (req, res) => {
             message: 'Tạo đơn đặt hàng thành công',
         })
     } catch (error) {
+        console.log(error)
         return res.status(error.statusCode || 404).json({
             message: error.message,
         })
     }
 }
 
-const getAllOrder = async (req, res) => {
+const getOrders = async (req, res) => {
     try {
         const { id } = req.user
         const { state } = req.query
 
-        let orders = await orderResponsitories.getAllOrder({
+        let orders = await orderResponsitories.getOrders({
             idUser: id,
             state: state.toLowerCase(),
         })
@@ -56,4 +57,4 @@ const getAllOrder = async (req, res) => {
     }
 }
 
-export default { createNewOrder, getAllOrder }
+export default { createNewOrder, getOrders }

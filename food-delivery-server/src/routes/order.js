@@ -7,6 +7,6 @@ const orderRouter = express.Router()
 
 orderRouter.post('/create', authenticateToken, orderController.createNewOrder)
 
-orderRouter.get('/get-all', authenticateToken, orderController.getAllOrder)
+orderRouter.get('/get-orders', authenticateToken, orderController.getOrders)
 
 export default orderRouter

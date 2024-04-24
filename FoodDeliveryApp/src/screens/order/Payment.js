@@ -1,4 +1,5 @@
 import {
+    Alert,
     FlatList,
     StyleSheet,
     Text,
@@ -8,30 +9,47 @@ import {
 import React, { useEffect } from 'react'
 import Icon from 'react-native-vector-icons/Entypo'
 import { useDispatch, useSelector } from 'react-redux'
-import { useIsFocused } from '@react-navigation/native'
 
 import Button from '../../components/button/Button'
 import OrderInformation from '../components/OrderInformation'
 import BoundaryScreen from '../../components/BoundaryScreen'
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 import screenName from '../config/screenName'
+import Loading from '../../components/Loading'
+import { global } from '../../global'
 
 import { selectOrder, selectMeals } from '../../store/selector/orderSelector'
-import { selectAddressDeliveryCurrent, selectDeliveryAddress } from '../../store/selector/deliveryAddressSelector'
+import { selectAddressDeliveryCurrent } from '../../store/selector/deliveryAddressSelector'
 import { fetchGetDefaultAddress } from '../../store/actions/deliveryAddressAction'
-import { global } from '../../global'
 import { reAddressDelivery } from '../../store/slice/deliveryAddressSlice'
+import { fetchCreateNewOrder } from '../../store/actions/orderAction'
+import { reState } from '../../store/slice/orderSlice'
 
 export default function Payment({ navigation }) {
-    const isFocused = useIsFocused()
     const dispatch = useDispatch()
 
-    const mealsOrder = useSelector(selectMeals)
-    const { totalPrice } = useSelector(selectOrder)
+    const mealsOrderWithPriceString = useSelector(selectMeals)
+    const {
+        totalPrice,
+        mealsOrder,
+        isLoading,
+        isError,
+        isSuccess,
+        messageNotify,
+    } = useSelector(selectOrder)
     const addressDeliveryCurrent = useSelector(selectAddressDeliveryCurrent)
 
     const handleNavigateEditInfo = () => {
-        navigation.navigate(screenName.editAddressAndContact)
+        if (!addressDeliveryCurrent) {
+            Alert.alert('Thông báo', 'Chưa có địa chỉ giao hàng')
+        } else {
+            dispatch(
+                fetchCreateNewOrder({
+                    meals: mealsOrder,
+                    ...addressDeliveryCurrent,
+                }),
+            )
+        }
     }
 
     const hanldeChangePaymentMethod = () => {
@@ -46,13 +64,37 @@ export default function Payment({ navigation }) {
     useEffect(() => {
         if (!addressDeliveryCurrent) {
             dispatch(fetchGetDefaultAddress())
-        } 
+        }
     }, [addressDeliveryCurrent])
 
     const handlePressBack = () => {
         dispatch(reAddressDelivery())
         navigation.goBack()
     }
+
+    // xử lý thông báo
+    useEffect(() => {
+        if (isSuccess) {
+            Alert.alert('Thông báo', messageNotify, [
+                {
+                    text: 'Tuyệt vời ông mặt trời',
+                    onPress: () => {
+                        dispatch(reState())
+                        navigation.navigate(screenName.orderSuccess)
+                    },
+                },
+            ])
+        }
+
+        if (isError) {
+            Alert.alert('Lỗi', messageNotify, [
+                {
+                    text: 'Thật đáng tiếc', 
+                    onPress: () => navigation.goBack()
+                }
+            ])
+        }
+    }, [isSuccess, isError])
 
     return (
         <BoundaryScreen style={styles.container}>
@@ -63,6 +105,7 @@ export default function Payment({ navigation }) {
                 title='Thanh toán'
                 handlePressBack={handlePressBack}
             />
+            {isLoading && <Loading />}
 
             <View style={styles.colBox}>
                 <TouchableOpacity
@@ -107,7 +150,7 @@ export default function Payment({ navigation }) {
                 </TouchableOpacity>
             </View>
             <FlatList
-                data={mealsOrder}
+                data={mealsOrderWithPriceString}
                 renderItem={({ item }) => <OrderInformation {...item} />}
             />
 

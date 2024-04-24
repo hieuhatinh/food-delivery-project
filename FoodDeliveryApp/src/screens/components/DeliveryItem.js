@@ -8,6 +8,7 @@ import { global } from '../../global'
 import screenName from '../config/screenName'
 import { setSelectedIdAddress } from '../../store/slice/deliveryAddressSlice'
 import { selectIdAddress } from '../../store/selector/deliveryAddressSelector'
+import { methodFetch } from '../order/EditAddressAndContact'
 
 const DeliveryItem = (props) => {
     const navigation = useNavigation()
@@ -16,7 +17,7 @@ const DeliveryItem = (props) => {
 
     const handleChangeInfo = () => {
         navigation.navigate(screenName.editAddressAndContact, {
-            method: 'put',
+            method: methodFetch.put,
             ...props,
         })
     }

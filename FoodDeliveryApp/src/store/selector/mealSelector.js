@@ -1,5 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit'
 
+import formatCurrency from '../../utils/formatCurrency'
+
 // meal
 const selectMeal = (state) => state.meal
 
@@ -12,10 +14,7 @@ const selectSizesMeal = createSelector([selectMeal], (result) => {
 const selectSizeAndQuantity = createSelector([selectMeal], (result) => {
     return {
         ...result.sizeAndQuantity,
-        price: result.sizeAndQuantity?.price?.toLocaleString('vi-VN', {
-            style: 'currency',
-            currency: 'VND',
-        }),
+        price: formatCurrency(result.sizeAndQuantity?.price),
     }
 })
 

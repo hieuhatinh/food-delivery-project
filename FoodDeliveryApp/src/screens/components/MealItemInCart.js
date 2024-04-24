@@ -19,6 +19,7 @@ import {
     fetchUpdateQuantity,
 } from '../../store/actions/cartAction'
 import { selectIdCart } from '../../store/selector/userSelector'
+import formatCurrency from '../../utils/formatCurrency'
 
 export default function MealItemInCart(props) {
     const dispatch = useDispatch()
@@ -30,10 +31,8 @@ export default function MealItemInCart(props) {
 
     let price = mealId.priceAndSize
         .find((item) => item.size === size)
-        .price.toLocaleString('vi-VN', {
-            style: 'currency',
-            currency: 'VND',
-        })
+        .price
+    price = formatCurrency(price)
 
     useDebounce(quantity, 1000, () => {
         if (isPress) {

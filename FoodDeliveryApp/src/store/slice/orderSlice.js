@@ -1,14 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { fetchCreateDeliveryAddress } from '../actions/orderAction'
+import { fetchCreateNewOrder, fetchGetOrders } from '../actions/orderAction'
 
 const initialState = {
     mealsOrder: [],
-    orderInfo: {
-        deliveryAddress: null,
-        note: null,
-        contactPhoneNumber: null,
-        recipientName: null,
-    },
+    orders: [],
     totalPrice: null,
     isLoading: false,
     isError: false,
@@ -26,12 +21,6 @@ export const orderSlice = createSlice({
         setTotalPrice: (state, action) => {
             state.totalPrice = action.payload
         },
-        setOrderInfo: (state, action) => {
-            state.orderInfo.contactPhoneNumber =
-                action.payload.contactPhoneNumber
-            state.orderInfo.deliveryAddress = action.payload.deliveryAddress
-            state.orderInfo.recipientName = action.payload.recipientName
-        },
         reState: (state, action) => {
             state.isLoading = false
             state.isError = false
@@ -40,6 +29,35 @@ export const orderSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+        builder
+            .addCase(fetchCreateNewOrder.pending, (state, action) => {
+                state.isLoading = true
+            })
+            .addCase(fetchCreateNewOrder.fulfilled, (state, action) => {
+                state.isSuccess = true
+                state.messageNotify = action.payload.message
+                state.isLoading = false
+            })
+            .addCase(fetchCreateNewOrder.rejected, (state, action) => {
+                state.isError = true
+                state.messageNotify = action.payload
+                state.isLoading = false
+            })
+        builder
+            .addCase(fetchGetOrders.pending, (state, action) => {
+                state.isLoading = true
+            })
+            .addCase(fetchGetOrders.fulfilled, (state, action) => {
+                state.isSuccess = true
+                state.orders = action.payload.orders
+                state.messageNotify = action.payload.message
+                state.isLoading = false
+            })
+            .addCase(fetchGetOrders.rejected, (state, action) => {
+                state.isError = true
+                state.messageNotify = action.payload
+                state.isLoading = false
+            })
     },
 })
 

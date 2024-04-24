@@ -1,5 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit'
 
+import formatCurrency from '../../utils/formatCurrency'
+
 // cart
 const selectCart = (state) => state.cart
 
@@ -15,10 +17,7 @@ const selectorTotalPrice = createSelector([selectCart], (result) => {
         return sum
     }, 0)
 
-    return total?.toLocaleString('vi-VN', {
-        style: 'currency',
-        currency: 'VND',
-    })
+    return formatCurrency(total)
 })
 
 const selectTypeFetch = createSelector(

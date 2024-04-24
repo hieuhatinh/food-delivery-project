@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useIsFocused, useNavigation } from '@react-navigation/native'
-import { StyleSheet, FlatList, View, Alert, Image, Text } from 'react-native'
+import { StyleSheet, FlatList, View, Alert } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
 import HeaderSecondary from '../../components/header/HeaderSecondary'
@@ -16,7 +16,8 @@ import {
     reState,
     setDeliveryAddress,
 } from '../../store/slice/deliveryAddressSlice'
-import { global } from '../../global'
+import { methodFetch } from './EditAddressAndContact'
+import NoneValuesNotify from '../../components/NoneValuesNotify'
 
 const DeliveryAddresses = () => {
     const navigation = useNavigation()
@@ -27,7 +28,7 @@ const DeliveryAddresses = () => {
 
     const handleAddNewAddress = () => {
         navigation.navigate(screenName.editAddressAndContact, {
-            method: 'post',
+            method: methodFetch.post,
         })
     }
 
@@ -65,18 +66,10 @@ const DeliveryAddresses = () => {
             {isLoading ? (
                 <Loading />
             ) : addresses.length < 1 ? (
-                <View style={styles.viewNoAddress}>
-                    <Image
-                        source={require('../../assets/images/no-address.png')}
-                        style={styles.imageNoAddress}
-                    />
-                    <Text style={styles.textNotify}>
-                        Chưa có địa chỉ nhận hàng.
-                    </Text>
-                    <Text style={styles.textNotify}>
-                        Vui lòng thêm địa chỉ nhận hàng
-                    </Text>
-                </View>
+                <NoneValuesNotify
+                    image={require('../../assets/images/no-address.png')}
+                    textNotify='Chưa có địa chỉ nhận hàng. Vui lòng thêm địa chỉ nhận hàng'
+                />
             ) : (
                 <FlatList
                     data={addresses}
@@ -104,22 +97,6 @@ const DeliveryAddresses = () => {
 }
 
 const styles = StyleSheet.create({
-    viewNoAddress: {
-        width: '100%',
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    imageNoAddress: {
-        height: 100, 
-        width: 100, 
-        marginBottom: 10
-    },
-    textNotify: {
-        color: global.error, 
-        fontSize: 16, 
-        fontWeight: '500', 
-    },
     flatlist: {
         width: '95%',
     },

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ScrollView, StyleSheet, Text, View, Alert, Image } from 'react-native'
+import { ScrollView, StyleSheet, Text, View, Alert } from 'react-native'
 import Checkbox from 'expo-checkbox'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -75,13 +75,10 @@ export default function Cart({ navigation }) {
                     <View style={{ width: '100%', height: '100%', flex: 1 }} />
                 </React.Fragment>
             ) : meals.length === 0 ? (
-                <View style={styles.viewEmptyCart}>
-                    <Image
-                        source={require('../assets/images/empty-cart.png')}
-                        style={styles.imageEmptyCart}
-                    />
-                    <Text style={styles.textEmpty}>Giỏ hàng trống</Text>
-                </View>
+                <NoneValuesNotify
+                    image={require('../assets/images/empty-cart.png')}
+                    textNotify='Giỏ hàng trống'
+                />
             ) : (
                 <ScrollView
                     contentContainerStyle={{ alignItems: 'center' }}
@@ -153,22 +150,6 @@ const styles = StyleSheet.create({
     },
     totalPrice: {
         fontSize: 20,
-        fontWeight: '500',
-    },
-
-    // empty cart
-    viewEmptyCart: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    imageEmptyCart: {
-        height: 200,
-        width: 200,
-    },
-    textEmpty: {
-        fontSize: 18,
-        color: global.error,
         fontWeight: '500',
     },
 })

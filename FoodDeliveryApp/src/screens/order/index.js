@@ -1,127 +1,78 @@
-import { Text, StyleSheet, View, useWindowDimensions } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import {
+    Text,
+    StyleSheet,
+    View,
+    useWindowDimensions,
+    ActivityIndicator,
+} from 'react-native'
 import { ScrollView } from 'react-native'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     TabView,
     SceneMap,
     TabBar,
     TabBarIndicator,
 } from 'react-native-tab-view'
+import { useDispatch, useSelector } from 'react-redux'
+import { useIsFocused } from '@react-navigation/native'
 
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 import OrderItem from '../components/OrderItem'
 import { global } from '../../global'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { fetchGetOrders } from '../../store/actions/orderAction'
+import { selectOrder } from '../../store/selector/orderSelector'
+import NoneValuesNotify from '../../components/NoneValuesNotify'
 
-const DataFoodOnGoing = [
-    {
-        id: 123456,
-        loai_mon_an: 'Food',
-        nameFood: 'Pizza Hut',
-        price: 45,
-        item: 1,
-        image: require('../../assets/images/avatar.png'),
-    },
-    {
-        id: 235322,
-        loai_mon_an: 'Food',
-        nameFood: 'Pizza Hut',
-        price: 45,
-        item: 1,
-        image: require('../../assets/images/avatar.png'),
-    },
-    {
-        id: 234534,
-        loai_mon_an: 'Food',
-        nameFood: 'Pizza Hut',
-        price: 45,
-        item: 1,
-        image: require('../../assets/images/avatar.png'),
-    },
-    ,
-    {
-        id: 454532,
-        loai_mon_an: 'Food',
-        nameFood: 'Pizza Hut',
-        price: 45,
-        item: 1,
-        image: require('../../assets/images/avatar.png'),
-    },
-]
-const DataFoodHistory = [
-    {
-        id: 123456,
-        loai_mon_an: 'Food',
-        nameFood: 'Pizza Hut',
-        price: 45,
-        dateTime: '29 Jan, 12:30',
-        item: 1,
-        image: require('../../assets/images/avatar.png'),
-        status: 'Completed',
-    },
-    {
-        id: 235322,
-        loai_mon_an: 'Food',
-        nameFood: 'Pizza Hut',
-        price: 45,
-        dateTime: '29 Jan, 12:30',
-        item: 1,
-        image: require('../../assets/images/avatar.png'),
-        status: 'Canceled',
-    },
-    {
-        id: 234534,
-        loai_mon_an: 'Food',
-        nameFood: 'Pizza Hut',
-        price: 45,
-        dateTime: '29 Jan, 12:30',
-        item: 1,
-        image: require('../../assets/images/avatar.png'),
-        status: 'Completed',
-    },
-    ,
-    {
-        id: 454532,
-        loai_mon_an: 'Food',
-        nameFood: 'Pizza Hut',
-        price: 45,
-        dateTime: '29 Jan, 12:30',
-        item: 1,
-        image: require('../../assets/images/avatar.png'),
-        status: 'Canceled',
-    },
-]
+const Orders = ({ button1, button2 }) => {
+    let { isLoading, isError, orders } = useSelector(selectOrder)
 
-const OnGoing = () => {
     return (
-        <ScrollView>
-            {DataFoodOnGoing.map((item) => (
-                <OrderItem key={item.id} {...item} />
-            ))}
-        </ScrollView>
+        <React.Fragment>
+            {isLoading ? (
+                <View style={styles.activeIndicator}>
+                    <ActivityIndicator size={30} />
+                </View>
+            ) : orders.length < 1 ? (
+                <View>
+                    <NoneValuesNotify textNotify='Chưa có đơn hàng nào.' />
+                </View>
+            ) : (
+                <ScrollView>
+                    {orders.map((item) => (
+                        <OrderItem
+                            key={item._id}
+                            {...item}
+                            btn1={button1}
+                            btn2={button2}
+                        />
+                    ))}
+                </ScrollView>
+            )}
+        </React.Fragment>
     )
 }
 
-const History = () => {
-    return (
-        <ScrollView>
-            {DataFoodHistory.map((item) => (
-                <OrderItem
-                    key={item.id}
-                    {...item}
-                    btn1='Rate'
-                    btn2='Re-Order'
-                    display='flex'
+const renderScene = ({ route }) => {
+    switch (route.key) {
+        case 'ongoing':
+            return (
+                <Orders
+                    button1={{ title: 'Track order', outline: false }}
+                    button2={{ title: 'Cancel', outline: true }}
                 />
-            ))}
-        </ScrollView>
-    )
+            )
+        case 'history':
+            return (
+                <Orders
+                    button1={{ title: 'Rate', outline: true }}
+                    button2={{ title: 'Re-Order', outline: false }}
+                />
+            )
+        default:
+            return null
+    }
 }
-
-const renderScene = SceneMap({
-    ongoing: OnGoing,
-    history: History,
-})
 
 const renderTabBar = (props) => (
     <TabBar
@@ -157,11 +108,27 @@ export default function MyOrder() {
     const layout = useWindowDimensions()
     const insets = useSafeAreaInsets()
 
+    const isFocused = useIsFocused()
+    const dispatch = useDispatch()
+
     const [index, setIndex] = useState(0)
     const [routes] = useState([
         { key: 'ongoing', title: 'Ongoing' },
         { key: 'history', title: 'History' },
     ])
+
+    useEffect(() => {
+        if (isFocused) {
+            switch (index) {
+                case 0:
+                    dispatch(fetchGetOrders({ state: 'ongoing' }))
+                    break
+                case 1:
+                    dispatch(fetchGetOrders({ state: 'history' }))
+                    break
+            }
+        }
+    }, [isFocused, index])
 
     return (
         <View
@@ -217,5 +184,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderBottomWidth: 2,
         bottom: -1.75,
+    },
+    activeIndicator: {
+        justifyContent: 'center',
+        alignItem: 'center',
     },
 })

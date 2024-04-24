@@ -1,14 +1,13 @@
 import { createSelector } from '@reduxjs/toolkit'
 
+import formatCurrency from '../../utils/formatCurrency'
+
 const selectOrder = (state) => state.order
 
 const selectMeals = createSelector([selectOrder], (result) =>
     result.mealsOrder.map((item) => ({
         ...item,
-        price: item.price.toLocaleString('vi-VN', {
-            style: 'currency',
-            currency: 'VND',
-        }),
+        price: formatCurrency(item.price),
     })),
 )
 

@@ -4,14 +4,12 @@ import Icon from 'react-native-vector-icons/Entypo'
 import { useNavigation } from '@react-navigation/native'
 
 import { global } from '../../global'
+import formatCurrency from '../../utils/formatCurrency'
 
 const CardMeal = (props) => {
     const navigation = useNavigation()
 
-    let priceVnd = props?.priceAndSize[0]?.price.toLocaleString('vi-VN', {
-        style: 'currency',
-        currency: 'VND',
-    })
+    let priceVnd = formatCurrency(props?.priceAndSize[0]?.price)
 
     const handlePressPlus = () => {
         console.log('press plus')

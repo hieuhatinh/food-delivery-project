@@ -1,86 +1,91 @@
 import { View, Text, StyleSheet, Image } from 'react-native'
-import React from 'react'
-
-import Button from '../../components/button/Button'
+import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/Entypo'
 
-const OrderItem = ({
-    loai_mon_an,
-    image,
-    nameFood,
-    id,
-    dateTime,
-    price,
-    item,
-    btn1 = 'Track Order',
-    btn2 = 'Cancel',
-    status = 'Completed',
-    display = 'none',
-}) => {
-    var colorStatus = '#059C6A'
-    status == 'Completed'
-        ? (colorStatus = '#059C6A')
-        : (colorStatus = '#FF0000')
+import Button from '../../components/button/Button'
+import formatCurrency from '../../utils/formatCurrency'
+
+const OrderItem = (props) => {
+    const [colorStatus, setColorStatus] = useState()
+
+    useEffect(() => {
+        let color
+        switch (props.state) {
+            case 'accepted':
+                color = '#059C6A'
+                break
+            case 'getting':
+                color = '#059C6A'
+                break
+            case 'delivering':
+                color = '#059C6A'
+                break
+            case 'completed':
+                color = '#059C6A'
+                break
+            case 'canceled':
+                color = '#FF0000'
+                break
+        }
+
+        setColorStatus(color)
+    }, [])
+
     return (
         <View style={{ width: '100%' }}>
             <View style={[styles.row, { paddingTop: 20, paddingBottom: 10 }]}>
-                <Text>{loai_mon_an}</Text>
                 <Text
                     style={{
-                        display: display,
-                        paddingLeft: 30,
                         color: colorStatus,
+                        fontWeight: '500'
                     }}
                 >
-                    {status}
+                    {props.state}
                 </Text>
             </View>
             <View style={styles.box}>
-                <Image source={image} style={styles.image} />
-                <View style={{ width: '80%' }}>
+                <Image
+                    source={{ uri: props.meals[0].artwork }}
+                    style={styles.image}
+                />
+                <View style={{ flex: 1, marginLeft: 20, alignItems: 'flex-start' }}>
                     <View style={styles.NameId}>
-                        <Text style={styles.textFood}>{nameFood}</Text>
-                        <Text style={styles.id}>#{id}</Text>
+                        <Text style={styles.textFood}>
+                            {props.meals[0].foodName}
+                        </Text>
                     </View>
                     <View style={styles.priceItem}>
-                        <Text style={styles.price}>${price}</Text>
+                        <Text style={styles.price}>
+                            {formatCurrency(props.totalPayment)}
+                        </Text>
                         <View style={styles.row}>
-                            <Text
-                                style={[
-                                    styles.colorDateTime,
-                                    { display: display },
-                                ]}
-                            >
-                                {dateTime}
-                            </Text>
                             <Icon
                                 name='dot-single'
                                 size={20}
-                                style={[
-                                    styles.colorDateTime,
-                                    { display: display },
-                                ]}
+                                style={styles.colorDateTime}
                             />
                             <Text style={styles.colorDateTime}>
-                                0{item} item
+                                {props.meals.length} item
                             </Text>
                         </View>
                     </View>
+                    <Text style={styles.colorDateTime}>{props.updatedAt}</Text>
                 </View>
             </View>
             <View style={styles.box2}>
                 <View style={styles.btn2}>
                     <Button
                         height={50}
-                        title={btn1}
+                        title={props.btn1.title}
+                        outline={props.btn1.outline}
                         // handlePress={() => navigation.navigate('OrderSuccess')}
                     />
                 </View>
                 <View style={styles.btn2}>
                     <Button
                         height={50}
-                        title={btn2}
-                        outline={true}
+                        title={props.btn2.title}
+                        outline={props.btn2.outline}
                         // handlePress={() => navigation.navigate('OrderSuccess')}
                     />
                 </View>
@@ -90,7 +95,6 @@ const OrderItem = ({
 }
 const styles = StyleSheet.create({
     NameId: {
-        paddingLeft: 20,
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -99,8 +103,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     box: {
-        marginHorizontal: 20,
         paddingTop: 20,
+        paddingLeft: 20,
         borderTopWidth: 1,
         borderTopColor: '#eef2f5',
         flexDirection: 'row',
@@ -113,11 +117,10 @@ const styles = StyleSheet.create({
     },
     priceItem: {
         paddingTop: 10,
-        paddingLeft: 30,
+        marginBottom: 5,
         flexDirection: 'row',
     },
     price: {
-        paddingRight: 20,
         borderRightWidth: 1,
         borderRightColor: '#6B6E82',
         fontWeight: 'bold',

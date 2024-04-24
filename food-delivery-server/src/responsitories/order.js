@@ -1,3 +1,4 @@
+import ErrorHandler from '../Exception/ErrorHandler.js'
 import { OrderModel } from '../models/index.js'
 
 const createNewOrder = async ({
@@ -32,19 +33,35 @@ const createNewOrder = async ({
     return newOrder._doc
 }
 
-const getAllOrder = async ({ idUser, state }) => {
-    let orders = await OrderModel.find({
-        $and: [
-            {
-                idUser,
-            },
-            {
-                state,
-            },
-        ],
-    })
+const getOrders = async ({ idUser, state }) => {
+    let orders
+    if (state === 'ongoing') {
+        orders = await OrderModel.find({
+            $and: [
+                {
+                    idUser,
+                },
+                {
+                    state: { $in: ['accepted', 'getting', 'delivering'] },
+                },
+            ],
+        })
+    } else if (state === 'history') {
+        orders = await OrderModel.find({
+            $and: [
+                {
+                    idUser,
+                },
+                {
+                    state: { $in: ['completed', 'canceled'] },
+                },
+            ],
+        })
+    } else {
+        throw new ErrorHandler('Invalid state parameter', 400)
+    }
 
     return orders
 }
 
-export default { createNewOrder, getAllOrder }
+export default { createNewOrder, getOrders }

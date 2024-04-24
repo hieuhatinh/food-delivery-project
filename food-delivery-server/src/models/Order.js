@@ -21,7 +21,7 @@ const orderSchema = new Schema(
         state: {
             type: String,
             require: true,
-            enum: ['accepted', 'getting', 'delivering', 'delivered', 'cancel'],
+            enum: ['accepted', 'getting', 'delivering', 'completed', 'canceled'],
             default: 'accepted',
         },
         payment: {

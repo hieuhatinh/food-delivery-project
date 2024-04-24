@@ -21,13 +21,18 @@ import useDebounce from '../../hooks/useDebounce'
 import { global } from '../../global'
 import Loading from '../../components/Loading'
 
-import { reState } from '../../store/slice/orderSlice'
+// import { reState } from '../../store/slice/deliveryAddressSlice'
 import {
     fetchCreateDeliveryAddress,
     fetchDeleteDeliveryAddress,
     fetchUpdateDeliveryAddress,
 } from '../../store/actions/deliveryAddressAction'
 import { selectDeliveryAddress } from '../../store/selector/deliveryAddressSelector'
+
+export const methodFetch = {
+    put: 'put', 
+    post: 'post'
+}
 
 const EditAddressAndContact = () => {
     const navigation = useNavigation()
@@ -95,7 +100,7 @@ const EditAddressAndContact = () => {
             setError(true)
         } else {
             setError(false)
-            if (method === 'post') {
+            if (method === methodFetch.post) {
                 dispatch(
                     fetchCreateDeliveryAddress({
                         deliveryAddress: address.trim(),
@@ -105,7 +110,7 @@ const EditAddressAndContact = () => {
                     }),
                 )
             }
-            if (method === 'put') {
+            if (method === methodFetch.put) {
                 dispatch(
                     fetchUpdateDeliveryAddress({
                         idAddress: infoAddress._id,
@@ -156,7 +161,7 @@ const EditAddressAndContact = () => {
                 },
             ])
 
-            dispatch(reState())
+            // dispatch(reState())
         }
 
         if (isError) {
@@ -284,7 +289,7 @@ const EditAddressAndContact = () => {
                         </View>
                         {/* submit */}
                         <View style={styles.viewButton}>
-                            {method === 'put' && (
+                            {method === methodFetch.put && (
                                 <Button
                                     outline
                                     title={'Xoá địa chỉ này'}

@@ -1,25 +1,41 @@
-// import { createAsyncThunk } from '@reduxjs/toolkit'
-// import { apiCreateDeliveryAddress } from '../../api/orderApi'
+import { createAsyncThunk } from '@reduxjs/toolkit'
+import { apiCreateNewOrder, apiGetOrders } from '../../api/orderApi'
 
-// const fetchCreateDeliveryAddress = createAsyncThunk(
-//     'order/fetchCreateDeliveryAddress',
-//     async (
-//         { deliveryAddress, contactPhoneNumber, recipientName, isDefault },
-//         { rejectWithValue },
-//     ) => {
-//         try {
-//             let newAddress = await apiCreateDeliveryAddress({
-//                 deliveryAddress,
-//                 contactPhoneNumber,
-//                 recipientName,
-//                 isDefault,
-//             })
+const fetchCreateNewOrder = createAsyncThunk(
+    'order/fetchCreateNewOrder',
+    async (
+        { meals, deliveryAddress, contactPhoneNumber, recipientName },
+        { rejectWithValue },
+    ) => {
+        try {
+            let newAddress = await apiCreateNewOrder({
+                meals,
+                payment: 'cash',
+                deliveryAddress,
+                contactPhoneNumber,
+                recipientName,
+            })
 
-//             return newAddress
-//         } catch (error) {
-//             return rejectWithValue(error.message)
-//         }
-//     },
-// )
+            return newAddress
+        } catch (error) {
+            return rejectWithValue(error.message)
+        }
+    },
+)
 
-// export { fetchCreateDeliveryAddress }
+const fetchGetOrders = createAsyncThunk(
+    'order/fetchGetOrders',
+    async ({ state }, { rejectWithValue }) => {
+        try {
+            let newAddress = await apiGetOrders({
+                state,
+            })
+
+            return newAddress
+        } catch (error) {
+            return rejectWithValue(error.message)
+        }
+    },
+)
+
+export { fetchCreateNewOrder, fetchGetOrders }
