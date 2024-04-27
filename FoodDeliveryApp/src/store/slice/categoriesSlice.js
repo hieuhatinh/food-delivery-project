@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { fetchGetCategories } from '../actions/categoryAction'
+
+import { fetchGetCategoriesName, fetchLoadMoreGetCategories, fetchRefreshGetCategories } from '../actions/categoryAction'
+import { limitCategories } from '../../utils/configLoadData'
 
 const initialState = {
     categories: [],
@@ -10,44 +12,68 @@ const initialState = {
         isError: false,
         message: null,
     },
+    isStopLoadMore: false
 }
 
 export const categoriesSlice = createSlice({
     name: 'categories',
     initialState,
     reducers: {
-        setCategories: () => initialState,
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchGetCategories.pending, (state, action) => {
+            .addCase(fetchRefreshGetCategories.pending, (state, action) => {
                 state.isLoading = true
-                state.isSuccess = false
-                state.error = {
-                    isError: false,
-                    message: null,
-                }
             })
-            .addCase(fetchGetCategories.fulfilled, (state, action) => {
+            .addCase(fetchRefreshGetCategories.fulfilled, (state, action) => {
                 state.categories = action.payload
-                state.isLoading = false
-                state.isSuccess = true
-                state.error = {
-                    isError: false,
-                    message: null,
-                }
+                state.isStopLoadMore = action.payload.length < limitCategories
+                // state.isLoading = false
+                // state.isSuccess = true
             })
-            .addCase(fetchGetCategories.rejected, (state, action) => {
+            .addCase(fetchRefreshGetCategories.rejected, (state, action) => {
                 state.error = {
                     isError: true,
                     message: action.payload,
                 }
                 state.isLoading = false
-                state.isSuccess = false
+            })
+        builder
+            .addCase(fetchLoadMoreGetCategories.pending, (state, action) => {
+                state.isLoading = true
+            })
+            .addCase(fetchLoadMoreGetCategories.fulfilled, (state, action) => {
+                state.categories.push(...action.payload)
+                state.isStopLoadMore = action.payload.length < limitCategories
+                // state.isLoading = false
+                // state.isSuccess = true
+            })
+            .addCase(fetchLoadMoreGetCategories.rejected, (state, action) => {
+                state.error = {
+                    isError: true,
+                    message: action.payload,
+                }
+                state.isLoading = false
+            })
+        builder
+            .addCase(fetchGetCategoriesName.pending, (state, action) => {
+                state.isLoading = true
+            })
+            .addCase(fetchGetCategoriesName.fulfilled, (state, action) => {
+                state.categoriesName = action.payload
+                state.isSuccess = true
+                state.isLoading = false
+            })
+            .addCase(fetchGetCategoriesName.rejected, (state, action) => {
+                state.error = {
+                    isError: true,
+                    message: action.payload,
+                }
+                state.isLoading = false
             })
     },
 })
 
-export const { getCategoriesName, setCategories } = categoriesSlice.actions
+export const {  } = categoriesSlice.actions
 
 export default categoriesSlice.reducer

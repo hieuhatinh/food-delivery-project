@@ -3,14 +3,26 @@ import { Types } from 'mongoose'
 import ErrorHandler from '../Exception/ErrorHandler.js'
 import { CartModel, MealModel } from '../models/index.js'
 
-const getAllMealInCart = async ({ idCart }) => {
-    let result = await CartModel.findById(idCart).populate('meals.mealId')
+const getAllMealInCart = async ({ idCart, limit, skip }) => {
+    let result = await CartModel.aggregate([
+        { $match: { _id: new Types.ObjectId(idCart) } },
+        { $unwind: '$meals' },
+        {
+            $lookup: {
+                from: 'meals',
+                localField: 'meals.mealId',
+                foreignField: '_id',
+                as: 'meals.mealId',
+            },
+        },
+        { $unwind: '$meals.mealId' },
+        { $sort: { 'meals.mealId.foodName': 1 } },
+        { $skip: skip },
+        { $limit: limit },
+        { $group: { _id: '$_id', meals: { $push: '$meals' } } },
+    ])
 
-    if (result.length === 0) {
-        return res.status(404).json({ error: 'Invalid cartId or mealId' })
-    }
-
-    return result._doc
+    return result
 }
 
 const addToCart = async ({ cartId, mealId, quantity, size }) => {
@@ -131,7 +143,7 @@ const updateQuantity = async ({ cartId, mealId, quantity, size }) => {
     return mealInCart._doc
 }
 
-const countQuantityMeals = async ({cartId}) => {
+const countQuantityMeals = async ({ cartId }) => {
     const cart = await CartModel.findById(new Types.ObjectId(cartId))
 
     if (!cart) {

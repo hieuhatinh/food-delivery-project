@@ -8,7 +8,7 @@ const fetchCreateNewOrder = createAsyncThunk(
         { rejectWithValue },
     ) => {
         try {
-            let newAddress = await apiCreateNewOrder({
+            let newOrder = await apiCreateNewOrder({
                 meals,
                 payment: 'cash',
                 deliveryAddress,
@@ -16,26 +16,45 @@ const fetchCreateNewOrder = createAsyncThunk(
                 recipientName,
             })
 
-            return newAddress
+            return newOrder
         } catch (error) {
             return rejectWithValue(error.message)
         }
     },
 )
 
-const fetchGetOrders = createAsyncThunk(
-    'order/fetchGetOrders',
-    async ({ state }, { rejectWithValue }) => {
+const fetchRefreshGetOrders = createAsyncThunk(
+    'order/fetchRefreshGetOrders',
+    async ({ state, limit }, { rejectWithValue }) => {
         try {
-            let newAddress = await apiGetOrders({
+            let orders = await apiGetOrders({
                 state,
+                limit,
+                skip: 0,
             })
 
-            return newAddress
+            return orders
         } catch (error) {
             return rejectWithValue(error.message)
         }
     },
 )
 
-export { fetchCreateNewOrder, fetchGetOrders }
+const fetchLoadMoreGetOrders = createAsyncThunk(
+    'order/fetchLoadMoreGetOrders',
+    async ({ state, limit, skip }, { rejectWithValue }) => {
+        try {
+            let orders = await apiGetOrders({
+                state,
+                limit,
+                skip,
+            })
+
+            return orders
+        } catch (error) {
+            return rejectWithValue(error.message)
+        }
+    },
+)
+
+export { fetchCreateNewOrder, fetchRefreshGetOrders, fetchLoadMoreGetOrders }

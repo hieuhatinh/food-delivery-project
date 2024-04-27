@@ -1,57 +1,106 @@
-import React, { useEffect, useState } from 'react'
-import { FlatList, StyleSheet, Text } from 'react-native'
+import React, { useEffect } from 'react'
+import {
+    FlatList,
+    StyleSheet,
+    ActivityIndicator,
+    RefreshControl,
+} from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { useIsFocused } from '@react-navigation/native'
 
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 import BoundaryScreen from '../../components/BoundaryScreen'
 import CardRestaurant from '../../components/Card/CardRestaurant'
 import CartNotify from '../../components/icon/CartNotify'
-import Loading from '../../components/Loading'
 
-import { fetchOpenRes } from '../../store/actions/restaurantAction'
+import {
+    fetchRefreshOpenRes,
+    fetchLoadMoreOpenRes,
+} from '../../store/actions/restaurantAction'
 import { selectRestaurants } from '../../store/selector/restaurantSelector'
 
-const OpenRestaurants = () => {
+import { limit, typeRefresh, typeLoadMore } from '../../utils/configLoadData'
+import { reState } from '../../store/slice/restaurantsSlice'
+
+const OpenRestaurants = ({navigation}) => {
     const dispatch = useDispatch()
-    const isFocused = useIsFocused()
-    const restaurantsState = useSelector(selectRestaurants)
+    const { restaurants, isLoading, error, isSuccess, isStopLoadMore } =
+        useSelector(selectRestaurants)
+    
+    const handlePressBack = () => {
+        dispatch(reState())
+        navigation.goBack()
+    }
+
+    const handleGetData = (type) => {
+        if (!isStopLoadMore) {
+            if (type === typeRefresh) {
+                dispatch(
+                    fetchRefreshOpenRes({
+                        limit,
+                        state: 'open',
+                    }),
+                )
+            }
+
+            if (type === typeLoadMore) {
+                dispatch(
+                    fetchLoadMoreOpenRes({
+                        limit,
+                        state: 'open',
+                        skip: restaurants.length,
+                    }),
+                )
+            }
+        }
+    }
 
     useEffect(() => {
-        if (isFocused) {
-            dispatch(fetchOpenRes({ limit: undefined, state: 'open' }))
-        }
-    }, [isFocused])
+        handleGetData(typeRefresh)
+    }, [])
 
     return (
         <React.Fragment>
-            {restaurantsState.isLoading ? (
-                <Loading />
-            ) : (
-                <BoundaryScreen>
-                    <HeaderSecondary
-                        iconNotify={<CartNotify />}
-                        title='Open Restaurants'
-                    />
+            <BoundaryScreen>
+                <HeaderSecondary
+                    iconNotify={<CartNotify />}
+                    title='Open Restaurants'
+                    handlePressBack={handlePressBack}
+                />
 
-                    <FlatList
-                        data={restaurantsState.restaurants}
-                        renderItem={({ item }) => (
-                            <CardRestaurant
-                                {...item}
-                                categories={item.categories
-                                    .map((item) => item.categoryName)
-                                    .join('-')}
-                                imageURI={item.image.path}
+                <FlatList
+                    data={restaurants}
+                    renderItem={({ item }) => (
+                        <CardRestaurant
+                            {...item}
+                            categories={item.categories
+                                .map((item) => item.categoryName)
+                                .join('-')}
+                            imageURI={item.image.path}
+                        />
+                    )}
+                    keyExtractor={(item) => item._id.toString()}
+                    numColumns={1}
+                    showsVerticalScrollIndicator={false}
+                    onEndReachedThreshold={0.2}
+                    onEndReached={() => handleGetData(typeLoadMore)}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={false}
+                            onRefresh={() => handleGetData(typeRefresh)}
+                        />
+                    }
+                    ListFooterComponent={
+                        isLoading &&
+                        !isStopLoadMore && (
+                            <ActivityIndicator
+                                color={'red'}
+                                style={{ paddingBottom: 20 }}
                             />
-                        )}
-                        keyExtractor={(item) => item._id}
-                        numColumns={1}
-                        showsVerticalScrollIndicator={false}
-                        style={styles.flatlist}
-                    />
-                </BoundaryScreen>
-            )}
+                        )
+                    }
+                    style={styles.flatlist}
+                />
+            </BoundaryScreen>
         </React.Fragment>
     )
 }

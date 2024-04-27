@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native'
 
 import { global } from '../../global'
 import formatCurrency from '../../utils/formatCurrency'
+import screenName from '../../screens/config/screenName'
 
 const CardMeal = (props) => {
     const navigation = useNavigation()
@@ -16,7 +17,7 @@ const CardMeal = (props) => {
     }
 
     const handlePressCart = () =>
-        navigation.navigate('Food_Details', { idMeal: props._id })
+        navigation.navigate(screenName.foodDetails, { idMeal: props._id })
 
     return (
         <TouchableOpacity

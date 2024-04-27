@@ -10,12 +10,13 @@ const apiGetDetailRes = async ({ idRestaurant }) => {
     }
 }
 
-const apiGetOpenRes = async ({ limit, state }) => {
+const apiGetOpenRes = async ({ limit, state, skip }) => {
     try {
         let openRes = await axiosClient.get('/restaurant/get-restaurants', {
             params: {
                 state,
                 limit,
+                skip
             },
         })
 

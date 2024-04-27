@@ -7,6 +7,8 @@ const categoryRouter = express.Router()
 // user
 categoryRouter.get('/get-categories', categoryController.getCategory)
 
+categoryRouter.get('/get-categories-name', categoryController.getCategoriesName)
+
 // admin (cần check role)
 categoryRouter.post(
     '/create',

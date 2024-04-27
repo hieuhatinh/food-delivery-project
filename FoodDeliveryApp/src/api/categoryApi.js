@@ -1,12 +1,13 @@
 import axiosClient from './axiosClient'
 
-const apiGetCategories = async ({ limit }) => {
+const apiGetCategories = async ({ limit, skip }) => {
     try {
         let categoriesResult = await axiosClient.get(
             '/category/get-categories',
             {
                 params: {
                     limit,
+                    skip,
                 },
             },
         )
@@ -17,4 +18,16 @@ const apiGetCategories = async ({ limit }) => {
     }
 }
 
-export { apiGetCategories }
+const apiGetCategoriesName = async () => {
+    try {
+        let categoriesResult = await axiosClient.get(
+            '/category/get-categories-name',
+        )
+
+        return categoriesResult.data.categoriesName
+    } catch (error) {
+        throw new Error(error.response.data.message)
+    }
+}
+
+export { apiGetCategories, apiGetCategoriesName }

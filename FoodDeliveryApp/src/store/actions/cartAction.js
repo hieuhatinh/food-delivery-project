@@ -8,11 +8,24 @@ import {
     apiUpdateQuantity,
 } from '../../api/cartApi'
 
-const fetchGetAllMealsInCart = createAsyncThunk(
-    'cart/fetchGetAllMealsInCart',
-    async ({ idCart }, { rejectWithValue }) => {
+const fetchRefreshGetAllMealsInCart = createAsyncThunk(
+    'cart/fetchRefreshGetAllMealsInCart',
+    async ({ idCart, limit }, { rejectWithValue }) => {
         try {
-            let result = await apiGetAllMealsInCart({ idCart })
+            let result = await apiGetAllMealsInCart({ idCart, limit, skip: 0 })
+
+            return result
+        } catch (error) {
+            return rejectWithValue(error.message)
+        }
+    },
+)
+
+const fetchLoadMoreGetAllMealsInCart = createAsyncThunk(
+    'cart/fetchLoadMoreGetAllMealsInCart',
+    async ({ idCart, limit, skip }, { rejectWithValue }) => {
+        try {
+            let result = await apiGetAllMealsInCart({ idCart, limit, skip })
 
             return result
         } catch (error) {
@@ -92,7 +105,8 @@ const fetchAddToCart = createAsyncThunk(
 )
 
 export {
-    fetchGetAllMealsInCart,
+    fetchRefreshGetAllMealsInCart,
+    fetchLoadMoreGetAllMealsInCart,
     fetchUpdateQuantity,
     fetchDeleteMeal,
     fetchCountQuantity,

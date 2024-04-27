@@ -11,9 +11,9 @@ import screenName from './src/screens/config/screenName'
 
 const Stack = createNativeStackNavigator()
 
-// gọi api tạo đơn đặt hàng
-// api lấy tất cả đơn đặt hàng
-// loading hiển thị thêm dữ liệu khi kéo xuống trong open restaurant và all categories
+// màn order => còn lỗi
+// nghiên cứu loading khi mới vào màn hình order, cart, categories, openres
+// nghieen cứu loadmore ở màn hình restaurant view
 
 function App() {
     return (

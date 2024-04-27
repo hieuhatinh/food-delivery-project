@@ -3,12 +3,16 @@ import { cartResponsitories } from '../responsitories/index.js'
 const getAllMealInCart = async (req, res) => {
     try {
         let { idCart } = req.params
+        let { limit, skip } = req.query
+
         const mealsInCart = await cartResponsitories.getAllMealInCart({
             idCart,
+            limit: parseInt(limit),
+            skip: parseInt(skip),
         })
 
         return res.status(200).json({
-            ...mealsInCart,
+            mealsInCart,
             message: 'Lấy thành công.',
         })
     } catch (error) {

@@ -1,12 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 import {
-    fetchGetAllMealsInCart,
+    fetchLoadMoreGetAllMealsInCart,
     fetchUpdateQuantity,
     fetchDeleteMeal,
     fetchCountQuantity,
     fetchAddToCart,
+    fetchRefreshGetAllMealsInCart,
 } from '../actions/cartAction'
+import { limit } from '../../utils/configLoadData'
 
 const initialState = {
     mealsInCart: {
@@ -20,8 +22,9 @@ const initialState = {
         isError: false,
         message: null,
     },
-    typeFetch: null, 
-    numberMeals: 0
+    typeFetch: null,
+    numberMeals: 0,
+    isStopLoadMore: false,
 }
 
 export const cartSlice = createSlice({
@@ -61,25 +64,73 @@ export const cartSlice = createSlice({
         resetTypeFetch: (state, action) => {
             state.typeFetch = null
         },
+        reState: (state, action) => {
+            state.isStopLoadMore = false
+        }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchGetAllMealsInCart.pending, (state, action) => {
+            .addCase(fetchRefreshGetAllMealsInCart.pending, (state, action) => {
                 state.isLoading = true
             })
-            .addCase(fetchGetAllMealsInCart.fulfilled, (state, action) => {
-                state.isSuccess = true
-                state.mealsInCart.meals = action.payload.map((item) => ({
-                    ...item,
-                    isChecked: state.mealsInCart.isCheckedAll,
-                }))
-                state.isLoading = false
-            })
-            .addCase(fetchGetAllMealsInCart.rejected, (state, action) => {
-                state.isLoading = false
-                state.error.isError = true
-                state.error.message = action.payload
-            })
+            .addCase(
+                fetchRefreshGetAllMealsInCart.fulfilled,
+                (state, action) => {
+                    // state.isSuccess = true
+                    if (!!action.payload?.[0]) {
+                        state.mealsInCart.meals = action.payload[0].meals.map(
+                            (item) => ({
+                                ...item,
+                                isChecked: state.mealsInCart.isCheckedAll,
+                            }),
+                        )
+                        state.isStopLoadMore =
+                            action.payload[0].meals.length < limit
+                    }
+                    // state.isLoading = false
+                },
+            )
+            .addCase(
+                fetchRefreshGetAllMealsInCart.rejected,
+                (state, action) => {
+                    state.isLoading = false
+                    state.error.isError = true
+                    state.error.message = action.payload
+                },
+            )
+        builder
+            .addCase(
+                fetchLoadMoreGetAllMealsInCart.pending,
+                (state, action) => {
+                    state.isLoading = true
+                },
+            )
+            .addCase(
+                fetchLoadMoreGetAllMealsInCart.fulfilled,
+                (state, action) => {
+                    // state.isSuccess = true
+                    if (!!action.payload?.[0]) {
+                        let resultAddChecked = action.payload[0].meals.map(
+                            (item) => ({
+                                ...item,
+                                isChecked: state.mealsInCart.isCheckedAll,
+                            }),
+                        )
+                        state.mealsInCart.meals.push(...resultAddChecked)
+                        state.isStopLoadMore =
+                            action.payload[0].meals.length < limit
+                    }
+                    // state.isLoading = false
+                },
+            )
+            .addCase(
+                fetchLoadMoreGetAllMealsInCart.rejected,
+                (state, action) => {
+                    state.isLoading = false
+                    state.error.isError = true
+                    state.error.message = action.payload
+                },
+            )
         builder
             .addCase(fetchUpdateQuantity.pending, (state, action) => {
                 state.isLoading = true
@@ -147,6 +198,7 @@ export const {
     setSelectItem,
     removeItemFromCart,
     resetTypeFetch,
+    reState,
 } = cartSlice.actions
 
 export default cartSlice.reducer

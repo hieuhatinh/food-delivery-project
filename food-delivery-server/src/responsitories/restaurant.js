@@ -3,14 +3,16 @@ import { Types } from 'mongoose'
 import { RestautantModel } from '../models/index.js'
 import ErrorHandler from '../Exception/ErrorHandler.js'
 
-const getRestaurants = async ({ limit, state }) => {
+const getRestaurants = async ({ limit, state, skip }) => {
     const restaurants = await RestautantModel.find({
         state: state ? state : { $exists: true },
     })
         .populate('categories', '_id categoryName')
+        .sort({ restaurantName: 1 })
+        .skip(skip)
         .limit(limit)
 
-    return restaurants
+        return restaurants
 }
 
 // lấy thông tin quán ăn

@@ -33,7 +33,7 @@ const createNewOrder = async ({
     return newOrder._doc
 }
 
-const getOrders = async ({ idUser, state }) => {
+const getOrders = async ({ idUser, state, limit, skip }) => {
     let orders
     if (state === 'ongoing') {
         orders = await OrderModel.find({
@@ -57,6 +57,9 @@ const getOrders = async ({ idUser, state }) => {
                 },
             ],
         })
+            .sort({ updateAt: 1 })
+            .skip(skip)
+            .limit(limit)
     } else {
         throw new ErrorHandler('Invalid state parameter', 400)
     }

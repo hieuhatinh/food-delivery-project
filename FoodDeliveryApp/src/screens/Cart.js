@@ -1,28 +1,51 @@
 import React, { useEffect } from 'react'
-import { ScrollView, StyleSheet, Text, View, Alert } from 'react-native'
+import {
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+    Alert,
+    FlatList,
+    ActivityIndicator,
+} from 'react-native'
 import Checkbox from 'expo-checkbox'
 import { useDispatch, useSelector } from 'react-redux'
+import { useIsFocused } from '@react-navigation/native'
 
 import Button from '../components/button/Button'
 import MealItemInCart from './components/MealItemInCart'
 import BoundaryScreen from '../components/BoundaryScreen'
 import HeaderSecondary from '../components/header/HeaderSecondary'
 import { global } from '../global'
-
-import { resetTypeFetch, setSelectAll } from '../store/slice/cartSlice'
-import { selectIdCart } from '../store/selector/userSelector'
-import { selectCart, selectMealsChecked, selectorTotalPrice } from '../store/selector/cartSelector'
 import Loading from '../components/Loading'
-import { fetchGetAllMealsInCart } from '../store/actions/cartAction'
+import NoneValuesNotify from '../components/NoneValuesNotify'
+
+import { reState, resetTypeFetch, setSelectAll } from '../store/slice/cartSlice'
+import { selectIdCart } from '../store/selector/userSelector'
+import {
+    selectCart,
+    selectMealsChecked,
+    selectorTotalPrice,
+} from '../store/selector/cartSelector'
+import { fetchLoadMoreGetAllMealsInCart, fetchRefreshGetAllMealsInCart } from '../store/actions/cartAction'
 import screenName from './config/screenName'
 import { setMealsOrder, setTotalPrice } from '../store/slice/orderSlice'
+import { limit, typeLoadMore, typeRefresh } from '../utils/configLoadData'
 
 export default function Cart({ navigation }) {
+    const isFocused = useIsFocused()
+
     const dispatch = useDispatch()
     const totalPrice = useSelector(selectorTotalPrice)
     const idCart = useSelector(selectIdCart)
-    const { isLoading, error, isSuccess, mealsInCart, typeFetch } =
-        useSelector(selectCart)
+    const {
+        isLoading,
+        error,
+        isSuccess,
+        mealsInCart,
+        typeFetch,
+        isStopLoadMore,
+    } = useSelector(selectCart)
     const mealsChecked = useSelector(selectMealsChecked)
     let { isCheckedAll, meals } = mealsInCart
 
@@ -31,11 +54,36 @@ export default function Cart({ navigation }) {
         dispatch(setSelectAll(!isCheckedAll))
     }
 
-    // lấy thông tin món ăn có trong giỏ hàng
-    useEffect(() => {
-        dispatch(fetchGetAllMealsInCart({ idCart }))
+    // xử lý lấy thông tin các món ăn có trong giỏ hàng
+    const handleGetData = (type) => {
+        if (!isStopLoadMore) {
+            if (type === typeRefresh) {
+                dispatch(
+                    fetchRefreshGetAllMealsInCart({
+                        idCart,
+                        limit
+                    }),
+                )
+            }
+
+            if (!isStopLoadMore && type === typeLoadMore) {
+                dispatch(
+                    fetchLoadMoreGetAllMealsInCart({
+                        idCart,
+                        limit,
+                        skip: meals.length,
+                    }),
+                )
+            }
+        }
         dispatch(resetTypeFetch())
-    }, [typeFetch])
+    }
+
+    useEffect(() => {
+        if (isFocused) {
+            handleGetData(typeRefresh)
+        }
+    }, [isFocused])
 
     // hiển thị lỗi
     useEffect(() => {
@@ -52,12 +100,16 @@ export default function Cart({ navigation }) {
 
     const handlePressPurchase = () => {
         if (mealsChecked.length < 1) {
-            Alert.alert('Thông báo', 'Bạn cần chọn món để thực hiện thao tác tiếp theo', [
-                {
-                    text: 'Ok',
-                    style: 'default',
-                },
-            ])
+            Alert.alert(
+                'Thông báo',
+                'Bạn cần chọn món để thực hiện thao tác tiếp theo',
+                [
+                    {
+                        text: 'Ok',
+                        style: 'default',
+                    },
+                ],
+            )
         } else {
             dispatch(setMealsOrder(mealsChecked))
             dispatch(setTotalPrice(totalPrice))
@@ -69,28 +121,33 @@ export default function Cart({ navigation }) {
         <BoundaryScreen>
             <HeaderSecondary iconLeft={false} title='Cart' />
 
-            {isLoading ? (
-                <React.Fragment>
-                    <Loading />
-                    <View style={{ width: '100%', height: '100%', flex: 1 }} />
-                </React.Fragment>
-            ) : meals.length === 0 ? (
+            {meals.length === 0 ? (
                 <NoneValuesNotify
                     image={require('../assets/images/empty-cart.png')}
                     textNotify='Giỏ hàng trống'
                 />
             ) : (
-                <ScrollView
-                    contentContainerStyle={{ alignItems: 'center' }}
-                    style={{ width: '100%' }}
-                >
-                    {meals.map((item) => (
+                <FlatList
+                    data={meals}
+                    renderItem={({ item }) => (
                         <MealItemInCart
-                            key={item.mealId._id + item.size + item.quantity}
                             {...item}
                         />
-                    ))}
-                </ScrollView>
+                    )}
+                    keyExtractor={(item) => item.mealId._id}
+                    numColumns={1}
+                    onEndReachedThreshold={0.2}
+                    onEndReached={() => handleGetData(typeLoadMore)}
+                    ListFooterComponent={
+                        isLoading &&
+                        !isStopLoadMore && (
+                            <ActivityIndicator
+                                color={'red'}
+                                style={{ paddingBottom: 20 }}
+                            />
+                        )
+                    }
+                />
             )}
             <View style={styles.footer}>
                 <View style={styles.viewCheckboxAndTotal}>
@@ -110,7 +167,7 @@ export default function Cart({ navigation }) {
                     height={50}
                     title='Mua hàng'
                     handlePress={handlePressPurchase}
-                    disabled={isLoading || meals.length === 0}
+                    disabled={meals.length === 0}
                 />
             </View>
         </BoundaryScreen>

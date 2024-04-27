@@ -1,10 +1,17 @@
 import axiosClient from './axiosClient'
 
-const apiGetAllMealsInCart = async ({ idCart }) => {
-    try {
-        let resultMeals = await axiosClient.get(`/cart/get-all-meal/${idCart}`)
+import { limit } from '../utils/configLoadData'
 
-        return resultMeals.data.meals
+const apiGetAllMealsInCart = async ({ idCart, skip }) => {
+    try {
+        let resultMeals = await axiosClient.get(`/cart/get-all-meal/${idCart}`, {
+            params: {
+                skip, 
+                limit: limit
+            }
+        })
+
+        return resultMeals.data.mealsInCart
     } catch (error) {
         throw new Error(error.response.data.message)
     }

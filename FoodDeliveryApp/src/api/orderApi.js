@@ -8,8 +8,8 @@ const apiCreateNewOrder = async (data) => {
     return newOrder.data
 }
 
-const apiGetOrders = async ({state}) => {
-    let orders = await axiosClient.get(`/order/get-orders?state=${state}`)
+const apiGetOrders = async ({state, limit, skip}) => {
+    let orders = await axiosClient.get(`/order/get-orders?state=${state}&limit=${limit}&skip=${skip}`)
 
     return orders.data
 }

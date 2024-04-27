@@ -5,61 +5,82 @@ import {
     View,
     useWindowDimensions,
     ActivityIndicator,
+    FlatList,
+    RefreshControl,
 } from 'react-native'
-import { ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import {
-    TabView,
-    SceneMap,
-    TabBar,
-    TabBarIndicator,
-} from 'react-native-tab-view'
+import { TabView, TabBar, TabBarIndicator } from 'react-native-tab-view'
 import { useDispatch, useSelector } from 'react-redux'
 import { useIsFocused } from '@react-navigation/native'
 
+import NoneValuesNotify from '../../components/NoneValuesNotify'
+import { global } from '../../global'
 import HeaderSecondary from '../../components/header/HeaderSecondary'
 import OrderItem from '../components/OrderItem'
-import { global } from '../../global'
-import { fetchGetOrders } from '../../store/actions/orderAction'
-import { selectOrder } from '../../store/selector/orderSelector'
-import NoneValuesNotify from '../../components/NoneValuesNotify'
 
-const Orders = ({ button1, button2 }) => {
-    let { isLoading, isError, orders } = useSelector(selectOrder)
+import {
+    fetchRefreshGetOrders,
+    fetchLoadMoreGetOrders,
+} from '../../store/actions/orderAction'
+import { selectOrder } from '../../store/selector/orderSelector'
+import { limit, typeLoadMore, typeRefresh } from '../../utils/configLoadData'
+import { reState } from '../../store/slice/orderSlice'
+
+const Orders = ({ button1, button2, handleRefresh, handleLoadMore }) => {
+    let { isLoading, isError, orders, isStopLoadMore } =
+        useSelector(selectOrder)
 
     return (
         <React.Fragment>
-            {isLoading ? (
-                <View style={styles.activeIndicator}>
-                    <ActivityIndicator size={30} />
-                </View>
-            ) : orders.length < 1 ? (
+            {orders.length < 1 ? (
                 <View>
                     <NoneValuesNotify textNotify='Chưa có đơn hàng nào.' />
                 </View>
             ) : (
-                <ScrollView>
-                    {orders.map((item) => (
+                <FlatList
+                    data={orders}
+                    renderItem={({ item }) => (
                         <OrderItem
                             key={item._id}
                             {...item}
                             btn1={button1}
                             btn2={button2}
                         />
-                    ))}
-                </ScrollView>
+                    )}
+                    keyExtractor={(item) => item._id}
+                    numColumns={1}
+                    onEndReachedThreshold={0.2}
+                    onEndReached={handleLoadMore}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={false}
+                            onRefresh={handleRefresh}
+                        />
+                    }
+                    ListFooterComponent={
+                        isLoading &&
+                        !isStopLoadMore && (
+                            <ActivityIndicator
+                                color={'red'}
+                                style={{ paddingBottom: 20 }}
+                            />
+                        )
+                    }
+                />
             )}
         </React.Fragment>
     )
 }
 
-const renderScene = ({ route }) => {
-    switch (route.key) {
+const renderScene = (props) => {
+    switch (props.route.key) {
         case 'ongoing':
             return (
                 <Orders
                     button1={{ title: 'Track order', outline: false }}
                     button2={{ title: 'Cancel', outline: true }}
+                    handleRefresh={props.handleRefresh}
+                    handleLoadMore={props.handleLoadMore}
                 />
             )
         case 'history':
@@ -67,6 +88,8 @@ const renderScene = ({ route }) => {
                 <Orders
                     button1={{ title: 'Rate', outline: true }}
                     button2={{ title: 'Re-Order', outline: false }}
+                    handleRefresh={props.handleRefresh}
+                    handleLoadMore={props.handleLoadMore}
                 />
             )
         default:
@@ -111,24 +134,43 @@ export default function MyOrder() {
     const isFocused = useIsFocused()
     const dispatch = useDispatch()
 
+    let { isLoading, isError, orders, isStopLoadMore } =
+        useSelector(selectOrder)
+
     const [index, setIndex] = useState(0)
     const [routes] = useState([
         { key: 'ongoing', title: 'Ongoing' },
         { key: 'history', title: 'History' },
     ])
 
-    useEffect(() => {
-        if (isFocused) {
-            switch (index) {
-                case 0:
-                    dispatch(fetchGetOrders({ state: 'ongoing' }))
-                    break
-                case 1:
-                    dispatch(fetchGetOrders({ state: 'history' }))
-                    break
+    const handleGetData = async ({ type }) => {
+        let state = routes[index].key
+
+        if (!isStopLoadMore) {
+            if (type === typeRefresh) {
+                dispatch(
+                    fetchRefreshGetOrders({
+                        state,
+                        limit,
+                    }),
+                )
+            }
+
+            if (type === typeLoadMore) {
+                dispatch(
+                    fetchLoadMoreGetOrders({
+                        state,
+                        limit,
+                        skip: orders.length,
+                    }),
+                )
             }
         }
-    }, [isFocused, index])
+    }
+
+    useEffect(() => {
+        handleGetData({ type: typeRefresh })
+    }, [index, routes[index].key])
 
     return (
         <View
@@ -153,7 +195,17 @@ export default function MyOrder() {
             <TabView
                 renderTabBar={renderTabBar}
                 navigationState={{ index, routes }}
-                renderScene={renderScene}
+                renderScene={(props) =>
+                    renderScene({
+                        ...props,
+                        handleRefresh: () => {
+                            handleGetData({ type: typeRefresh })
+                        },
+                        handleLoadMore: () => {
+                            handleGetData({ type: typeLoadMore })
+                        },
+                    })
+                }
                 onIndexChange={setIndex}
                 initialLayout={{ width: layout.width }}
                 lazy

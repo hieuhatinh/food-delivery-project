@@ -18,14 +18,16 @@ import OpenRestaurantsComp from './components/OpenRestaurantsComp'
 import HeaderSection from '../components/header/HeaderSection'
 import Loading from '../components/Loading'
 
-import { fetchGetCategories } from '../store/actions/categoryAction'
-import { selectLimitCategories } from '../store/selector/categorySelector'
-import { fetchOpenRes } from '../store/actions/restaurantAction'
+import { fetchRefreshGetCategories } from '../store/actions/categoryAction'
+import { selectCategories } from '../store/selector/categorySelector'
+import { fetchRefreshOpenRes } from '../store/actions/restaurantAction'
+
+import { limit, limitCategories } from '../utils/configLoadData'
 
 export default function Home() {
     const navigation = useNavigation()
     const dispatch = useDispatch()
-    const categoriesLimit = useSelector(selectLimitCategories)
+    const { categories } = useSelector(selectCategories)
     const isFocused = useIsFocused()
 
     const [greeting, setGreeting] = useState()
@@ -36,8 +38,10 @@ export default function Home() {
 
     useEffect(() => {
         if (isFocused) {
-            dispatch(fetchGetCategories({ limit: undefined }))
-            dispatch(fetchOpenRes({ limit: 3, state: 'open' }))
+            dispatch(
+                fetchRefreshGetCategories({ limit: limitCategories }),
+            )
+            dispatch(fetchRefreshOpenRes({ limit, state: 'open' }))
         }
     }, [isFocused])
 
@@ -61,60 +65,52 @@ export default function Home() {
 
     return (
         <BoundaryScreen>
-            {categoriesLimit.isLoading ? (
-                <View
-                    style={{ height: '100%', width: '100%', top: 0, bottom: 0 }}
-                >
-                    <Loading />
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                style={{ width: '100%' }}
+            >
+                {/* Header */}
+                <HeaderHome />
+
+                {/* Search */}
+                <View style={[styles.row, { marginLeft: 20 }]}>
+                    <Text>Hey Septa, </Text>
+                    <Text style={{ fontWeight: '700' }}>{greeting}</Text>
                 </View>
-            ) : (
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    style={{ width: '100%' }}
+                <TouchableOpacity
+                    style={styles.search}
+                    onPress={() => navigation.navigate('Search')}
+                    activeOpacity={0.9}
                 >
-                    {/* Header */}
-                    <HeaderHome />
+                    <Icon name='magnifying-glass' size={25} />
+                    <Text style={styles.textPlaceHolder}>
+                        What will you like to eat?
+                    </Text>
+                </TouchableOpacity>
 
-                    {/* Search */}
-                    <View style={[styles.row, { marginLeft: 20 }]}>
-                        <Text>Hey Septa, </Text>
-                        <Text style={{ fontWeight: '700' }}>{greeting}</Text>
-                    </View>
-                    <TouchableOpacity
-                        style={styles.search}
-                        onPress={() => navigation.navigate('Search')}
-                        activeOpacity={0.9}
-                    >
-                        <Icon name='magnifying-glass' size={25} />
-                        <Text style={styles.textPlaceHolder}>
-                            What will you like to eat?
-                        </Text>
-                    </TouchableOpacity>
-
-                    {/* All categories */}
-                    <View style={styles.headerSection}>
-                        <HeaderSection
-                            title='All Categories'
-                            handleSeeAll={handlePressAllCategories}
-                        />
-                    </View>
-                    <ScrollView
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                    >
-                        <View style={[styles.row, { paddingTop: 0 }]}>
-                            {categoriesLimit.categories?.map((item) => (
-                                <CardCategory key={item._id} {...item} />
-                            ))}
-                        </View>
-                    </ScrollView>
-
-                    {/* Open Restaurants */}
-                    <View style={{ marginHorizontal: '5%' }}>
-                        <OpenRestaurantsComp />
+                {/* All categories */}
+                <View style={styles.headerSection}>
+                    <HeaderSection
+                        title='All Categories'
+                        handleSeeAll={handlePressAllCategories}
+                    />
+                </View>
+                <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                >
+                    <View style={[styles.row, { paddingTop: 0 }]}>
+                        {categories?.map((item) => (
+                            <CardCategory key={item._id} {...item} />
+                        ))}
                     </View>
                 </ScrollView>
-            )}
+
+                {/* Open Restaurants */}
+                <View style={{ marginHorizontal: '5%' }}>
+                    <OpenRestaurantsComp />
+                </View>
+            </ScrollView>
         </BoundaryScreen>
     )
 }

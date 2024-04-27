@@ -1,13 +1,13 @@
 import { restaurantResponsitories } from '../responsitories/index.js'
 
 const getRestaurants = async (req, res) => {
-    const limit = parseInt(req.query.limit)
-    const state = req.query.state
+    const {limit, state, skip} = req.query
 
     try {
         const result = await restaurantResponsitories.getRestaurants({
-            limit,
+            limit: parseInt(limit),
             state,
+            skip: parseInt(skip),
         })
 
         return res.status(200).json({

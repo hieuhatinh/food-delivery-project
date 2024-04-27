@@ -29,7 +29,6 @@ const createNewOrder = async (req, res) => {
             message: 'Tạo đơn đặt hàng thành công',
         })
     } catch (error) {
-        console.log(error)
         return res.status(error.statusCode || 404).json({
             message: error.message,
         })
@@ -39,11 +38,13 @@ const createNewOrder = async (req, res) => {
 const getOrders = async (req, res) => {
     try {
         const { id } = req.user
-        const { state } = req.query
+        const { state, limit, skip } = req.query
 
         let orders = await orderResponsitories.getOrders({
             idUser: id,
             state: state.toLowerCase(),
+            limit: parseInt(limit),
+            skip: parseInt(skip)
         })
 
         return res.status(200).json({

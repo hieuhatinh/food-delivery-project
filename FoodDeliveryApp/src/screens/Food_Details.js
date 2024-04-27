@@ -31,6 +31,7 @@ import { selectIdCart } from '../store/selector/userSelector'
 import { fetchAddToCart } from '../store/actions/cartAction'
 import { resetTypeFetch } from '../store/slice/cartSlice'
 import { selectCart } from '../store/selector/cartSelector'
+import screenName from './config/screenName'
 
 const Food_Details = () => {
     const route = useRoute()
@@ -43,6 +44,12 @@ const Food_Details = () => {
     const idCart = useSelector(selectIdCart)
     const stateCart = useSelector(selectCart)
 
+    // gọi api lấy thông tin món
+    useEffect(() => {
+        dispatch(fetchMealDetail({ idMeal: route.params?.idMeal }))
+    }, [])
+
+    // xử lý tăng giảm số lượng món 
     function handleClickPlus() {
         dispatch(setQuantity(sizeAndQuantity.quantity + 1))
     }
@@ -57,12 +64,14 @@ const Food_Details = () => {
         dispatch(setSize(size))
     }
 
+    // xử lý navigation
     const handleNavigate = () => {
-        navigation.navigate('RestaurantView', {
+        navigation.navigate(screenName.restaurantView, {
             idRestaurant: mealInfo.restaurant._id,
         })
     }
 
+    // xử lý thêm vào giỏ hàng
     const handleAddToCart = () => {
         dispatch(
             fetchAddToCart({
@@ -75,10 +84,7 @@ const Food_Details = () => {
         )
     }
 
-    useEffect(() => {
-        dispatch(fetchMealDetail({ idMeal: route.params?.idMeal }))
-    }, [])
-
+    // hiển thị thông báo
     useEffect(() => {
         if (stateCart.typeFetch === 'addToCart') {
             Alert.alert('Thông báo', stateCart.messageSuccess)

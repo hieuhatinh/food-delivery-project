@@ -1,12 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
-import { apiGetCategories } from '../../api/categoryApi'
+import { apiGetCategories, apiGetCategoriesName } from '../../api/categoryApi'
 
-const fetchGetCategories = createAsyncThunk(
-    'category/fetchCategories',
+const fetchRefreshGetCategories = createAsyncThunk(
+    'category/fetchRefreshGetCategories',
     async ({ limit }, { rejectWithValue }) => {
         try {
-            let result = await apiGetCategories({ limit })
+            let result = await apiGetCategories({ limit, skip: 0 })
 
             return result
         } catch (error) {
@@ -15,4 +15,34 @@ const fetchGetCategories = createAsyncThunk(
     },
 )
 
-export { fetchGetCategories }
+const fetchLoadMoreGetCategories = createAsyncThunk(
+    'category/fetchLoadMoreGetCategories',
+    async ({ limit, skip }, { rejectWithValue }) => {
+        try {
+            let result = await apiGetCategories({ limit, skip })
+
+            return result
+        } catch (error) {
+            return rejectWithValue(error.message)
+        }
+    },
+)
+
+const fetchGetCategoriesName = createAsyncThunk(
+    'category/fetchGetCategoriesName',
+    async (_, { rejectWithValue }) => {
+        try {
+            let result = await apiGetCategoriesName()
+
+            return result
+        } catch (error) {
+            return rejectWithValue(error.message)
+        }
+    },
+)
+
+export {
+    fetchRefreshGetCategories,
+    fetchGetCategoriesName,
+    fetchLoadMoreGetCategories,
+}

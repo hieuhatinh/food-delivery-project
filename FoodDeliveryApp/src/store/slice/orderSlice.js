@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { fetchCreateNewOrder, fetchGetOrders } from '../actions/orderAction'
+import { fetchCreateNewOrder, fetchLoadMoreGetOrders, fetchRefreshGetOrders } from '../actions/orderAction'
+import { limit } from '../../utils/configLoadData'
 
 const initialState = {
     mealsOrder: [],
@@ -9,6 +10,7 @@ const initialState = {
     isError: false,
     isSuccess: false,
     messageNotify: null,
+    isStopLoadMore: false,
 }
 
 export const orderSlice = createSlice({
@@ -26,6 +28,7 @@ export const orderSlice = createSlice({
             state.isError = false
             state.isSuccess = false
             state.messageNotify = null
+            state.orders = []
         },
     },
     extraReducers: (builder) => {
@@ -44,16 +47,34 @@ export const orderSlice = createSlice({
                 state.isLoading = false
             })
         builder
-            .addCase(fetchGetOrders.pending, (state, action) => {
+            .addCase(fetchRefreshGetOrders.pending, (state, action) => {
                 state.isLoading = true
             })
-            .addCase(fetchGetOrders.fulfilled, (state, action) => {
-                state.isSuccess = true
+            .addCase(fetchRefreshGetOrders.fulfilled, (state, action) => {
+                // state.isSuccess = true
+                // state.isLoading = false
                 state.orders = action.payload.orders
                 state.messageNotify = action.payload.message
+                state.isStopLoadMore =
+                    action.payload.orders.length < limit
+            })
+            .addCase(fetchRefreshGetOrders.rejected, (state, action) => {
+                state.isError = true
+                state.messageNotify = action.payload
                 state.isLoading = false
             })
-            .addCase(fetchGetOrders.rejected, (state, action) => {
+        builder
+            .addCase(fetchLoadMoreGetOrders.pending, (state, action) => {
+                state.isLoading = true
+            })
+            .addCase(fetchLoadMoreGetOrders.fulfilled, (state, action) => {
+                // state.isSuccess = true
+                // state.isLoading = false
+                state.orders.push(...action.payload.orders)
+                state.messageNotify = action.payload.message
+                state.isStopLoadMore = action.payload.orders.length < limit
+            })
+            .addCase(fetchLoadMoreGetOrders.rejected, (state, action) => {
                 state.isError = true
                 state.messageNotify = action.payload
                 state.isLoading = false
@@ -61,6 +82,7 @@ export const orderSlice = createSlice({
     },
 })
 
-export const { setMealsOrder, setTotalPrice, reState } = orderSlice.actions
+export const { setMealsOrder, setTotalPrice, reState } =
+    orderSlice.actions
 
 export default orderSlice.reducer

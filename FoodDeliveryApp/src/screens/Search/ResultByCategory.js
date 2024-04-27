@@ -19,24 +19,31 @@ import HeaderSection from '../../components/header/HeaderSection'
 import OpenRestaurantsComp from '../components/OpenRestaurantsComp'
 import CartNotify from '../../components/icon/CartNotify'
 
-import { selectCategoriesName } from '../../store/selector/categorySelector'
+import { selectCategories } from '../../store/selector/categorySelector'
 import {
     selectLimitSearch,
     selectSearch,
 } from '../../store/selector/searchSelector'
 import { fetchSearchByCategory } from '../../store/actions/searchAction'
+import { fetchGetCategoriesName } from '../../store/actions/categoryAction'
 
 const ResultByCategory = () => {
     const navigation = useNavigation()
     const route = useRoute()
     const dispatch = useDispatch()
-    const allCategory = useSelector(selectCategoriesName)
+    const { categoriesName } = useSelector(selectCategories)
     const resultSearchState = useSelector(selectSearch)
     const resultSearchLimit = useSelector(selectLimitSearch)
 
     const [isOpenDropdown, setIsOpenDropdown] = useState(false)
     const [categoryInfo, setCategoryInfo] = useState({ ...route.params })
 
+    // xử lý gọi api lấy tên các loại món
+    useEffect(() => {
+        dispatch(fetchGetCategoriesName())
+    }, [])
+
+    // xử lý gọi api tìm theo loại món
     useEffect(() => {
         dispatch(fetchSearchByCategory({ idCategory: categoryInfo._id }))
     }, [categoryInfo])
@@ -98,12 +105,13 @@ const ResultByCategory = () => {
                                 }}
                             >
                                 <View style={{ height: 40 }} />
-                                {allCategory?.map((item, index) => (
+                                {categoriesName?.map((item, index) => (
                                     <TouchableOpacity
                                         key={item._id}
                                         style={[
                                             styles.item,
-                                            index !== allCategory.length - 1 &&
+                                            index !==
+                                                categoriesName.length - 1 &&
                                                 styles.borderBottom,
                                         ]}
                                         onPress={() =>
