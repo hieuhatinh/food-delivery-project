@@ -22,13 +22,13 @@ export default function Welcome({ navigation }) {
                     title='Log in'
                     backgroundColor={global.fourthColor}
                     height={75}
-                    handlePress={() => navigation.navigate(screenName.signIn)}
+                    handlePress={() => navigation.replace(screenName.signIn)}
                 />
                 <Button
                     title='Sign up'
                     outline
                     height={75}
-                    handlePress={() => navigation.navigate(screenName.signUp)}
+                    handlePress={() => navigation.replace(screenName.signUp)}
                 />
             </View>
         </View>

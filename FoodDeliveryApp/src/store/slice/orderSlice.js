@@ -30,6 +30,10 @@ export const orderSlice = createSlice({
             state.messageNotify = null
             state.orders = []
         },
+        reStopLoadMore: (state, action) => {
+            state.orders = []
+            state.isStopLoadMore = false
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -51,8 +55,8 @@ export const orderSlice = createSlice({
                 state.isLoading = true
             })
             .addCase(fetchRefreshGetOrders.fulfilled, (state, action) => {
-                // state.isSuccess = true
-                // state.isLoading = false
+                state.isSuccess = true
+                state.isLoading = false
                 state.orders = action.payload.orders
                 state.messageNotify = action.payload.message
                 state.isStopLoadMore =
@@ -68,8 +72,8 @@ export const orderSlice = createSlice({
                 state.isLoading = true
             })
             .addCase(fetchLoadMoreGetOrders.fulfilled, (state, action) => {
-                // state.isSuccess = true
-                // state.isLoading = false
+                state.isSuccess = true
+                state.isLoading = false
                 state.orders.push(...action.payload.orders)
                 state.messageNotify = action.payload.message
                 state.isStopLoadMore = action.payload.orders.length < limit
@@ -82,7 +86,7 @@ export const orderSlice = createSlice({
     },
 })
 
-export const { setMealsOrder, setTotalPrice, reState } =
+export const { setMealsOrder, setTotalPrice, reState, reStopLoadMore } =
     orderSlice.actions
 
 export default orderSlice.reducer

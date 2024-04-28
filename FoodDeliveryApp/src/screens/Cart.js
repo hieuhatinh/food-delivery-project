@@ -21,7 +21,6 @@ import Loading from '../components/Loading'
 import NoneValuesNotify from '../components/NoneValuesNotify'
 
 import {
-    reState,
     reStopLoadMore,
     resetTypeFetch,
     setSelectAll,

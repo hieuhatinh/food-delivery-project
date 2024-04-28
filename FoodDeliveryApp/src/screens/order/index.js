@@ -24,9 +24,14 @@ import {
 } from '../../store/actions/orderAction'
 import { selectOrder } from '../../store/selector/orderSelector'
 import { limit, typeLoadMore, typeRefresh } from '../../utils/configLoadData'
-import { reState } from '../../store/slice/orderSlice'
+import { reState, reStopLoadMore } from '../../store/slice/orderSlice'
 
-const Orders = ({ button1, button2, handleRefresh, handleLoadMore }) => {
+const Orders = ({
+    button1,
+    button2,
+    handleRefresh,
+    handleLoadMore,
+}) => {
     let { isLoading, isError, orders, isStopLoadMore } =
         useSelector(selectOrder)
 
@@ -58,7 +63,6 @@ const Orders = ({ button1, button2, handleRefresh, handleLoadMore }) => {
                         />
                     }
                     ListFooterComponent={
-                        isLoading &&
                         !isStopLoadMore && (
                             <ActivityIndicator
                                 color={'red'}
@@ -79,8 +83,7 @@ const renderScene = (props) => {
                 <Orders
                     button1={{ title: 'Track order', outline: false }}
                     button2={{ title: 'Cancel', outline: true }}
-                    handleRefresh={props.handleRefresh}
-                    handleLoadMore={props.handleLoadMore}
+                    {...props}
                 />
             )
         case 'history':
@@ -88,8 +91,7 @@ const renderScene = (props) => {
                 <Orders
                     button1={{ title: 'Rate', outline: true }}
                     button2={{ title: 'Re-Order', outline: false }}
-                    handleRefresh={props.handleRefresh}
-                    handleLoadMore={props.handleLoadMore}
+                    {...props}
                 />
             )
         default:
@@ -143,34 +145,33 @@ export default function MyOrder() {
         { key: 'history', title: 'History' },
     ])
 
-    const handleGetData = async ({ type }) => {
+    const handleGetData = async (type) => {
         let state = routes[index].key
 
-        if (!isStopLoadMore) {
-            if (type === typeRefresh) {
-                dispatch(
-                    fetchRefreshGetOrders({
-                        state,
-                        limit,
-                    }),
-                )
-            }
+        if (type === typeRefresh) {
+            dispatch(reStopLoadMore())
+            dispatch(
+                fetchRefreshGetOrders({
+                    state,
+                    limit,
+                }),
+            )
+        }
 
-            if (type === typeLoadMore) {
-                dispatch(
-                    fetchLoadMoreGetOrders({
-                        state,
-                        limit,
-                        skip: orders.length,
-                    }),
-                )
-            }
+        if (!isStopLoadMore && type === typeLoadMore) {
+            dispatch(
+                fetchLoadMoreGetOrders({
+                    state,
+                    limit,
+                    skip: orders.length,
+                }),
+            )
         }
     }
 
     useEffect(() => {
-        handleGetData({ type: typeRefresh })
-    }, [index, routes[index].key])
+        handleGetData(typeRefresh)
+    }, [index])
 
     return (
         <View
@@ -199,10 +200,10 @@ export default function MyOrder() {
                     renderScene({
                         ...props,
                         handleRefresh: () => {
-                            handleGetData({ type: typeRefresh })
+                            handleGetData(typeRefresh)
                         },
                         handleLoadMore: () => {
-                            handleGetData({ type: typeLoadMore })
+                            handleGetData(typeLoadMore)
                         },
                     })
                 }
