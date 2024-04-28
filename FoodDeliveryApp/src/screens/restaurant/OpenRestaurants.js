@@ -19,38 +19,32 @@ import {
 import { selectRestaurants } from '../../store/selector/restaurantSelector'
 
 import { limit, typeRefresh, typeLoadMore } from '../../utils/configLoadData'
-import { reState } from '../../store/slice/restaurantsSlice'
+import { reStopLoadMore } from '../../store/slice/restaurantsSlice'
 
-const OpenRestaurants = ({navigation}) => {
+const OpenRestaurants = ({ navigation }) => {
     const dispatch = useDispatch()
     const { restaurants, isLoading, error, isSuccess, isStopLoadMore } =
         useSelector(selectRestaurants)
-    
-    const handlePressBack = () => {
-        dispatch(reState())
-        navigation.goBack()
-    }
 
     const handleGetData = (type) => {
-        if (!isStopLoadMore) {
-            if (type === typeRefresh) {
-                dispatch(
-                    fetchRefreshOpenRes({
-                        limit,
-                        state: 'open',
-                    }),
-                )
-            }
+        if (type === typeRefresh) {
+            dispatch(reStopLoadMore())
+            dispatch(
+                fetchRefreshOpenRes({
+                    limit,
+                    state: 'open',
+                }),
+            )
+        }
 
-            if (type === typeLoadMore) {
-                dispatch(
-                    fetchLoadMoreOpenRes({
-                        limit,
-                        state: 'open',
-                        skip: restaurants.length,
-                    }),
-                )
-            }
+        if (!isStopLoadMore && type === typeLoadMore) {
+            dispatch(
+                fetchLoadMoreOpenRes({
+                    limit,
+                    state: 'open',
+                    skip: restaurants.length,
+                }),
+            )
         }
     }
 
@@ -64,7 +58,6 @@ const OpenRestaurants = ({navigation}) => {
                 <HeaderSecondary
                     iconNotify={<CartNotify />}
                     title='Open Restaurants'
-                    handlePressBack={handlePressBack}
                 />
 
                 <FlatList
@@ -90,7 +83,6 @@ const OpenRestaurants = ({navigation}) => {
                         />
                     }
                     ListFooterComponent={
-                        isLoading &&
                         !isStopLoadMore && (
                             <ActivityIndicator
                                 color={'red'}

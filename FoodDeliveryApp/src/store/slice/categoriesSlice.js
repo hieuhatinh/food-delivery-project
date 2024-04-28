@@ -19,6 +19,9 @@ export const categoriesSlice = createSlice({
     name: 'categories',
     initialState,
     reducers: {
+        reStopLoadMore: (state, action) => {
+            state.isStopLoadMore = false
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -28,8 +31,8 @@ export const categoriesSlice = createSlice({
             .addCase(fetchRefreshGetCategories.fulfilled, (state, action) => {
                 state.categories = action.payload
                 state.isStopLoadMore = action.payload.length < limitCategories
-                // state.isLoading = false
-                // state.isSuccess = true
+                state.isLoading = false
+                state.isSuccess = true
             })
             .addCase(fetchRefreshGetCategories.rejected, (state, action) => {
                 state.error = {
@@ -45,8 +48,8 @@ export const categoriesSlice = createSlice({
             .addCase(fetchLoadMoreGetCategories.fulfilled, (state, action) => {
                 state.categories.push(...action.payload)
                 state.isStopLoadMore = action.payload.length < limitCategories
-                // state.isLoading = false
-                // state.isSuccess = true
+                state.isLoading = false
+                state.isSuccess = true
             })
             .addCase(fetchLoadMoreGetCategories.rejected, (state, action) => {
                 state.error = {
@@ -74,6 +77,6 @@ export const categoriesSlice = createSlice({
     },
 })
 
-export const {  } = categoriesSlice.actions
+export const { reStopLoadMore } = categoriesSlice.actions
 
 export default categoriesSlice.reducer

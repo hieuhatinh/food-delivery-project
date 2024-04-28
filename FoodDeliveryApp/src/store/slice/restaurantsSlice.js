@@ -19,15 +19,8 @@ export const restaurantsSlice = createSlice({
     name: 'restaurants',
     initialState,
     reducers: {
-        reState: (state, action) => {
-            state.isLoading = false
-            state.error = {
-                isError: false,
-                message: null,
-            }
-            state.isSuccess = false
+        reStopLoadMore: (state, action) => {
             state.isStopLoadMore = false
-            state.restaurants = []
         },
     },
     extraReducers: (builder) => {
@@ -38,8 +31,8 @@ export const restaurantsSlice = createSlice({
             .addCase(fetchRefreshOpenRes.fulfilled, (state, action) => {
                 state.restaurants = action.payload
                 state.isStopLoadMore = action.payload.length < limit
-                // state.isSuccess = true
-                // state.isLoading = false
+                state.isSuccess = true
+                state.isLoading = false
             })
             .addCase(fetchRefreshOpenRes.rejected, (state, action) => {
                 state.isLoading = false
@@ -55,8 +48,8 @@ export const restaurantsSlice = createSlice({
             .addCase(fetchLoadMoreOpenRes.fulfilled, (state, action) => {
                 state.restaurants.push(...action.payload)
                 state.isStopLoadMore = action.payload.length < limit
-                // state.isSuccess = true
-                // state.isLoading = false
+                state.isSuccess = true
+                state.isLoading = false
             })
             .addCase(fetchLoadMoreOpenRes.rejected, (state, action) => {
                 state.isLoading = false
@@ -68,6 +61,6 @@ export const restaurantsSlice = createSlice({
     },
 })
 
-export const { reState } = restaurantsSlice.actions
+export const { reStopLoadMore } = restaurantsSlice.actions
 
 export default restaurantsSlice.reducer

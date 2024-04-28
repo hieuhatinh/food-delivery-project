@@ -12,6 +12,8 @@ import screenName from './src/screens/config/screenName'
 const Stack = createNativeStackNavigator()
 
 // màn order => còn lỗi
+// maàn hình cart không loadmore khi checkall
+
 // nghiên cứu loading khi mới vào màn hình order, cart, categories, openres
 // nghieen cứu loadmore ở màn hình restaurant view
 

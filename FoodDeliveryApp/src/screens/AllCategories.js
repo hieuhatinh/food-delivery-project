@@ -12,6 +12,7 @@ import Loading from '../components/Loading'
 import { selectCategories } from '../store/selector/categorySelector'
 import { fetchLoadMoreGetCategories, fetchRefreshGetCategories } from '../store/actions/categoryAction'
 import { limitCategories, typeLoadMore, typeRefresh } from '../utils/configLoadData'
+import { reStopLoadMore } from '../store/slice/categoriesSlice'
 
 const AllCategories = () => {
     const isFocused = useIsFocused()
@@ -22,12 +23,12 @@ const AllCategories = () => {
 
     // xử lý loadmore lấy dữ liệu
     const handleGetData = (type) => {
-        if (!isStopLoadMore) {
             if (type === typeRefresh) {
+                dispatch(reStopLoadMore())
                 dispatch(fetchRefreshGetCategories({ limit: limitCategories }))
             }
 
-            if (type === typeLoadMore) {
+            if (!isStopLoadMore && type === typeLoadMore) {
                 dispatch(
                     fetchLoadMoreGetCategories({
                         limit: limitCategories,
@@ -35,7 +36,6 @@ const AllCategories = () => {
                     }),
                 )
             }
-        }
     }
 
     useEffect(() => {
@@ -61,7 +61,6 @@ const AllCategories = () => {
                     onEndReachedThreshold={0.2}
                     onEndReached={() => handleGetData(typeLoadMore)}
                     ListFooterComponent={
-                        isLoading &&
                         !isStopLoadMore && (
                             <ActivityIndicator
                                 color={'red'}

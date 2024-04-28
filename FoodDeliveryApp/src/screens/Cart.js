@@ -20,14 +20,22 @@ import { global } from '../global'
 import Loading from '../components/Loading'
 import NoneValuesNotify from '../components/NoneValuesNotify'
 
-import { reState, resetTypeFetch, setSelectAll } from '../store/slice/cartSlice'
+import {
+    reState,
+    reStopLoadMore,
+    resetTypeFetch,
+    setSelectAll,
+} from '../store/slice/cartSlice'
 import { selectIdCart } from '../store/selector/userSelector'
 import {
     selectCart,
     selectMealsChecked,
     selectorTotalPrice,
 } from '../store/selector/cartSelector'
-import { fetchLoadMoreGetAllMealsInCart, fetchRefreshGetAllMealsInCart } from '../store/actions/cartAction'
+import {
+    fetchLoadMoreGetAllMealsInCart,
+    fetchRefreshGetAllMealsInCart,
+} from '../store/actions/cartAction'
 import screenName from './config/screenName'
 import { setMealsOrder, setTotalPrice } from '../store/slice/orderSlice'
 import { limit, typeLoadMore, typeRefresh } from '../utils/configLoadData'
@@ -56,34 +64,33 @@ export default function Cart({ navigation }) {
 
     // xử lý lấy thông tin các món ăn có trong giỏ hàng
     const handleGetData = (type) => {
-        if (!isStopLoadMore) {
-            if (type === typeRefresh) {
-                dispatch(
-                    fetchRefreshGetAllMealsInCart({
-                        idCart,
-                        limit
-                    }),
-                )
-            }
-
-            if (!isStopLoadMore && type === typeLoadMore) {
-                dispatch(
-                    fetchLoadMoreGetAllMealsInCart({
-                        idCart,
-                        limit,
-                        skip: meals.length,
-                    }),
-                )
-            }
+        if (type === typeRefresh) {
+            dispatch(reStopLoadMore())
+            dispatch(
+                fetchRefreshGetAllMealsInCart({
+                    idCart,
+                    limit,
+                }),
+            )
         }
-        dispatch(resetTypeFetch())
+
+        if (!isStopLoadMore && type === typeLoadMore) {
+            dispatch(
+                fetchLoadMoreGetAllMealsInCart({
+                    idCart,
+                    limit,
+                    skip: meals.length,
+                }),
+            )
+        }
+        // dispatch(resetTypeFetch())
     }
 
     useEffect(() => {
         if (isFocused) {
             handleGetData(typeRefresh)
         }
-    }, [isFocused])
+    }, [isFocused, typeFetch])
 
     // hiển thị lỗi
     useEffect(() => {
@@ -129,17 +136,12 @@ export default function Cart({ navigation }) {
             ) : (
                 <FlatList
                     data={meals}
-                    renderItem={({ item }) => (
-                        <MealItemInCart
-                            {...item}
-                        />
-                    )}
+                    renderItem={({ item }) => <MealItemInCart {...item} />}
                     keyExtractor={(item) => item.mealId._id}
                     numColumns={1}
                     onEndReachedThreshold={0.2}
                     onEndReached={() => handleGetData(typeLoadMore)}
                     ListFooterComponent={
-                        isLoading &&
                         !isStopLoadMore && (
                             <ActivityIndicator
                                 color={'red'}

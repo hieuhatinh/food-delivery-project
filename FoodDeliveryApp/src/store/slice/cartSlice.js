@@ -64,9 +64,9 @@ export const cartSlice = createSlice({
         resetTypeFetch: (state, action) => {
             state.typeFetch = null
         },
-        reState: (state, action) => {
+        reStopLoadMore: (state, action) => {
             state.isStopLoadMore = false
-        }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -76,7 +76,7 @@ export const cartSlice = createSlice({
             .addCase(
                 fetchRefreshGetAllMealsInCart.fulfilled,
                 (state, action) => {
-                    // state.isSuccess = true
+                    state.isSuccess = true
                     if (!!action.payload?.[0]) {
                         state.mealsInCart.meals = action.payload[0].meals.map(
                             (item) => ({
@@ -84,10 +84,11 @@ export const cartSlice = createSlice({
                                 isChecked: state.mealsInCart.isCheckedAll,
                             }),
                         )
-                        state.isStopLoadMore =
-                            action.payload[0].meals.length < limit
                     }
-                    // state.isLoading = false
+                    state.isStopLoadMore =
+                        action.payload.length === 0 ||
+                        action.payload?.[0]?.meals.length < limit
+                    state.isLoading = false
                 },
             )
             .addCase(
@@ -108,7 +109,7 @@ export const cartSlice = createSlice({
             .addCase(
                 fetchLoadMoreGetAllMealsInCart.fulfilled,
                 (state, action) => {
-                    // state.isSuccess = true
+                    state.isSuccess = true
                     if (!!action.payload?.[0]) {
                         let resultAddChecked = action.payload[0].meals.map(
                             (item) => ({
@@ -117,10 +118,11 @@ export const cartSlice = createSlice({
                             }),
                         )
                         state.mealsInCart.meals.push(...resultAddChecked)
-                        state.isStopLoadMore =
-                            action.payload[0].meals.length < limit
                     }
-                    // state.isLoading = false
+                    state.isStopLoadMore =
+                        action.payload.length === 0 ||
+                        action.payload?.[0]?.meals.length < limit
+                    state.isLoading = false
                 },
             )
             .addCase(
@@ -198,7 +200,7 @@ export const {
     setSelectItem,
     removeItemFromCart,
     resetTypeFetch,
-    reState,
+    reStopLoadMore,
 } = cartSlice.actions
 
 export default cartSlice.reducer
