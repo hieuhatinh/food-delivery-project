@@ -107,10 +107,32 @@ const removeFromCart = async (req, res) => {
     }
 }
 
+const removeManyFromCart = async (req, res) => {
+    try {
+        let { idCart } = req.params
+        let { mealsId } = req.body
+
+        const resultDelete = await cartResponsitories.removeManyFromCart({
+            cartId: idCart,
+            mealsId,
+        })
+
+        return res.status(200).json({
+            resultDelete,
+            message: 'Xoá món ăn thành công khỏi giỏ hàng.',
+        })
+    } catch (error) {
+        return res.status(error.statusCode || 404).json({
+            message: error.message,
+        })
+    }
+}
+
 export default {
     getAllMealInCart,
     addToCart,
     removeFromCart,
+    removeManyFromCart,
     updateQuantity,
     countQuantityMeals,
 }

@@ -39,4 +39,10 @@ cartRouter.delete(
     cartController.removeFromCart,
 )
 
+cartRouter.delete(
+    '/delete-meal-many/:idCart',
+    authenticateToken,
+    cartController.removeManyFromCart,
+)
+
 export default cartRouter

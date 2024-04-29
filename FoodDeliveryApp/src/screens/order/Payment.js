@@ -24,6 +24,8 @@ import { fetchGetDefaultAddress } from '../../store/actions/deliveryAddressActio
 import { reAddressDelivery } from '../../store/slice/deliveryAddressSlice'
 import { fetchCreateNewOrder } from '../../store/actions/orderAction'
 import { reState } from '../../store/slice/orderSlice'
+import { fetchDeleteManyMeals } from '../../store/actions/cartAction'
+import { selectIdCart } from '../../store/selector/userSelector'
 
 export default function Payment({ navigation }) {
     const dispatch = useDispatch()
@@ -38,6 +40,7 @@ export default function Payment({ navigation }) {
         messageNotify,
     } = useSelector(selectOrder)
     const addressDeliveryCurrent = useSelector(selectAddressDeliveryCurrent)
+    const idCart = useSelector(selectIdCart)
 
     const handleNavigateEditInfo = () => {
         if (!addressDeliveryCurrent) {
@@ -80,7 +83,14 @@ export default function Payment({ navigation }) {
                     text: 'Tuyệt vời ông mặt trời',
                     onPress: () => {
                         dispatch(reState())
-                        navigation.navigate(screenName.orderSuccess)
+                        dispatch(
+                            fetchDeleteManyMeals({
+                                idCart,
+                                mealsOrder,
+                                typeFetch: 'delete-many',
+                            }),
+                        ),
+                            navigation.navigate(screenName.orderSuccess)
                     },
                 },
             ])
@@ -89,9 +99,9 @@ export default function Payment({ navigation }) {
         if (isError) {
             Alert.alert('Lỗi', messageNotify, [
                 {
-                    text: 'Thật đáng tiếc', 
-                    onPress: () => navigation.goBack()
-                }
+                    text: 'Thật đáng tiếc',
+                    onPress: () => navigation.goBack(),
+                },
             ])
         }
     }, [isSuccess, isError])

@@ -136,7 +136,9 @@ export default function Cart({ navigation }) {
                 <FlatList
                     data={meals}
                     renderItem={({ item }) => <MealItemInCart {...item} />}
-                    keyExtractor={(item) => item.mealId._id}
+                    keyExtractor={(item) =>
+                        item.mealId._id + item.size + item.quantity
+                    }
                     numColumns={1}
                     onEndReachedThreshold={0.2}
                     onEndReached={() => handleGetData(typeLoadMore)}

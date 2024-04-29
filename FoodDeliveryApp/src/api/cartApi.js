@@ -53,6 +53,24 @@ const apiDeleteMeal = async ({ idCart, idMeal, typeFetch }) => {
     }
 }
 
+const apiDeleteManyMeals = async ({ idCart, mealsId, typeFetch }) => {
+    try {
+        let resultMeals = await axiosClient.delete(
+            `/cart/delete-meal-many/${idCart}`,
+            {
+                data: { mealsId: mealsId },
+            },
+        )
+
+        return {
+            message: resultMeals.data.message,
+            typeFetch,
+        }
+    } catch (error) {
+        throw new Error(error.response.data.message)
+    }
+}
+
 const apiCountQuantity = async ({ idCart }) => {
     try {
         let result = await axiosClient.get(
@@ -84,6 +102,7 @@ export {
     apiGetAllMealsInCart,
     apiUpdateQuantity,
     apiDeleteMeal,
+    apiDeleteManyMeals,
     apiCountQuantity,
     apiAddToCart,
 }

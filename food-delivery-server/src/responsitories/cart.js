@@ -175,10 +175,27 @@ const removeFromCart = async ({ cartId, mealId }) => {
     return result
 }
 
+const removeManyFromCart = async ({cartId, mealsId}) => {
+    const cart = await CartModel.findById(new Types.ObjectId(cartId))
+
+    if (!cart) {
+        throw new ErrorHandler('Giỏ hàng không tồn tại.', 404)
+    }
+
+    cart.meals = cart.meals.filter(
+        (meal) => !mealsId.includes(meal.mealId.toString()),
+    )
+
+    let result = await cart.save()
+
+    return result
+}
+
 export default {
     getAllMealInCart,
     addToCart,
     updateQuantity,
     countQuantityMeals,
     removeFromCart,
+    removeManyFromCart,
 }

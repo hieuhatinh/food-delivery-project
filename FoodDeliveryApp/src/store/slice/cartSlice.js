@@ -7,6 +7,7 @@ import {
     fetchCountQuantity,
     fetchAddToCart,
     fetchRefreshGetAllMealsInCart,
+    fetchDeleteManyMeals,
 } from '../actions/cartAction'
 import { limit } from '../../utils/configLoadData'
 
@@ -158,6 +159,21 @@ export const cartSlice = createSlice({
                 state.isLoading = false
             })
             .addCase(fetchDeleteMeal.rejected, (state, action) => {
+                state.error.isError = true
+                state.error.message = action.payload
+                state.isLoading = false
+            })
+        builder
+            .addCase(fetchDeleteManyMeals.pending, (state, action) => {
+                state.isLoading = true
+            })
+            .addCase(fetchDeleteManyMeals.fulfilled, (state, action) => {
+                state.isSuccess = true
+                state.messageSuccess = action.payload.message
+                state.typeFetch = action.payload.typeFetch
+                state.isLoading = false
+            })
+            .addCase(fetchDeleteManyMeals.rejected, (state, action) => {
                 state.error.isError = true
                 state.error.message = action.payload
                 state.isLoading = false

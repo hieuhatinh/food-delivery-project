@@ -170,8 +170,8 @@ export default function MyOrder() {
     }
 
     useEffect(() => {
-        handleGetData(typeRefresh)
-    }, [index])
+        if (isFocused) handleGetData(typeRefresh)
+    }, [isFocused, index])
 
     return (
         <View

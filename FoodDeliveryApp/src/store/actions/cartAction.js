@@ -3,6 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import {
     apiAddToCart,
     apiCountQuantity,
+    apiDeleteManyMeals,
     apiDeleteMeal,
     apiGetAllMealsInCart,
     apiUpdateQuantity,
@@ -69,6 +70,24 @@ const fetchDeleteMeal = createAsyncThunk(
     },
 )
 
+const fetchDeleteManyMeals = createAsyncThunk(
+    'cart/fetchDeleteManyMeals',
+    async ({ idCart, mealsOrder, typeFetch }, { rejectWithValue }) => {
+        try {
+            let mealsId = mealsOrder.map((item) => item.mealId)
+            let result = await apiDeleteManyMeals({
+                idCart,
+                mealsId,
+                typeFetch,
+            })
+
+            return result
+        } catch (error) {
+            return rejectWithValue(error.message)
+        }
+    },
+)
+
 const fetchCountQuantity = createAsyncThunk(
     'cart/fetchCountQuantity',
     async ({ idCart }, { rejectWithValue }) => {
@@ -109,6 +128,7 @@ export {
     fetchLoadMoreGetAllMealsInCart,
     fetchUpdateQuantity,
     fetchDeleteMeal,
+    fetchDeleteManyMeals,
     fetchCountQuantity,
     fetchAddToCart,
 }
