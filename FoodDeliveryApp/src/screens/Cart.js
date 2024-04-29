@@ -21,6 +21,7 @@ import Loading from '../components/Loading'
 import NoneValuesNotify from '../components/NoneValuesNotify'
 
 import {
+    reState,
     reStopLoadMore,
     resetTypeFetch,
     setSelectAll,
@@ -97,7 +98,10 @@ export default function Cart({ navigation }) {
             Alert.alert('Lỗi', error.message, [
                 {
                     text: 'Ok',
-                    onPress: () => navigation.replace(screenName.bottomTabs),
+                    onPress: () =>{ 
+                        dispatch(reState())
+                        navigation.replace(screenName.bottomTabs)
+                    },
                     style: 'destructive',
                 },
             ])
@@ -136,9 +140,7 @@ export default function Cart({ navigation }) {
                 <FlatList
                     data={meals}
                     renderItem={({ item }) => <MealItemInCart {...item} />}
-                    keyExtractor={(item) =>
-                        item.mealId._id + item.size + item.quantity
-                    }
+                    keyExtractor={(item) => item.mealId._id + item.size + item.quantity}
                     numColumns={1}
                     onEndReachedThreshold={0.2}
                     onEndReached={() => handleGetData(typeLoadMore)}

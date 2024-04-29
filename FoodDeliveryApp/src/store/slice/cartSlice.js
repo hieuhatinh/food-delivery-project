@@ -26,19 +26,25 @@ const initialState = {
     typeFetch: null,
     numberMeals: 0,
     isStopLoadMore: false,
+    isPressChangeQuantity: false,
 }
 
 export const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
+        // xử lý thay đổi số lượng món ăn trong giỏ hàng
+        setIsPressChangeQuantity: (state, action) => {
+            state.isPressChangeQuantity = action.payload
+        },
         setQuantityMeal: (state, action) => {
-            let { _id, quantity } = action.payload
+            let { _id, quantity, size } = action.payload
             let meal = state.mealsInCart.meals.find(
-                (item) => item.mealId._id === _id,
+                (item) => item.mealId._id === _id && item.size === size,
             )
             meal.quantity = quantity
         },
+        // xử lý chọn item
         setSelectAll: (state, action) => {
             state.mealsInCart.isCheckedAll = action.payload
             state.mealsInCart.meals = state.mealsInCart.meals.map((item) => ({
@@ -47,27 +53,36 @@ export const cartSlice = createSlice({
             }))
         },
         setSelectItem: (state, action) => {
-            let { _id, isChecked } = action.payload
+            let { _id, isChecked, size, quantity } = action.payload
             let meal = state.mealsInCart.meals.find(
-                (item) => item.mealId._id === _id,
-            )
+                (item) =>
+                    item.mealId._id === _id &&
+                    item.size === size &&
+                    item.quantity === quantity,
+            ) // tìm item
             meal.isChecked = isChecked
             state.mealsInCart.isCheckedAll =
                 state.mealsInCart.meals.reduce((totalItemChecked, item) => {
                     return item.isChecked && ++totalItemChecked
                 }, 0) === state.mealsInCart.meals.length
         },
-        removeItemFromCart: (state, action) => {
-            state.mealsInCart.meals = state.mealsInCart.meals.filter(
-                (item) => item.mealId._id !== action.payload,
-            )
-        },
         resetTypeFetch: (state, action) => {
             state.typeFetch = null
         },
         reStopLoadMore: (state, action) => {
             state.isStopLoadMore = false
+            state.mealsInCart = {
+                meals: [],
+                isCheckedAll: false,
+            }
         },
+        reState: (state, action) => {
+            state.error.isError = false
+            state.error.message = null
+            state.isSuccess = false
+            state.messageSuccess = null
+        },
+
     },
     extraReducers: (builder) => {
         builder
@@ -211,12 +226,13 @@ export const cartSlice = createSlice({
 })
 
 export const {
+    setIsPressChangeQuantity,
     setQuantityMeal,
     setSelectAll,
     setSelectItem,
-    removeItemFromCart,
     resetTypeFetch,
     reStopLoadMore,
+    reState,
 } = cartSlice.actions
 
 export default cartSlice.reducer

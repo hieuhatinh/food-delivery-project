@@ -46,6 +46,9 @@ const getOrders = async ({ idUser, state, limit, skip }) => {
                 },
             ],
         })
+            .sort({ updatedAt: 1 })
+            .skip(skip)
+            .limit(limit)
     } else if (state === 'history') {
         orders = await OrderModel.find({
             $and: [
@@ -57,7 +60,7 @@ const getOrders = async ({ idUser, state, limit, skip }) => {
                 },
             ],
         })
-            .sort({ updateAt: 1 })
+            .sort({ updatedAt: 1 })
             .skip(skip)
             .limit(limit)
     } else {

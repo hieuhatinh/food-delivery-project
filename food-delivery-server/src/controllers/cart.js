@@ -90,10 +90,13 @@ const countQuantityMeals = async (req, res) => {
 const removeFromCart = async (req, res) => {
     try {
         let { idCart, idMeal } = req.params
+        let { size, quantity } = req.query
 
         const resultDelete = await cartResponsitories.removeFromCart({
             cartId: idCart,
             mealId: idMeal,
+            size,
+            quantity: parseInt(quantity),
         })
 
         return res.status(200).json({

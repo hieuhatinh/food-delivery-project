@@ -53,6 +53,9 @@ const selectMealsChecked = createSelector([selectCart], (result) => {
     return mealsChecked
 })
 
+const selectIsPressChangeQuantiy = createSelector([selectCart], (result) => {
+    return result.isPressChangeQuantity
+})
 
 export {
     selectCart,
@@ -60,4 +63,5 @@ export {
     selectTypeFetch,
     selectNumberMeals,
     selectMealsChecked,
+    selectIsPressChangeQuantiy,
 }

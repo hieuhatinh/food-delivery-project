@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useIsFocused } from '@react-navigation/native'
-import { ActivityIndicator, FlatList, StyleSheet } from 'react-native'
+import { ActivityIndicator, FlatList, RefreshControl, StyleSheet } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
 import HeaderSecondary from '../components/header/HeaderSecondary'
@@ -60,6 +60,12 @@ const AllCategories = () => {
                     showsVerticalScrollIndicator={false}
                     onEndReachedThreshold={0.2}
                     onEndReached={() => handleGetData(typeLoadMore)}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={false}
+                            onRefresh={() => handleGetData(typeRefresh)}
+                        />
+                    }
                     ListFooterComponent={
                         !isStopLoadMore && (
                             <ActivityIndicator

@@ -153,7 +153,7 @@ const countQuantityMeals = async ({ cartId }) => {
     return cart.meals.length
 }
 
-const removeFromCart = async ({ cartId, mealId }) => {
+const removeFromCart = async ({ cartId, mealId, size, quantity }) => {
     const cart = await CartModel.findById(new Types.ObjectId(cartId))
 
     if (!cart) {
@@ -161,9 +161,13 @@ const removeFromCart = async ({ cartId, mealId }) => {
     }
 
     // Kiểm tra xem mealId có trong giỏ hàng không
-    const mealIndex = cart.meals.findIndex((meal) =>
-        meal.mealId.equals(new Types.ObjectId(mealId)),
+    const mealIndex = cart.meals.findIndex(
+        (meal) =>
+            meal.mealId.equals(new Types.ObjectId(mealId)) &&
+            meal.size === size &&
+            meal.quantity === quantity,
     )
+    
     if (mealIndex === -1) {
         throw new ErrorHandler('Món ăn không có trong giỏ hàng', 404)
     }
@@ -175,7 +179,7 @@ const removeFromCart = async ({ cartId, mealId }) => {
     return result
 }
 
-const removeManyFromCart = async ({cartId, mealsId}) => {
+const removeManyFromCart = async ({ cartId, mealsId }) => {
     const cart = await CartModel.findById(new Types.ObjectId(cartId))
 
     if (!cart) {

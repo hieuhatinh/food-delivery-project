@@ -12,7 +12,7 @@ import Checkbox from 'expo-checkbox'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { global } from '../../global'
-import { setQuantityMeal, setSelectItem } from '../../store/slice/cartSlice'
+import { setIsPressChangeQuantity, setQuantityMeal, setSelectItem } from '../../store/slice/cartSlice'
 import useDebounce from '../../hooks/useDebounce'
 import {
     fetchDeleteMeal,
@@ -20,22 +20,23 @@ import {
 } from '../../store/actions/cartAction'
 import { selectIdCart } from '../../store/selector/userSelector'
 import formatCurrency from '../../utils/formatCurrency'
+import { selectIsPressChangeQuantiy } from '../../store/selector/cartSelector'
 
 export default function MealItemInCart(props) {
     const dispatch = useDispatch()
     const idCart = useSelector(selectIdCart)
-
-    const [isPress, setIsPress] = useState(false)
+    const isPressChangeQuantity = useSelector(selectIsPressChangeQuantiy)
 
     let { mealId, size, quantity, isChecked } = props
 
-    let price = mealId.priceAndSize
-        .find((item) => item.size === size)
-        .price
+    const [isPress, setIsPress] = useState(false)
+
+    // xử lý khi tăng số lượng
+    let price = mealId.priceAndSize.find((item) => item.size === size).price
     price = formatCurrency(price)
 
     useDebounce(quantity, 1000, () => {
-        if (isPress) {
+        if (isPressChangeQuantity) {
             dispatch(
                 fetchUpdateQuantity({
                     idCart,
@@ -45,47 +46,54 @@ export default function MealItemInCart(props) {
                     typeFetch: 'updateQuantity',
                 }),
             )
-
-            setIsPress(false)
+            dispatch(setIsPressChangeQuantity(false))
         }
     })
 
     const onClickPlus = () => {
-        setIsPress(true)
+        dispatch(setIsPressChangeQuantity(true))
         dispatch(
             setQuantityMeal({
                 _id: mealId._id,
+                size,
                 quantity: quantity + 1,
             }),
         )
     }
 
     const onClickMinus = () => {
-        setIsPress(true)
         if (quantity > 1) {
+            dispatch(setIsPressChangeQuantity(true))
             dispatch(
                 setQuantityMeal({
                     _id: mealId._id,
+                    size,
                     quantity: quantity - 1,
                 }),
             )
         }
     }
 
+    // xử lý check item
     const handleCheckedItem = () => {
         dispatch(
             setSelectItem({
                 _id: mealId._id,
+                size,
+                quantity,
                 isChecked: !isChecked,
             }),
         )
     }
 
+    // xử lý xoá item
     const removeItem = () => {
         dispatch(
             fetchDeleteMeal({
                 idMeal: mealId._id,
                 idCart,
+                size,
+                quantity,
                 typeFetch: 'removeItem',
             }),
         )
@@ -170,7 +178,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         flexDirection: 'row',
-        width: '90%'
+        width: '90%',
     },
     checkbox: {
         height: 20,
@@ -193,7 +201,7 @@ const styles = StyleSheet.create({
     nameFood: {
         fontSize: 18,
         // flexWrap: 'wrap',
-        width: '90%'
+        width: '90%',
     },
     price: {
         fontSize: 20,

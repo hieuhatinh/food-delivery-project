@@ -59,9 +59,18 @@ const fetchUpdateQuantity = createAsyncThunk(
 
 const fetchDeleteMeal = createAsyncThunk(
     'cart/fetchDeleteMeal',
-    async ({ idCart, idMeal, typeFetch }, { rejectWithValue }) => {
+    async (
+        { idCart, size, quantity, idMeal, typeFetch },
+        { rejectWithValue },
+    ) => {
         try {
-            let result = await apiDeleteMeal({ idCart, idMeal, typeFetch })
+            let result = await apiDeleteMeal({
+                idCart,
+                size,
+                quantity,
+                idMeal,
+                typeFetch,
+            })
 
             return result
         } catch (error) {
