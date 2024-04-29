@@ -113,11 +113,11 @@ const removeFromCart = async (req, res) => {
 const removeManyFromCart = async (req, res) => {
     try {
         let { idCart } = req.params
-        let { mealsId } = req.body
+        let { meals } = req.body
 
         const resultDelete = await cartResponsitories.removeManyFromCart({
             cartId: idCart,
-            mealsId,
+            meals,
         })
 
         return res.status(200).json({

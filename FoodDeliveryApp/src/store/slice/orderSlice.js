@@ -28,7 +28,7 @@ export const orderSlice = createSlice({
             state.isError = false
             state.isSuccess = false
             state.messageNotify = null
-            state.orders = []
+            // state.orders = []
         },
         reStopLoadMore: (state, action) => {
             state.orders = []
@@ -58,7 +58,6 @@ export const orderSlice = createSlice({
                 state.isSuccess = true
                 state.isLoading = false
                 state.orders = action.payload.orders
-                state.messageNotify = action.payload.message
                 state.isStopLoadMore =
                     action.payload.orders.length < limit
             })
@@ -75,7 +74,6 @@ export const orderSlice = createSlice({
                 state.isSuccess = true
                 state.isLoading = false
                 state.orders.push(...action.payload.orders)
-                state.messageNotify = action.payload.message
                 state.isStopLoadMore = action.payload.orders.length < limit
             })
             .addCase(fetchLoadMoreGetOrders.rejected, (state, action) => {

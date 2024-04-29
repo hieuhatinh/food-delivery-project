@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Alert,
     Image,
@@ -21,19 +21,24 @@ import {
 import { selectIdCart } from '../../store/selector/userSelector'
 import formatCurrency from '../../utils/formatCurrency'
 import { selectIsPressChangeQuantiy } from '../../store/selector/cartSelector'
+import typeFetch from '../../utils/typeFetch'
 
 export default function MealItemInCart(props) {
+    let { mealId, size, quantity, isChecked } = props
+
     const dispatch = useDispatch()
     const idCart = useSelector(selectIdCart)
     const isPressChangeQuantity = useSelector(selectIsPressChangeQuantiy)
 
-    let { mealId, size, quantity, isChecked } = props
-
-    const [isPress, setIsPress] = useState(false)
+    const [priceItem, setPriceItem] = useState(0)
 
     // xử lý khi tăng số lượng
-    let price = mealId.priceAndSize.find((item) => item.size === size).price
-    price = formatCurrency(price)
+    useEffect(() => {
+        let price = mealId.priceAndSize.find((item) => item.size === size).price
+        price = formatCurrency(price)
+
+        setPriceItem(price)
+    }, [mealId])
 
     useDebounce(quantity, 1000, () => {
         if (isPressChangeQuantity) {
@@ -43,7 +48,7 @@ export default function MealItemInCart(props) {
                     idMeal: mealId._id,
                     quantity,
                     size,
-                    typeFetch: 'updateQuantity',
+                    typeFetch: typeFetch.updateQuantity,
                 }),
             )
             dispatch(setIsPressChangeQuantity(false))
@@ -135,7 +140,8 @@ export default function MealItemInCart(props) {
                             <Text style={styles.nameFood} numberOfLines={2}>
                                 {mealId.foodName}
                             </Text>
-                            <Text style={styles.price}>{price}</Text>
+                            <Text style={{marginVertical: 5}}>{!!size && `size: ${size}`}</Text>
+                            <Text style={styles.price}>{priceItem}</Text>
                         </View>
                         <View style={styles.viewNumberMeal}>
                             <View style={styles.icon}>
@@ -206,6 +212,7 @@ const styles = StyleSheet.create({
     price: {
         fontSize: 20,
         fontWeight: 'bold',
+        marginBottom: 5
     },
     row: {
         flexDirection: 'row',

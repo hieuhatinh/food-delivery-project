@@ -59,12 +59,12 @@ const apiDeleteMeal = async ({ idCart, size, quantity, idMeal, typeFetch }) => {
     }
 }
 
-const apiDeleteManyMeals = async ({ idCart, mealsId, typeFetch }) => {
+const apiDeleteManyMeals = async ({ idCart, meals, typeFetch }) => {
     try {
         let resultMeals = await axiosClient.delete(
             `/cart/delete-meal-many/${idCart}`,
             {
-                data: { mealsId: mealsId },
+                data: { meals: meals },
             },
         )
 
