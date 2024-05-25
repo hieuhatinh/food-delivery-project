@@ -31,6 +31,7 @@ const Orders = ({
     button2,
     handleRefresh,
     handleLoadMore,
+    image
 }) => {
     let { isLoading, isError, orders, isStopLoadMore } =
         useSelector(selectOrder)
@@ -38,8 +39,8 @@ const Orders = ({
     return (
         <React.Fragment>
             {orders.length < 1 ? (
-                <View>
-                    <NoneValuesNotify textNotify='Chưa có đơn hàng nào.' />
+                <View style={{flex: 1}}>
+                    <NoneValuesNotify image={image} textNotify='Chưa có đơn hàng nào.' />
                 </View>
             ) : (
                 <FlatList
@@ -83,6 +84,7 @@ const renderScene = (props) => {
                 <Orders
                     button1={{ title: 'Track order', outline: false }}
                     button2={{ title: 'Cancel', outline: true }}
+                    image={require('../../assets/images/order-ongoing.png')}
                     {...props}
                 />
             )
@@ -91,6 +93,7 @@ const renderScene = (props) => {
                 <Orders
                     button1={{ title: 'Rate', outline: true }}
                     button2={{ title: 'Re-Order', outline: false }}
+                    image={require('../../assets/images/order-history.png')}
                     {...props}
                 />
             )

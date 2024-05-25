@@ -26,7 +26,7 @@ const createNewOrder = async (req, res) => {
 
         return res.status(200).json({
             newOrder,
-            message: 'Tạo đơn đặt hàng thành công',
+            message: 'Đặt hàng thành công',
         })
     } catch (error) {
         return res.status(error.statusCode || 404).json({

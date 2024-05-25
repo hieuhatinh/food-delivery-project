@@ -167,7 +167,7 @@ const removeFromCart = async ({ cartId, mealId, size, quantity }) => {
             meal.size === size &&
             meal.quantity === quantity,
     )
-    
+
     if (mealIndex === -1) {
         throw new ErrorHandler('Món ăn không có trong giỏ hàng', 404)
     }
@@ -179,7 +179,7 @@ const removeFromCart = async ({ cartId, mealId, size, quantity }) => {
     return result
 }
 
-const removeManyFromCart = async ({ cartId, mealsId }) => {
+const removeManyFromCart = async ({ cartId, meals }) => {
     const cart = await CartModel.findById(new Types.ObjectId(cartId))
 
     if (!cart) {
@@ -187,7 +187,11 @@ const removeManyFromCart = async ({ cartId, mealsId }) => {
     }
 
     cart.meals = cart.meals.filter(
-        (meal) => !mealsId.includes(meal.mealId.toString()),
+        (meal) =>
+            !meals.some(
+                (item) =>
+                    item.mealId === meal.mealId.toString() && item.size === meal.size,
+            ),
     )
 
     let result = await cart.save()

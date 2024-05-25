@@ -9,6 +9,7 @@ import {
 import React, { useEffect } from 'react'
 import Icon from 'react-native-vector-icons/Entypo'
 import { useDispatch, useSelector } from 'react-redux'
+import { useIsFocused } from '@react-navigation/native'
 
 import Button from '../../components/button/Button'
 import OrderInformation from '../components/OrderInformation'
@@ -26,8 +27,10 @@ import { fetchCreateNewOrder } from '../../store/actions/orderAction'
 import { reState } from '../../store/slice/orderSlice'
 import { fetchDeleteManyMeals } from '../../store/actions/cartAction'
 import { selectIdCart } from '../../store/selector/userSelector'
+import typeFetch from '../../utils/typeFetch'
 
 export default function Payment({ navigation }) {
+    const isFocused = useIsFocused()
     const dispatch = useDispatch()
 
     const mealsOrderWithPriceString = useSelector(selectMeals)
@@ -75,6 +78,10 @@ export default function Payment({ navigation }) {
         navigation.goBack()
     }
 
+    useEffect(() => {
+        if (isFocused) dispatch(reState())
+    }, [isFocused])
+
     // xử lý thông báo
     useEffect(() => {
         if (isSuccess) {
@@ -82,12 +89,12 @@ export default function Payment({ navigation }) {
                 {
                     text: 'Tuyệt vời ông mặt trời',
                     onPress: () => {
-                        dispatch(reState())
+                        // dispatch(reState())
                         dispatch(
                             fetchDeleteManyMeals({
                                 idCart,
                                 mealsOrder,
-                                typeFetch: 'delete-many',
+                                typeFetch: typeFetch.deleteMany,
                             }),
                         ),
                             navigation.navigate(screenName.orderSuccess)
@@ -162,6 +169,7 @@ export default function Payment({ navigation }) {
             <FlatList
                 data={mealsOrderWithPriceString}
                 renderItem={({ item }) => <OrderInformation {...item} />}
+                keyExtractor={(item) => item.mealId + item.size + item.quantity}
             />
 
             <View style={styles.footer}>

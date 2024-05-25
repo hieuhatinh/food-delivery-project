@@ -32,6 +32,7 @@ import { fetchAddToCart } from '../store/actions/cartAction'
 import { resetTypeFetch } from '../store/slice/cartSlice'
 import { selectCart } from '../store/selector/cartSelector'
 import screenName from './config/screenName'
+import typeFetch from '../utils/typeFetch'
 
 const Food_Details = () => {
     const route = useRoute()
@@ -79,14 +80,14 @@ const Food_Details = () => {
                 idMeal: route.params?.idMeal,
                 quantity: sizeAndQuantity.quantity,
                 size: sizeAndQuantity.size,
-                typeFetch: 'addToCart',
+                typeFetch: typeFetch.addToCart,
             }),
         )
     }
 
     // hiển thị thông báo
     useEffect(() => {
-        if (stateCart.typeFetch === 'addToCart') {
+        if (stateCart.typeFetch === typeFetch.addToCart) {
             Alert.alert('Thông báo', stateCart.messageSuccess)
         }
         dispatch(resetTypeFetch())

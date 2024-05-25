@@ -16,8 +16,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     image: {
-        height: 200,
-        width: 200,
+        height: 150,
+        width: 150,
+        marginBottom: 20
     },
     textNotify: {
         fontSize: 18,

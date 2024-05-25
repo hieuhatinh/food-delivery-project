@@ -83,10 +83,16 @@ const fetchDeleteManyMeals = createAsyncThunk(
     'cart/fetchDeleteManyMeals',
     async ({ idCart, mealsOrder, typeFetch }, { rejectWithValue }) => {
         try {
-            let mealsId = mealsOrder.map((item) => item.mealId)
+            let meals = mealsOrder.map((item) => {
+                return {
+                    mealId: item.mealId,
+                    size: item.size,
+                }
+            })
+
             let result = await apiDeleteManyMeals({
                 idCart,
-                mealsId,
+                meals,
                 typeFetch,
             })
 
