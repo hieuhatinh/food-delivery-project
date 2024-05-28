@@ -3,7 +3,7 @@ import axios from 'axios'
 import * as storage from '../storage'
 import { KEY_USER } from '../storage/keys'
 
-const IP_ADRESS = '192.168.1.8'
+const IP_ADRESS = '192.168.1.4'
 
 const axiosClient = axios.create({
     baseURL: `http://${IP_ADRESS}:3000`,
