@@ -9,6 +9,7 @@ import Home from '../Home'
 import MenuProfile from '../MenuProfile'
 import Cart from '../Cart'
 import MyOrder from '../order'
+import { useIsFocused } from '@react-navigation/native'
 
 import { selectIdCart } from '../../store/selector/userSelector'
 import {
@@ -21,14 +22,15 @@ import screenName from '../config/screenName'
 const Tab = createBottomTabNavigator()
 
 export default function BottomTabs() {
+    const isFocused = useIsFocused()
     const dispatch = useDispatch()
     const idCart = useSelector(selectIdCart)
     const numberMeals = useSelector(selectNumberMeals)
     const typeFetch = useSelector(selectTypeFetch)
 
     useEffect(() => {
-        dispatch(fetchCountQuantity({ idCart }))
-    }, [typeFetch])
+        if (isFocused) dispatch(fetchCountQuantity({ idCart }))
+    }, [typeFetch, isFocused])
 
     return (
         <Tab.Navigator

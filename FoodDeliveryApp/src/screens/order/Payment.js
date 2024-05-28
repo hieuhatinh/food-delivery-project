@@ -27,7 +27,7 @@ import { fetchCreateNewOrder } from '../../store/actions/orderAction'
 import { reState } from '../../store/slice/orderSlice'
 import { fetchDeleteManyMeals } from '../../store/actions/cartAction'
 import { selectIdCart } from '../../store/selector/userSelector'
-import typeFetch from '../../utils/typeFetch'
+import typeFetchUtils from '../../utils/typeFetch'
 
 export default function Payment({ navigation }) {
     const isFocused = useIsFocused()
@@ -79,7 +79,7 @@ export default function Payment({ navigation }) {
     }
 
     useEffect(() => {
-        if (isFocused) dispatch(reState())
+        dispatch(reState())
     }, [isFocused])
 
     // xử lý thông báo
@@ -94,7 +94,7 @@ export default function Payment({ navigation }) {
                             fetchDeleteManyMeals({
                                 idCart,
                                 mealsOrder,
-                                typeFetch: typeFetch.deleteMany,
+                                typeFetch: typeFetchUtils.deleteMany,
                             }),
                         ),
                             navigation.navigate(screenName.orderSuccess)

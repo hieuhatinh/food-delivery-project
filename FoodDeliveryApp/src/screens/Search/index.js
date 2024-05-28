@@ -95,7 +95,7 @@ export default function Search({ navigation }) {
     }
 
     useEffect(() => {
-        if (searchState.isSuccess) {
+        if (searchState.isSuccess && searchValue) {
             navigation.navigate('ResultByName', {
                 title: searchValue,
                 data: searchState.meals,

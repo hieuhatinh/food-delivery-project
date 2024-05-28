@@ -5,10 +5,12 @@ const OrderInformation = ({ artwork, foodName, price, quantity, size }) => {
     return (
         <View style={styles.container}>
             <View style={styles.row}>
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row', flex: 1 }}>
                     <Image source={{ uri: artwork }} style={styles.image} />
                     <View style={styles.infRes}>
-                        <Text style={styles.textRes}>{foodName} ({!!size && `size: ${size}`})</Text>
+                        <Text style={styles.textRes}>
+                            {foodName} ({!!size && `size: ${size}`})
+                        </Text>
                         <Text style={styles.price}>{price}</Text>
                     </View>
                 </View>
@@ -35,8 +37,8 @@ const styles = StyleSheet.create({
     },
     row: {
         flexDirection: 'row',
-        justifyContent: 'space-between', 
-        width: '100%'
+        justifyContent: 'space-between',
+        width: '100%',
     },
     image: {
         height: 90,
